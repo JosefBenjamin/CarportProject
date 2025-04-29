@@ -1,0 +1,89 @@
+# ----------------------------------------------------------
+# Global .gitignore for this Java/Maven project
+# Works for IntelliJ IDEA, VS Code, macOS & Windows users.
+# ----------------------------------------------------------
+
+########################
+# Build artifacts
+########################
+target/
+build/
+
+########################
+# Maven wrapper binary
+########################
+!.mvn/wrapper/maven-wrapper.jar
+
+########################
+# IntelliJ IDEA
+########################
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+cmake-build-*/
+
+########################
+# VS Code
+########################
+.vscode/
+
+########################
+# Eclipse / NetBeans
+########################
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.nb-gradle/
+nbbuild/
+dist/
+nbdist/
+springBeans
+sts4-cache
+
+########################
+# macOS system files
+########################
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.apdisk
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+Icon
+
+########################
+# Windows system files
+########################
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+########################
+# Log & environment files
+########################
+*.log
+.env
