@@ -1,0 +1,16 @@
+@startuml
+Object User
+Object Carport
+Object Order
+Object BillOfMaterials
+Object Calculator
+Object Material
+Object CompleteUnitMaterial
+
+User --* Order
+BillOfMaterials --* Order
+Order --* Carport
+Carport --* CompleteUnitMaterial
+CompleteUnitMaterial --* Material
+
+@enduml

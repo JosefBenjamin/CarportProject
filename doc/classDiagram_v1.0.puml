@@ -1,0 +1,57 @@
+@startuml
+class User {
+int userID
+String email
+String password
+int tlf
+boolean isAdmin
+}
+
+class Order {
+int orderID
+int userID
+Carport carport
+LocalDateTime date
+double totalPrice
+int status
+}
+
+class CompleteUnitMaterial {
+int cumID
+int quantity
+String description
+int ordersID
+int mlID
+}
+
+class Carport {
+int carportWidth
+int carportLength
+int carportHeight
+}
+
+class BillOfMaterials {
+List<CompleteUnitMaterial> materials
+}
+
+class Material {
+int materialID
+String name
+String UnitName
+double price
+int length
+}
+
+class Calculator {
+}
+
+User *-- Order
+BillOfMaterials *-- Order
+Order *-- Carport
+Carport *-- CompleteUnitMaterial
+CompleteUnitMaterial *-- Material
+
+
+
+
+@enduml
