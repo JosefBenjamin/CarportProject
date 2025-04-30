@@ -11,7 +11,7 @@ class Order {
 int orderID
 int userID
 Carport carport
-LocalDateTime date
+LocalDate date
 double totalPrice
 int status
 }
