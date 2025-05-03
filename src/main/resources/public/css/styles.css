@@ -1,0 +1,79 @@
+.footer-content {
+        background-color: #FCFCFC; /* Light background */
+        color: #003D76;          /* Dark blue text */
+        padding: 15px 0;         /* Padding below the bar */
+        text-align: center;      /* center text */
+        font-size: 0.9rem;
+        border-top: 5px solid #003D76; /* Solid color bar */
+}
+
+.landingpage-boxes {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 25px; /* Slightly smaller gap */
+    padding: 40px 15px;
+    max-width: 1000px;
+    margin: 40px auto;
+}
+
+.press-to-carport,
+.press-to-login,
+.press-to-register {
+    background-color: #FCFCFC;
+    border: 1px solid #d0d0e0; /* Subtle light grey border */
+    border-radius: 6px;
+    width: 280px; /* Slightly smaller width */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.landingpage-boxes a {
+    display: block;
+    padding: 20px 18px;
+    text-decoration: none;
+    height: 100%;
+    color: inherit;
+    box-sizing: border-box;
+    border-radius: inherit;
+}
+
+.landingpage-boxes h2 {
+    color: #003D76; /* Blue heading */
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 1.3em;
+    transition: color 0.25s ease;
+}
+
+.landingpage-boxes p {
+    color: #555;
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin-bottom: 0;
+    transition: color 0.25s ease;
+}
+
+.press-to-carport:hover,
+.press-to-login:hover,
+.press-to-register:hover {
+    background-color: #F2F2FF; /* Accent background on hover */
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 61, 118, 0.1); /* Subtle blue-tinted shadow */
+    border-color: #c0c0f0; /* Slightly darker border for accent */
+}
+
+/* Keep text colors readable on light hover background */
+.press-to-carport:hover h2,
+.press-to-login:hover h2,
+.press-to-register:hover h2 {
+    color: #003D76; /* Keep heading blue */
+}
+
+.press-to-carport:hover p,
+.press-to-login:hover p,
+.press-to-register:hover p {
+    color: #333; /* Slightly darker paragraph for contrast */
+}
