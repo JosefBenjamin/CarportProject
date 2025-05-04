@@ -80,6 +80,14 @@ public class UserController {
             return;
         }
 
+        if (tlf == null || tlf.isBlank()) {
+            ctx.sessionAttribute("savedEmail", email);
+            ctx.sessionAttribute("savedPhone", tlf);
+            ctx.sessionAttribute("savedAddress", address);
+            ctx.attribute("message", "Telefonnummer skal udfyldes");
+            ctx.render("register.html");
+            return;
+        }
 
         int phone;
         try {
@@ -95,7 +103,7 @@ public class UserController {
 
         User user = new User(email, password1, phone, false, address);
         try {
-            User registeredUser = UserMapper.register(user, connectionPool);
+            UserMapper.register(user, connectionPool);
             ctx.sessionAttribute("savedEmail", null);
             ctx.sessionAttribute("savedPhone", null);
             ctx.sessionAttribute("savedAddress", null);
@@ -121,14 +129,16 @@ public class UserController {
 
         if (password == null || password.length() < 8) {
             ctx.attribute("message", "Kodeord skal være mindst 8 tegn");
+            ctx.sessionAttribute("savedEmail", email);
             ctx.render("login.html");
             return;
         }
 
         try {
-            String hashedPassword = UserMapper.getHashedPasswordByEmail(email, connectionPool);
-            if (hashedPassword == null || !PasswordUtil.checkPassword(password, hashedPassword)) {
+            boolean authenticated = UserMapper.login(email, password, connectionPool);
+            if (!authenticated) {
                 ctx.attribute("message", "Forkert email eller kodeord");
+                ctx.sessionAttribute("savedEmail", email);
                 ctx.render("login.html");
                 return;
             }

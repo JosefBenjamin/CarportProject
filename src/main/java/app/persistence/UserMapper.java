@@ -121,26 +121,6 @@ public class UserMapper {
 
     }
 
-
-    public static String getHashedPasswordByEmail(String email, ConnectionPool connectionPool) throws DatabaseException {
-        String sql = "SELECT password FROM public.users WHERE email = ?";
-
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, email);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getString("password");
-                } else {
-                    return null;
-                }
-            }
-        } catch (SQLException e) {
-            throw new DatabaseException("Error retrieving hashed password", e);
-        }
-    }
-
     public static User getUserByEmail(String email, ConnectionPool connectionPool) throws DatabaseException {
         String sql = "SELECT user_id, email, password, tlf, is_admin, address FROM public.users WHERE email = ?";
 
