@@ -6,6 +6,8 @@ public class User {
     private String password;
     private int tlf;
     private boolean isAdmin;
+    private String address;
+    private String zipCode;
 
     public User(int userID, String email, String password, int tlf, boolean isAdmin) {
         this.userID = userID;
@@ -13,6 +15,23 @@ public class User {
         this.password = password;
         this.tlf = tlf;
         this.isAdmin = isAdmin;
+    }
+
+    public User(int userID, String email, String password, int tlf, boolean isAdmin, String address) {
+        this.userID = userID;
+        this.email = email;
+        this.password = password;
+        this.tlf = tlf;
+        this.isAdmin = isAdmin;
+        this.address = address;
+    }
+
+    public User(String email, String password, int tlf, boolean isAdmin, String address) {
+        this.email = email;
+        this.password = password;
+        this.tlf = tlf;
+        this.isAdmin = isAdmin;
+        this.address = address;
     }
 
     public int getUserID() {
@@ -53,6 +72,22 @@ public class User {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 
     @Override

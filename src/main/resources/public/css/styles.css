@@ -1,0 +1,244 @@
+.footer-content {
+        background-color: #FCFCFC; /* Light background */
+        color: #003D76;          /* Dark blue text */
+        padding: 15px 0;         /* Padding below the bar */
+        text-align: center;      /* center text */
+        font-size: 0.9rem;
+        border-top: 5px solid #003D76; /* Solid color bar */
+}
+
+.landingpage-boxes {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 25px; /* Slightly smaller gap */
+    padding: 40px 15px;
+    max-width: 1000px;
+    margin: 40px auto;
+}
+
+.press-to-carport,
+.press-to-login,
+.press-to-register {
+    background-color: #FCFCFC;
+    border: 1px solid #d0d0e0; /* Subtle light grey border */
+    border-radius: 6px;
+    width: 280px; /* Slightly smaller width */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.landingpage-boxes a {
+    display: block;
+    padding: 20px 18px;
+    text-decoration: none;
+    height: 100%;
+    color: inherit;
+    box-sizing: border-box;
+    border-radius: inherit;
+}
+
+.landingpage-boxes h2 {
+    color: #003D76; /* Blue heading */
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 1.3em;
+    transition: color 0.25s ease;
+}
+
+.landingpage-boxes p {
+    color: #555;
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin-bottom: 0;
+    transition: color 0.25s ease;
+}
+
+.press-to-carport:hover,
+.press-to-login:hover,
+.press-to-register:hover {
+    background-color: #F2F2FF; /* Accent background on hover */
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 61, 118, 0.1); /* Subtle blue-tinted shadow */
+    border-color: #c0c0f0; /* Slightly darker border for accent */
+}
+
+/* Keep text colors readable on light hover background */
+.press-to-carport:hover h2,
+.press-to-login:hover h2,
+.press-to-register:hover h2 {
+    color: #003D76; /* Keep heading blue */
+}
+
+.press-to-carport:hover p,
+.press-to-login:hover p,
+.press-to-register:hover p {
+    color: #333; /* Slightly darker paragraph for contrast */
+}
+
+/* ==================
+   Register Form Styles
+   ================== */
+
+.register-header {
+    text-align: center;
+    padding: 40px 15px 20px 15px;
+    background-color: #FCFCFC;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.register-header h1 {
+    color: #003D76;
+    font-size: 1.8em;
+    margin: 0;
+}
+
+.register-form {
+    background-color: #FCFCFC;
+    border: 1px solid #d0d0e0;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    padding: 25px 30px;
+    max-width: 500px;
+    margin: 40px auto;
+}
+
+.register-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.register-form input[type="email"],
+.register-form input[type="password"],
+.register-form input[type="tel"],
+.register-form input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.register-form input:focus {
+    outline: none;
+    border-color: #003D76;
+    box-shadow: 0 0 0 2px rgba(0, 61, 118, 0.15);
+}
+
+.register-button {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.register-form button {
+    background-color: #003D76;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.register-form button:hover {
+    background-color: #002a50;
+}
+
+.register-form button:active {
+    transform: translateY(1px);
+}
+
+.register-message {
+    text-align: center;
+    margin-top: 20px;
+    color: #003D76;
+    font-weight: bold;
+    min-height: 1.2em;
+}
+
+
+/* ==================
+   Login Form Styles
+   ================== */
+
+/* Login header can reuse .register-header styles if desired */
+/* If different, define .login-header here */
+
+.login-form {
+    background-color: #FCFCFC;
+    border: 1px solid #d0d0e0;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    padding: 25px 30px;
+    max-width: 400px; /* Maybe slightly smaller for login */
+    margin: 40px auto;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: #003D76;
+    box-shadow: 0 0 0 2px rgba(0, 61, 118, 0.15);
+}
+
+.login-button {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-form button {
+    background-color: #003D76;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.login-form button:hover {
+    background-color: #002a50;
+}
+
+.login-form button:active {
+    transform: translateY(1px);
+}
+
+.login-message {
+    text-align: center;
+    margin-top: 20px;
+    color: #D9534F; /* Often error messages are red, adjust if needed */
+    font-weight: bold;
+    min-height: 1.2em;
+}

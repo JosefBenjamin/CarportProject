@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Fog Carport</title>
+    <link rel="icon" href="/images/carportfavicon64.png" th:href="@{/images/carportfavicon64.png}" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+
+<body>
+
+<div class="register-header">
+    <h1>Log på og følg med i din carport 💙</h1>
+</div>
+
+
+<form class="login-form" method="post">
+    <label>Din email</label>
+    <input type="email" name="email" placeholder="example@example.org" th:value="${session.savedEmail}" required/>
+    <label>Kodeord</label>
+    <input type="password" name="password" placeholder="" required minlength="8" maxlength="64"/>
+
+    <div class="login-button">
+        <button type="submit" formaction="/login">Log på</button>
+    </div>
+
+    <div>
+        <p class="login-message"  th:text="${message}"> </p>
+    </div>
+</form>
+
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2025 Fog Carport. Alle rettigheder forbeholdes.</p>
+    </div>
+</footer>
+
+</body>
+</html>
