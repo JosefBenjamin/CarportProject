@@ -3,6 +3,7 @@ package app;
 
 import app.config.SessionConfig;
 import app.config.ThymeleafConfig;
+import app.controllers.UserController;
 import app.persistence.ConnectionPool;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
@@ -43,6 +44,8 @@ public class Main {
             System.out.println("Visitor ID: " + ctx.sessionAttribute("currentVisitor"));
             ctx.render("index.html");
         });
+
+        UserController.routes(app, connectionPool);
 
     }
 

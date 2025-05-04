@@ -10,6 +10,26 @@
 
 <body>
 
+<div class="register-header">
+    <h1>Log på og følg med i din carport 💙</h1>
+</div>
+
+
+<form class="login-form" method="post">
+    <label>Din email</label>
+    <input type="email" name="email" placeholder="example@example.org" th:value="${session.savedEmail}" required/>
+    <label>Kodeord</label>
+    <input type="password" name="password" placeholder="" required minlength="8" maxlength="64"/>
+
+    <div class="login-button">
+        <button type="submit" formaction="/login">Log på</button>
+    </div>
+
+    <div>
+        <p class="login-message"  th:text="${message}"> </p>
+    </div>
+</form>
+
 
 <footer>
     <div class="footer-content">
