@@ -9,9 +9,12 @@ import java.util.List;
 
 public class Calculator {
 
-    private static final int POST = 1;
-    private static final int RAFTER = 2;
-    private static final int BEAMS = 2;
+
+    private static final int POST = 1; //Stolper
+
+    private static final int RAFTER = 2; // Spær
+
+    private static final int BEAMS = 2; // Remme
 
     private List<CompleteUnitMaterial> orderMaterials = new ArrayList<CompleteUnitMaterial>();
     private int width;
