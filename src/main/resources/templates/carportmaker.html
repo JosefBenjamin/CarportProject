@@ -8,15 +8,23 @@
     <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
 </head>
 <body>
-<h3 class="center">Nedenfor kan du lave en forespørgsel på din egen carport ud fra dine egne mål</h3>
 
-<form class="carport-form" method="post">
-    <label for="length">Længde:</label>
-    <input class="lb" type="number" id="length"  name="length" placeholder="Længde" min="400" max="2700" required/>
-    <label for="width">Bredde:</label>
-    <input class="lb" type="number" id="width" name="width" placeholder="Bredde" min="300" max="2700" required/>
+<div th:if="${orderSend}" class="conformation-message center">
+    <h2>Tak for din forespørgsel!</h2>
+    <p>Din forespørgsel på din carport er modtaget. Vores Fog repræsentant vender tilbage hurtigst muligt</p>
+    <p>Du kan holde styr på statussen af din forespørgsel på din profil side</p>
+</div>
+
+<div th:unless="${orderSend}">
+
+    <h3 class="center">Nedenfor kan du lave en forespørgsel på din egen carport ud fra dine egne mål</h3>
 
 
+    <form class="carport-form" method="post">
+        <label for="length">Længde:</label>
+        <input class="lb" type="number" id="length"  name="length" placeholder="Længde" min="400" max="2700" required/>
+        <label for="width">Bredde:</label>
+        <input class="lb" type="number" id="width" name="width" placeholder="Bredde" min="300" max="2700" required/>
 
     <div class="btn">
         <input type="submit" formaction="/sendOrder" value="Bestil Carport" name="button"/>
@@ -32,7 +40,7 @@
     </div>
 
 </form>
-
+</div>
 
 <footer>
     <div class="footer-content">

@@ -17,11 +17,17 @@ public class CarportMakerController {
     public static void routes(Javalin app, ConnectionPool connectionPool) {
         app.get("/carport-form", ctx -> {
             Boolean loginRequired = ctx.sessionAttribute("loginRequired");
+            Boolean orderSend = ctx.sessionAttribute("orderSend");
+
             ctx.attribute("loginRequired", loginRequired);
-            ctx.sessionAttribute("loginRequired", null); // clears the session attribute after reloading page
+            ctx.attribute("orderSend", orderSend);
+
+            ctx.sessionAttribute("loginRequired", null); // clear login message
+            ctx.sessionAttribute("orderSend", null);     // clear order flag
 
             ctx.render("carportmaker.html");
         });
+
         app.post("/sendOrder", ctx -> sendAndSaveCarportQuery(ctx, connectionPool));
         app.post("/calculatePrice", ctx -> calculateCarport(ctx, connectionPool));
 
@@ -44,7 +50,7 @@ public class CarportMakerController {
             return;
         }
 
-        ctx.attribute("message", "Din forespørgsel er sendt");
+        ctx.attribute("orderSend", true);
         ctx.render("carportmaker.html");
 
     }
