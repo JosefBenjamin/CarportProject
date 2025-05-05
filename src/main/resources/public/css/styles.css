@@ -20,6 +20,7 @@
 
 .press-to-carport,
 .press-to-login,
+.press-to-admin,
 .press-to-register {
     background-color: #FCFCFC;
     border: 1px solid #d0d0e0; /* Subtle light grey border */

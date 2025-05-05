@@ -11,6 +11,11 @@ import java.sql.SQLException;
 
 public class UserMapper {
 
+    private final ConnectionPool connectionPool;
+
+    public UserMapper(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
+    }
 
     /**
      * ALERT! The user must type their password twice for confirmation,
