@@ -1,6 +1,7 @@
 package app.utilities;
 
 import app.entities.CompleteUnitMaterial;
+import app.entities.Material;
 import app.entities.Order;
 import app.persistence.ConnectionPool;
 
@@ -8,23 +9,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Calculator {
-
-
-    private static final int POST = 1; //Stolper
-
-    private static final int RAFTER = 2; // Spær
-
-    private static final int BEAMS = 2; // Remme
-
-    private List<CompleteUnitMaterial> orderMaterials = new ArrayList<CompleteUnitMaterial>();
-    private int width;
-    private int length;
     private ConnectionPool connectionPool;
 
-    public Calculator(int width, int length, ConnectionPool connectionPool) {
+    // Carport dimensions
+    private final int width;
+    private final int length;
+    private final int height;
+
+    // Stolper
+    /*private final Material post;
+    private final int amountOfPosts;
+
+    // Remme
+    private final Material beams;
+    private final int amountOfBeams;
+
+    // Spær
+    private final Material rafter;
+    private final int amountOfRafters;
+
+    // Tag
+    private final Material roof;
+    private final int amountOfRoofs;
+
+    private final float totalPrice;
+    */
+
+    private List<CompleteUnitMaterial> orderMaterials = new ArrayList<CompleteUnitMaterial>();
+
+
+
+
+    public Calculator(int width, int length, int height, ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
+
         this.width = width;
         this.length = length;
-        this.connectionPool = connectionPool;
+        this.height = height;
+
+
+
     }
 
     public void calculateCarport(Order order) {

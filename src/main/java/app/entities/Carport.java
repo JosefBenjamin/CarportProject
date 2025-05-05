@@ -12,6 +12,12 @@ public class Carport {
         this.carportHeight = carportHeight;
     }
 
+    public Carport(int carportWidth, int carportLength) {
+        this.carportWidth = carportWidth;
+        this.carportLength = carportLength;
+        this.carportHeight = 230;
+    }
+
     public int getCarportHeight() {
         return carportHeight;
     }
