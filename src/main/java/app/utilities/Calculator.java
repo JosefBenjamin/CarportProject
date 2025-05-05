@@ -3,7 +3,9 @@ package app.utilities;
 import app.entities.CompleteUnitMaterial;
 import app.entities.Material;
 import app.entities.Order;
+import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
+import app.persistence.MaterialMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,15 +13,20 @@ import java.util.List;
 public class Calculator {
     private ConnectionPool connectionPool;
 
+    private static final int POSTS = 6;
+    private static final int BEAMS = 5;
+    private static final int RAFTERS = 5;
+
     // Carport dimensions
     private final int width;
     private final int length;
     private final int height;
 
     // Stolper
-    /*private final Material post;
-    private final int amountOfPosts;
+    private final Material post;
+    //private final int amountOfPosts;
 
+    /*
     // Remme
     private final Material beams;
     private final int amountOfBeams;
@@ -27,6 +34,10 @@ public class Calculator {
     // Spær
     private final Material rafter;
     private final int amountOfRafters;
+
+    // Stern
+    private final Material stern
+    private final int amount of sterns
 
     // Tag
     private final Material roof;
@@ -40,31 +51,35 @@ public class Calculator {
 
 
 
-    public Calculator(int width, int length, int height, ConnectionPool connectionPool) {
+    public Calculator(int width, int length, int height, ConnectionPool connectionPool) throws DatabaseException {
         this.connectionPool = connectionPool;
 
         this.width = width;
         this.length = length;
         this.height = height;
 
-
-
-    }
-
-    public void calculateCarport(Order order) {
+        this.post = MaterialMapper.getMaterialByID(POSTS, connectionPool);
         calculatePost();
-        calculateBeams();
-        calculateRafters();
+
+
+
     }
 
     // Stolper
     private void calculatePost() {
         // Antal stolper
-        int quantity = 6;
+        int quantity = calculatePostAmount();
 
         // Længde på stolper
-
     }
+
+    public int calculatePostAmount() {
+        return 2 * (2 + (length - 130) / 340);
+    }
+
+
+
+
 
     // Remme
     private void calculateBeams() {

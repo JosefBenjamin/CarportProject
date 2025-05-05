@@ -2,6 +2,7 @@ package app.controllers;
 
 import app.Main;
 import app.entities.Carport;
+import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.utilities.Calculator;
 import io.javalin.Javalin;
@@ -33,13 +34,15 @@ public class CarportMakerController {
 
     }
 
-    private static void calculateCarport(Context ctx, ConnectionPool connectionPool) {
+    private static void calculateCarport(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
         int carportLength = Integer.parseInt(ctx.formParam("length"));
         int carportWidth = Integer.parseInt(ctx.formParam("width"));
 
-        Carport carport = new Carport(carportLength, carportWidth);
+        Carport carport = new Carport(carportWidth, carportLength);
 
         Calculator calculator = new Calculator(carport.getCarportWidth(), carport.getCarportLength(), carport.getCarportHeight(), connectionPool);
+
+
 
     }
 

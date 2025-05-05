@@ -5,16 +5,18 @@ public class Material {
     private int materialID;
     private String name;
     private String unitName;
-    private double price;
+    private double meterPrice;
     private int length;
 
     public Material(int materialID, String name, String unitName, double price, int length) {
         this.materialID = materialID;
         this.name = name;
         this.unitName = unitName;
-        this.price = price;
+        this.meterPrice = price;
         this.length = length;
     }
+
+
 
     public int getMaterialID() {
         return materialID;
@@ -40,12 +42,12 @@ public class Material {
         this.unitName = unitName;
     }
 
-    public double getPrice() {
-        return price;
+    public double getMeterPrice() {
+        return meterPrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setMeterPrice(double meterPrice) {
+        this.meterPrice = meterPrice;
     }
 
     public int getLength() {
@@ -62,7 +64,7 @@ public class Material {
                 "materialID=" + materialID +
                 ", name='" + name + '\'' +
                 ", unitName='" + unitName + '\'' +
-                ", price=" + price +
+                ", meterPrice=" + meterPrice +
                 ", length=" + length +
                 '}';
     }
