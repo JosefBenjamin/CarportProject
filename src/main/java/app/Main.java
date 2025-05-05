@@ -3,10 +3,12 @@ package app;
 
 import app.config.SessionConfig;
 import app.config.ThymeleafConfig;
+import app.controllers.UserController;
 import app.persistence.ConnectionPool;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class Main {
@@ -27,9 +29,23 @@ public class Main {
             config.fileRenderer(new JavalinThymeleaf(ThymeleafConfig.templateEngine()));
         }).start(7070);
 
+        /*
+            Gives each visitor a unique ID to track them across the site
+            This happens before any http requests are made
+         */
         app.before(ctx -> {
+            if(ctx.sessionAttribute("currentVisitor") == null) {
+                ctx.sessionAttribute("currentVisitor", "guest-" + UUID.randomUUID());
+            }
             ctx.attribute("session", ctx.sessionAttributeMap());
         });
+
+        app.get("/", ctx -> {
+            System.out.println("Visitor ID: " + ctx.sessionAttribute("currentVisitor"));
+            ctx.render("index.html");
+        });
+
+        UserController.routes(app, connectionPool);
 
     }
 
