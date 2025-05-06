@@ -63,7 +63,7 @@ public class Calculator {
         calculatePost();
 
         this.beams = getMaterialByID(BEAMS);
-        calculateBeams();
+        selectsBeams();
 
         this.totalPrice = calculateTotalPrice();
 
@@ -110,9 +110,26 @@ public class Calculator {
     }
 
 
-
+    /**
+     *sortedBeams.sort((a,b) -> Integer.compare(b.getLength(), a.getLength()));
+     * Sorts the sortedBeams list in length integers. Looks at 2 beams compares. It sorts them from longest to smallest
+     *
+     * While loop:
+     * Checks the beam list (Starts with longest) Checks if it's under or equal to the length of the carport.
+     * Then adds it to a new list and takes that beam length from the carport length, so we can see how much is remaining.
+     * remainingLength is now lesser. If a beam isn't found (it goes over the remainingLength).
+     * it will force in the smallest beam. We expect the customer to saw off what is needed.
+     *
+     * Final bit:
+     * the compute method of the hashmap gives us the opportunity to update a values for a specific key.
+     * The loop run through the selected beams, puts in the length of the material and checks the CompleteUnitMaterial.
+     * If it's null (there isn't a completeUnitMaterial) we put it in as a value.
+     * The compute is there if we have beams with the same length. So if the second beam is the same as the first one.
+     * cum is not null and will then jumnp to the else statement, which just adds the quantity of the already
+     * added CompleteUnitMaterial.
+     */
     // Remme
-    private void calculateBeams() {
+    private void selectsBeams() {
         int remainingLength = this.length;
         List<Material> sortedBeams = new ArrayList<>(beams);
         sortedBeams.sort((a,b) -> Integer.compare(b.getLength(), a.getLength()));
@@ -136,7 +153,23 @@ public class Calculator {
                 remainingLength -= smallest.getLength();
             }
         }
+        calculateBeamAmount(selectedBeams);
+    }
 
+    /**
+     *
+     * @param selectedBeams A list of selected beams with the right lengths.
+     *
+     *      Final bit:
+     *      the compute method of the hashmap gives us the opportunity to update a values for a specific key.
+     *      The loop run through the selected beams, puts in the length of the material and checks the CompleteUnitMaterial.
+     *      If it's null (there isn't a completeUnitMaterial) we put it in as a value.
+     *      The compute is there if we have beams with the same length. So if the second beam is the same as the first one.
+     *      cum is not null and will then jumnp to the else statement, which just adds the quantity of the already
+     *      added CompleteUnitMaterial.
+     */
+
+    private void calculateBeamAmount(List<Material> selectedBeams) {
         Map<Integer, CompleteUnitMaterial> grouped = new HashMap<>();
         for (Material m : selectedBeams) {
             grouped.compute(m.getLength(), (len, cum) -> {
@@ -148,9 +181,7 @@ public class Calculator {
                 }
             });
         }
-
         orderMaterials.addAll(grouped.values());
-
     }
 
     // Spær
