@@ -12,6 +12,7 @@ import java.util.List;
 
 public class Calculator {
     private ConnectionPool connectionPool;
+    private MaterialMapper materialMapper;
 
     private static final int POSTS = 6;
     private static final int BEAMS = 5;
@@ -51,18 +52,28 @@ public class Calculator {
 
 
 
-    public Calculator(int width, int length, int height, ConnectionPool connectionPool) throws DatabaseException {
+    public Calculator(int width, int length, int height, ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
 
         this.width = width;
         this.length = length;
         this.height = height;
+        this.post = getMaterialByID(POSTS);
 
-        this.post = MaterialMapper.getMaterialByID(POSTS, connectionPool);
+
         calculatePost();
 
 
 
+    }
+
+    private Material getMaterialByID(int materialID) {
+        try {
+             return materialMapper.getMaterialByID(materialID, connectionPool);
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     // Stolper

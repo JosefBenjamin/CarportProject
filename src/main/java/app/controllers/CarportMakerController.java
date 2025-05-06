@@ -34,14 +34,17 @@ public class CarportMakerController {
 
     }
 
-    private static void calculateCarport(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
+    private static void calculateCarport(Context ctx, ConnectionPool connectionPool)  {
         int carportLength = Integer.parseInt(ctx.formParam("length"));
         int carportWidth = Integer.parseInt(ctx.formParam("width"));
 
         Carport carport = new Carport(carportWidth, carportLength);
 
-        Calculator calculator = new Calculator(carport.getCarportWidth(), carport.getCarportLength(), carport.getCarportHeight(), connectionPool);
-
+        try {
+            Calculator calculator = new Calculator(carport.getCarportWidth(), carport.getCarportLength(), carport.getCarportHeight(), connectionPool);
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
 
 
     }
