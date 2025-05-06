@@ -1,6 +1,7 @@
 package app.persistence;
 
 import app.entities.User;
+import app.entities.ZipCode;
 import app.exceptions.DatabaseException;
 import app.utilities.PasswordUtil;
 
@@ -27,9 +28,11 @@ public class UserMapper {
         int tlf = user.getTlf();
         boolean isAdmin = user.isAdmin();
         String address = user.getAddress();
+        int zip = user.getZipCode().getZipCode();
+        String city = user.getZipCode().getCity();
 
-
-        String sql = "INSERT INTO public.users (email, password, tlf, is_admin, address) VALUES (?, ?, ?, ?, ?) RETURNING user_id";
+        String sql = "INSERT INTO public.users (email, password, tlf, is_admin, address, zip_code) " +
+                     "VALUES (?, ?, ?, ?, ?, ?) RETURNING user_id";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -41,15 +44,18 @@ public class UserMapper {
             ps.setInt(3, tlf);
             ps.setBoolean(4, isAdmin);
             ps.setString(5, address);
+            ps.setInt(6, zip);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     int id = rs.getInt("user_id");
-                    return new User(id, email, hashedPassword, tlf, isAdmin, address);
+                    User newUser = new User(id, email, hashedPassword, tlf, isAdmin, address);
+                    newUser.setZipCode(new ZipCode(zip, city));
+                    return newUser;
 
                 }
             }
-            throw new DatabaseException("No user data was returned");
+            throw new DatabaseException("No user data was returned from the database");
 
         } catch (SQLException e) {
             throw new DatabaseException("Database error during registration", e);
