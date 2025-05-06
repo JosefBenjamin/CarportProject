@@ -40,11 +40,7 @@ public class CarportMakerController {
 
         Carport carport = new Carport(carportWidth, carportLength);
 
-        try {
-            Calculator calculator = new Calculator(carport.getCarportWidth(), carport.getCarportLength(), carport.getCarportHeight(), connectionPool);
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        }
+        Calculator calculator = new Calculator(carport.getCarportWidth(), carport.getCarportLength(), carport.getCarportHeight(), connectionPool);
 
 
     }

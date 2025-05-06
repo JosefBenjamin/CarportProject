@@ -8,7 +8,9 @@ import app.persistence.ConnectionPool;
 import app.persistence.MaterialMapper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Calculator {
     private ConnectionPool connectionPool;
@@ -27,7 +29,7 @@ public class Calculator {
     private final Material post;
 
     // Remme
-    private final Material beams;
+    private final List<Material> beams;
     /*
     private final int amountOfBeams;
 
@@ -56,7 +58,7 @@ public class Calculator {
         this.length = length;
         this.height = height;
 
-        this.post = getMaterialByID(POSTS);
+        this.post = getMaterialByID(POSTS).get(0);
         calculatePost();
 
         this.beams = getMaterialByID(BEAMS);
@@ -66,9 +68,9 @@ public class Calculator {
 
     }
 
-    private Material getMaterialByID(int materialID) {
+    private List<Material> getMaterialByID(int materialID) {
         try {
-             return materialMapper.getMaterialByID(materialID, connectionPool);
+             return materialMapper.getMaterialsByID(materialID, connectionPool);
         } catch (DatabaseException e) {
             e.printStackTrace();
         }
@@ -92,6 +94,43 @@ public class Calculator {
 
     // Remme
     private void calculateBeams() {
+        int remainingLength = this.length;
+        List<Material> sortedBeams = new ArrayList<>(beams);
+        sortedBeams.sort((a,b) -> Integer.compare(b.getLength(), a.getLength()));
+
+        List<Material> selectedBeams = new ArrayList<>();
+
+        while (remainingLength > 0) {
+            boolean found = false;
+            for (Material beam : sortedBeams) {
+                if (beam.getLength() <= remainingLength) {
+                    selectedBeams.add(beam);
+                    remainingLength -= beam.getLength();
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                Material smallest = sortedBeams.get(sortedBeams.size() - 1);
+                selectedBeams.add(smallest);
+                remainingLength -= smallest.getLength();
+            }
+        }
+
+        Map<Integer, CompleteUnitMaterial> grouped = new HashMap<>();
+        for (Material m : selectedBeams) {
+            grouped.compute(m.getLength(), (len, cum) -> {
+                if (cum == null) {
+                    return new CompleteUnitMaterial(2, "Remme i sider, sadles ned i stopler", m);
+                } else {
+                    cum.setQuantity(cum.getQuantity() + 2);
+                    return cum;
+                }
+            });
+        }
+
+        orderMaterials.addAll(grouped.values());
 
     }
 
