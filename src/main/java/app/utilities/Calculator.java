@@ -160,7 +160,7 @@ public class Calculator {
      *
      * @param selectedBeams A list of selected beams with the right lengths.
      *
-     *      Final bit:
+     *                      Final bit:
      *      the compute method of the hashmap gives us the opportunity to update a values for a specific key.
      *      The loop run through the selected beams, puts in the length of the material and checks the CompleteUnitMaterial.
      *      If it's null (there isn't a completeUnitMaterial) we put it in as a value.
