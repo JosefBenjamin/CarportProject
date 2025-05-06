@@ -42,6 +42,10 @@ public class CarportMakerController {
 
         Calculator calculator = new Calculator(carport.getCarportWidth(), carport.getCarportLength(), carport.getCarportHeight(), connectionPool);
 
+        double totalPrice = calculator.getTotalPrice();
+        ctx.attribute("message",  "Pris for selvlavet carport: " + totalPrice + " kr.");
+        ctx.render("carportmaker.html");
+
 
     }
 

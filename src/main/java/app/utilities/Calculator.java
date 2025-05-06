@@ -31,7 +31,7 @@ public class Calculator {
     // Remme
     private final List<Material> beams;
     /*
-    private final int amountOfBeams;
+
 
     // Spær
     private final Material rafter;
@@ -48,7 +48,8 @@ public class Calculator {
     private final float totalPrice;
     */
 
-    private List<CompleteUnitMaterial> orderMaterials = new ArrayList<CompleteUnitMaterial>();
+    private final double totalPrice;
+    private final List<CompleteUnitMaterial> orderMaterials = new ArrayList<CompleteUnitMaterial>();
 
 
     public Calculator(int width, int length, int height, ConnectionPool connectionPool) {
@@ -64,9 +65,12 @@ public class Calculator {
         this.beams = getMaterialByID(BEAMS);
         calculateBeams();
 
+        this.totalPrice = calculateTotalPrice();
 
 
     }
+
+
 
     private List<Material> getMaterialByID(int materialID) {
         try {
@@ -141,5 +145,18 @@ public class Calculator {
 
     public List<CompleteUnitMaterial> getOrderMaterials() {
         return orderMaterials;
+    }
+
+    private double calculateTotalPrice() {
+        double totalPrice = 0;
+        for (CompleteUnitMaterial material : orderMaterials) {
+            totalPrice += (material.getMaterial().getMeterPrice() * ((double) material.getMaterial().getLength() / 100)) * material.getQuantity();
+
+        }
+        return Math.round(totalPrice * 100) / 100.0;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
     }
 }
