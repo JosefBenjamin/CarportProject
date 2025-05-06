@@ -15,6 +15,12 @@ public class CarportMakerController {
 
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
+    /**
+     * @param app line 1: Clears the two season attributes (loginRequired, orderSend)
+     *            If user reloads the page the messages that are linked to those
+     *            attributes won't show again.
+     */
+
     public static void routes(Javalin app, ConnectionPool connectionPool) {
         app.get("/carport-form", ctx -> {
             Boolean loginRequired = ctx.sessionAttribute("loginRequired");

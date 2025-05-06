@@ -71,7 +71,13 @@ public class Calculator {
     }
 
 
-
+    /**
+     *
+     * @param materialID uses materialID (which is hardcoded in Calculators attributes)
+     *                   to find the specific material.
+     * @return returns list of that Material, which size is varied because the Materials
+     * can have different sizes.
+     */
     private List<Material> getMaterialByID(int materialID) {
         try {
              return materialMapper.getMaterialsByID(materialID, connectionPool);
@@ -81,6 +87,11 @@ public class Calculator {
         return null;
     }
 
+    /**
+     * Calculates the quantity fo posts needed.
+     * Then adds the Complete unit Material to a list.
+     * That list will represent our Bill of Materials
+     */
     // Stolper
     private void calculatePost() {
         // Antal stolper
@@ -90,6 +101,10 @@ public class Calculator {
 
     }
 
+    /**
+     *
+     * @return Returns the quantity of posts. The quantity is decided by this equation.
+     */
     public int calculatePostAmount() {
         return 2 * (2 + (length - 130) / 340);
     }
@@ -147,6 +162,17 @@ public class Calculator {
         return orderMaterials;
     }
 
+    /**
+     * totalPrice equation:
+     * Material length / 100 <- divides by 100 to get the length(cm) in meters
+     *
+     * @return returns the total price accumulated from the orderMaterials (BillOfMaterials) list.
+     *
+     * Return statement used to get the totalPrice in only two decimals:
+     * totalPrice * 100 shifts the decimal point two places to the right.
+     * Math.round rounds totalPrice * 100 to the nearest integer.
+     * This divided by 100 shifts the decimal to its original place, but now rounded to two decimal digits.
+     */
     private double calculateTotalPrice() {
         double totalPrice = 0;
         for (CompleteUnitMaterial material : orderMaterials) {
