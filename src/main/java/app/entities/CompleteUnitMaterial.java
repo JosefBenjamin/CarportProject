@@ -7,6 +7,7 @@ public class CompleteUnitMaterial {
     private String description;
     private int ordersId;
     private int MaterialLengthId;
+    private int msdId;
 
 
     public CompleteUnitMaterial(int cumId, int quantity, String description, int ordersId, int materialLengthId) {
@@ -14,8 +15,17 @@ public class CompleteUnitMaterial {
         this.quantity = quantity;
         this.description = description;
         this.ordersId = ordersId;
-        MaterialLengthId = materialLengthId;
+        this.MaterialLengthId = materialLengthId;
     }
+
+    public CompleteUnitMaterial(int cumId, int quantity, int ordersId, int mlId, int msdId) {
+        this.cumId = cumId;
+        this.quantity = quantity;
+        this.ordersId = ordersId;
+        this.MaterialLengthId = mlId;
+        this.msdId = msdId;
+    }
+
 
 
     public int getCumId() {

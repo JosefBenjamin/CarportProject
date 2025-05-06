@@ -1,32 +1,39 @@
 package app.controllers;
 
+import app.entities.Order;
 import app.entities.User;
+
+import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
-import app.persistence.UserMapper;
+import app.persistence.OrderMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+import java.util.List;
+
 public class AdminController {
 
-    private static final ConnectionPool connectionPool = ConnectionPool.getInstance(
-            "postgres", "postgres", "jdbc:postgresql://localhost:5432/%s?currentSchema=public", "fog_carport_2025"
-    );
 
-    private static final UserMapper userMapper = new UserMapper(connectionPool);
-
-    public static void Routes(Javalin app){
-        app.get("/admin", AdminController::showAdminPage);
+    public static void routes(Javalin app, ConnectionPool connectionPool){
+        app.get("/admin", ctx -> showAdminPage(ctx, connectionPool));
 
     }
 
-    public static void showAdminPage(Context ctx){
-        User adminUser = ctx.sessionAttribute("user");
+    public static void showAdminPage(Context ctx, ConnectionPool connectionPool){
+        User adminUser = ctx.sessionAttribute("currentUser");
         if(adminUser == null || !adminUser.isAdmin()){
             ctx.redirect("index.html");
             return;
         }
-
-        ctx.render("admin.html");
+        try {
+            // Fetch all orders with their carport details and materials
+            List<Order> orders = OrderMapper.getAllOrdersWithDetails(connectionPool);
+            ctx.attribute("orders", orders);
+            ctx.render("admin.html");
+        } catch (DatabaseException e) {
+            ctx.attribute("error", "Error fetching orders: " + e.getMessage());
+            ctx.render("admin.html");
+        }
     }
 
 }

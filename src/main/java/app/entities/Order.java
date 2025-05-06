@@ -10,6 +10,7 @@ public class Order {
     private LocalDate date;
     private double totalPrice;
     private int status;
+    private BillOfMaterials billOfMaterials;
 
     public Order(int orderID, int userID, Carport carport, LocalDate date, double totalPrice, int status) {
         this.orderID = orderID;
@@ -68,6 +69,14 @@ public class Order {
         this.status = status;
     }
 
+    public BillOfMaterials getBillOfMaterials() {
+        return billOfMaterials;
+    }
+
+    public void setBillOfMaterials(BillOfMaterials billOfMaterials) {
+        this.billOfMaterials = billOfMaterials;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -77,6 +86,7 @@ public class Order {
                 ", date=" + date +
                 ", totalPrice=" + totalPrice +
                 ", status=" + status +
+                ", billOfMaterials=" + billOfMaterials +
                 '}';
     }
 }

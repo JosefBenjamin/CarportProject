@@ -1,21 +1,88 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Fog Carport</title>
+    <title>Fog Carport - Admin Page</title>
     <link rel="icon" href="/images/carportfavicon64.png" th:href="@{/images/carportfavicon64.png}" type="image/png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .order-details {
+            margin-left: 20px;
+        }
+    </style>
 </head>
-
 <body>
+<div class="admin-header">
+    <h1>Admin Page - Forespørgelser</h1>
+    <a href="/" th:href="@{/}">Tilbage til forsiden</a>
+</div>
 
+<div class="admin-content">
+    <div th:if="${error}" class="error-message">
+        <p th:text="${error}"></p>
+    </div>
+
+    <div th:if="${orders != null and !orders.isEmpty}">
+        <table>
+            <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>User ID</th>
+                <th>Carport Mål (B x L x H)</th>
+                <th>Dato</th>
+                <th>Total Pris</th>
+                <th>Status</th>
+                <th>Materialer</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.orderID}"></td>
+                <td th:text="${order.userID}"></td>
+                <td th:text="${order.carport.carportWidth} + ' x ' + ${order.carport.carportLength} + ' x ' + ${order.carport.carportHeight} + ' cm'"></td>
+                <td th:text="${order.date}"></td>
+                <td th:text="${order.totalPrice} + ' DKK'"></td>
+                <td th:text="${order.status}"></td>
+                <td>
+                    <div th:if="${order.billOfMaterials != null and !order.billOfMaterials.completeUnitMaterials.isEmpty}">
+                        <ul>
+                            <li th:each="material : ${order.billOfMaterials.completeUnitMaterials}">
+                                <span th:text="'Antal: ' + ${material.quantity} + ', Beskrivelse: ' + ${material.description}"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div th:unless="${order.billOfMaterials != null and !order.billOfMaterials.completeUnitMaterials.isEmpty}">
+                        Ingen materialer tilknyttet.
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:unless="${orders != null and !orders.isEmpty}">
+        <p>Ingen forespørgelser fundet.</p>
+    </div>
+</div>
 
 <footer>
     <div class="footer-content">
-        <p>&copy; 2025 Fog Carport. Alle rettigheder forbeholdes.</p>
+        <p>© 2025 Fog Carport. Alle rettigheder forbeholdes.</p>
     </div>
 </footer>
-
 </body>
 </html>
