@@ -25,11 +25,10 @@ public class Calculator {
 
     // Stolper
     private final Material post;
-    //private final int amountOfPosts;
 
-    /*
     // Remme
     private final Material beams;
+    /*
     private final int amountOfBeams;
 
     // Spær
@@ -50,18 +49,18 @@ public class Calculator {
     private List<CompleteUnitMaterial> orderMaterials = new ArrayList<CompleteUnitMaterial>();
 
 
-
-
     public Calculator(int width, int length, int height, ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
 
         this.width = width;
         this.length = length;
         this.height = height;
+
         this.post = getMaterialByID(POSTS);
-
-
         calculatePost();
+
+        this.beams = getMaterialByID(BEAMS);
+        calculateBeams();
 
 
 
@@ -81,14 +80,13 @@ public class Calculator {
         // Antal stolper
         int quantity = calculatePostAmount();
 
-        // Længde på stolper
+        orderMaterials.add(new CompleteUnitMaterial(quantity, "Stolper nedgraves 90 cm. i jord", post));
+
     }
 
     public int calculatePostAmount() {
         return 2 * (2 + (length - 130) / 340);
     }
-
-
 
 
 

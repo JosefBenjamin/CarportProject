@@ -6,17 +6,22 @@ public class CompleteUnitMaterial {
     private int quantity;
     private String description;
     private int ordersId;
-    private int MaterialLengthId;
+    private Material material;
 
 
-    public CompleteUnitMaterial(int cumId, int quantity, String description, int ordersId, int materialLengthId) {
+    public CompleteUnitMaterial(int cumId, int quantity, String description, int ordersId, Material material) {
         this.cumId = cumId;
         this.quantity = quantity;
         this.description = description;
         this.ordersId = ordersId;
-        MaterialLengthId = materialLengthId;
+        this.material = material;
     }
 
+    public CompleteUnitMaterial(int quantity, String description, Material material) {
+        this.quantity = quantity;
+        this.description = description;
+        this.material = material;
+    }
 
     public int getCumId() {
         return cumId;
@@ -50,12 +55,12 @@ public class CompleteUnitMaterial {
         this.ordersId = ordersId;
     }
 
-    public int getMaterialLengthId() {
-        return MaterialLengthId;
+    public Material getMaterial() {
+        return material;
     }
 
-    public void setMaterialLengthId(int materialLengthId) {
-        MaterialLengthId = materialLengthId;
+    public void setMaterial(Material material) {
+        this.material = material;
     }
 
     @Override
@@ -65,7 +70,7 @@ public class CompleteUnitMaterial {
                 ", quantity=" + quantity +
                 ", description='" + description + '\'' +
                 ", ordersId=" + ordersId +
-                ", MaterialLengthId=" + MaterialLengthId +
+                ", material=" + material +
                 '}';
     }
 }
