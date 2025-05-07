@@ -27,11 +27,13 @@ public class Calculator {
 
     // Remme
     private final List<Material> beams;
-    /*
+
 
 
     // Spær
     private final Material rafter;
+
+    /*
     private final int amountOfRafters;
 
     // Stern
@@ -60,6 +62,9 @@ public class Calculator {
 
         this.beams = getMaterialByID(BEAMS);
         selectsBeams();
+
+        this.rafter = getMaterialByID(RAFTERS).get(0);
+        calculateRafters();
 
         this.totalPrice = calculateTotalPrice();
 
@@ -187,6 +192,14 @@ public class Calculator {
 
     // Spær
     private void calculateRafters() {
+        // Checking how many 600 cm long rafters are needed for the width of the carport
+        int i = (int) Math.ceil(width / 600.0);
+
+        //Checking how many rafters are needed for the length of the carport, by dividing it by the max amount of space between
+        //rafters (60), and the width of a rafter (4.5). Then multiplying it with the amount needed for the width
+        int quantity = (int) Math.ceil(length / 64.5) * i;
+
+        orderMaterials.add(new CompleteUnitMaterial(quantity, "Spær, monteres på rem", rafter));
 
     }
 

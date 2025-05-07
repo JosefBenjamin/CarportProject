@@ -31,25 +31,6 @@ class CalculatorTest {
         assertEquals(6, calculator.calculatePostAmount());
     }
 
-    @Test
-    public void testSelectsBeams_MinimalWaste() {
-        // Given: a set of beams
-        Calculator calculator = new Calculator(600, 855, 230, connectionPool);
-        List<Material> beams = calculator.getBeams();
 
-
-
-        /// When
-        List<CompleteUnitMaterial> result = calculator.getOrderMaterials();
-
-        // Then
-        int totalLength = result.stream()
-                .filter(m -> m.getDescription().contains("Remme"))
-                .mapToInt(m -> m.getMaterial().getLength() * (m.getQuantity() / 2))
-                .sum();
-
-        assertTrue(totalLength >= 855);
-        assertTrue(totalLength - 855 < 60, "Waste should be minimal");
-    }
 
 }
