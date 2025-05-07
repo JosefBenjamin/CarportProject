@@ -108,20 +108,24 @@ public class Calculator {
     }
 
 
-
+    /**
+     * This method finds the best combination of beams while trying to have as little waste of material as possible.
+     *
+     */
     // Remme
     private void selectsBeams() {
         int remainingLength = this.length;
         List<Material> sortedBeams = new ArrayList<>(beams);
-        sortedBeams.sort((a, b) -> Integer.compare(a.getLength(), b.getLength()));
+        sortedBeams.sort((a, b) -> Integer.compare(a.getLength(), b.getLength())); //Sorts list by length in ascending order
 
-        List<Material> selectedBeams = new ArrayList<>();
+        List<Material> selectedBeams = new ArrayList<>(); // Will hold the chosen combination of beams
 
         while (remainingLength > 0) {
-            Material best1 = null, best2 = null;
+            Material best1 = null;
+            Material best2 = null;
             int bestTotal = Integer.MAX_VALUE;
 
-            for (Material m1 : sortedBeams) {
+            for (Material m1 : sortedBeams) { // Goes through every beam as the first candidate
                 int len1 = m1.getLength();
                 // Try single beam
                 if (len1 >= remainingLength && len1 < bestTotal) {
@@ -132,7 +136,7 @@ public class Calculator {
 
                 for (Material m2 : sortedBeams) {
                     int sum = len1 + m2.getLength();
-                    if (sum >= remainingLength && sum < bestTotal) {
+                    if (sum >= remainingLength && sum < bestTotal) { // Checks combination and waste to find the best one.
                         best1 = m1;
                         best2 = m2;
                         bestTotal = sum;
@@ -142,13 +146,10 @@ public class Calculator {
 
             if (best1 != null) {
                 selectedBeams.add(best1);
-                if (best2 != null) selectedBeams.add(best2);
+                if (best2 != null) {
+                    selectedBeams.add(best2);
+                }
                 remainingLength -= bestTotal;
-            } else {
-                // fallback: just pick the smallest
-                Material smallest = sortedBeams.get(0);
-                selectedBeams.add(smallest);
-                remainingLength -= smallest.getLength();
             }
         }
 
@@ -167,7 +168,7 @@ public class Calculator {
      *      the compute method of the hashmap gives us the opportunity to update a values for a specific key.
      *      The loop run through the selected beams, puts in the length of the material and checks the CompleteUnitMaterial.
      *      If it's null (there isn't a completeUnitMaterial) we put it in as a value.
-     *      The compute is there if we have beams with the same length. So if the second beam is the same as the first one.
+     *      The grouped.compute is there if we have beams with the same length. So if the second beam is the same as the first one.
      *      cum is not null and will then jumnp to the else statement, which just adds the quantity of the already
      *      added CompleteUnitMaterial.
      */
