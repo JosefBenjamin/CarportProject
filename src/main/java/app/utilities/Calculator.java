@@ -7,10 +7,7 @@ import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.MaterialMapper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Calculator {
     private ConnectionPool connectionPool;
@@ -45,7 +42,6 @@ public class Calculator {
     private final Material roof;
     private final int amountOfRoofs;
 
-    private final float totalPrice;
     */
 
     private final double totalPrice;
@@ -110,51 +106,56 @@ public class Calculator {
     }
 
 
-    /**
-     *sortedBeams.sort((a,b) -> Integer.compare(b.getLength(), a.getLength()));
-     * Sorts the sortedBeams list in length integers. Looks at 2 beams compares. It sorts them from longest to smallest
-     *
-     * While loop:
-     * Checks the beam list (Starts with longest) Checks if it's under or equal to the length of the carport.
-     * Then adds it to a new list and takes that beam length from the carport length, so we can see how much is remaining.
-     * remainingLength is now lesser. If a beam isn't found (it goes over the remainingLength).
-     * it will force in the smallest beam. We expect the customer to saw off what is needed.
-     *
-     * Final bit:
-     * the compute method of the hashmap gives us the opportunity to update a values for a specific key.
-     * The loop run through the selected beams, puts in the length of the material and checks the CompleteUnitMaterial.
-     * If it's null (there isn't a completeUnitMaterial) we put it in as a value.
-     * The compute is there if we have beams with the same length. So if the second beam is the same as the first one.
-     * cum is not null and will then jumnp to the else statement, which just adds the quantity of the already
-     * added CompleteUnitMaterial.
-     */
+
     // Remme
     private void selectsBeams() {
         int remainingLength = this.length;
         List<Material> sortedBeams = new ArrayList<>(beams);
-        sortedBeams.sort((a,b) -> Integer.compare(b.getLength(), a.getLength()));
+        sortedBeams.sort((a, b) -> Integer.compare(a.getLength(), b.getLength()));
 
         List<Material> selectedBeams = new ArrayList<>();
 
         while (remainingLength > 0) {
-            boolean found = false;
-            for (Material beam : sortedBeams) {
-                if (beam.getLength() <= remainingLength) {
-                    selectedBeams.add(beam);
-                    remainingLength -= beam.getLength();
-                    found = true;
-                    break;
+            Material best1 = null, best2 = null;
+            int bestTotal = Integer.MAX_VALUE;
+
+            for (Material m1 : sortedBeams) {
+                int len1 = m1.getLength();
+                // Try single beam
+                if (len1 >= remainingLength && len1 < bestTotal) {
+                    best1 = m1;
+                    best2 = null;
+                    bestTotal = len1;
+                }
+
+                for (Material m2 : sortedBeams) {
+                    int sum = len1 + m2.getLength();
+                    if (sum >= remainingLength && sum < bestTotal) {
+                        best1 = m1;
+                        best2 = m2;
+                        bestTotal = sum;
+                    }
                 }
             }
 
-            if (!found) {
-                Material smallest = sortedBeams.get(sortedBeams.size() - 1);
+            if (best1 != null) {
+                selectedBeams.add(best1);
+                if (best2 != null) selectedBeams.add(best2);
+                remainingLength -= bestTotal;
+            } else {
+                // fallback: just pick the smallest
+                Material smallest = sortedBeams.get(0);
                 selectedBeams.add(smallest);
                 remainingLength -= smallest.getLength();
             }
         }
+
         calculateBeamAmount(selectedBeams);
     }
+
+
+
+
 
     /**
      *
