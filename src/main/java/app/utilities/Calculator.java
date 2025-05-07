@@ -28,20 +28,17 @@ public class Calculator {
     // Remme
     private final List<Material> beams;
 
-
-
     // Spær
     private final Material rafter;
 
     /*
-    private final int amountOfRafters;
-
     // Stern
     private final Material stern
     private final int amount of sterns
 
+
     // Tag
-    private final Material roof;
+    private final List<Material> roof;
     private final int amountOfRoofs;
 
     */
@@ -190,6 +187,17 @@ public class Calculator {
         orderMaterials.addAll(grouped.values());
     }
 
+    /**
+     * First equation:
+     * Checks how many 600 cm long rafters that are needed for the width of the carport.
+     * So how many are needed to get from one side of the carport to the other.
+     * Math.ceil always rounds up and return and integer.
+     *
+     * Second equation:
+     * Check how man rafters (if have two 600 cm long rafters, then how many of those) are needed for the length of the carport.
+     * Divides the max amount of space between rafters (60) and it's width (4.5).
+     * Then multiplies by the quantity needed for its width.
+     */
     // Spær
     private void calculateRafters() {
         // Checking how many 600 cm long rafters are needed for the width of the carport
