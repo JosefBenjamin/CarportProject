@@ -62,9 +62,9 @@ public class Material {
         this.length = length;
     }
 
-    public int getLengthID(ConnectionPool connectionPool) {
+    /*public int getLengthID(ConnectionPool connectionPool) {
         MaterialMapper.getLengthID(this.materialID, this.length, connectionPool);
-    }
+    }*/
 
 
     @Override

@@ -59,6 +59,7 @@ public class CarportMakerController {
 
     }
 
+
     private static void sendAndSaveCarportQuery(Context ctx, ConnectionPool connectionPool) {
         if (ctx.sessionAttribute("currentUser") == null) {
             ctx.sessionAttribute("loginRequired", true);
@@ -73,11 +74,14 @@ public class CarportMakerController {
         User user = ctx.sessionAttribute("currentUser");
 
         Calculator calculator = new Calculator(carport.getCarportWidth(), carport.getCarportLength(), carport.getCarportHeight(), connectionPool);
-
-        OrderMapper.registerOrder(user.getUserID(), carport.getCarportWidth(), carport.getCarportLength(), carport.getCarportHeight(),
-                calculator.getTotalPrice(), 1, connectionPool);
-
-        int newOrderID = OrderMapper.getOrderID(user.getUserID(), connectionPool);
+        int newOrderID;
+        try {
+            newOrderID = OrderMapper.registerOrder(user.getUserID(), carport.getCarportWidth(), carport.getCarportLength(), carport.getCarportHeight(),
+                    calculator.getTotalPrice(), 1, connectionPool);
+        } catch (DatabaseException e) {
+            ctx.attribute("message", "Noget gik galt i at gemme din forespørgsel");
+            return;
+        }
 
         List<CompleteUnitMaterial> billOfMaterials = calculator.getOrderMaterials();
         for(CompleteUnitMaterial material: billOfMaterials) {
