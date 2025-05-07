@@ -16,6 +16,7 @@ public class Calculator {
     private static final int POSTS = 6;
     private static final int BEAMS = 5;
     private static final int RAFTERS = 5;
+    private static final int ROOFS =
 
     // Carport dimensions
     private final int width;
@@ -35,13 +36,13 @@ public class Calculator {
     // Stern
     private final Material stern
     private final int amount of sterns
-
+*/
 
     // Tag
     private final List<Material> roof;
-    private final int amountOfRoofs;
+    private final int roofWidth = 109;
 
-    */
+
 
     private final double totalPrice;
     private final List<CompleteUnitMaterial> orderMaterials = new ArrayList<CompleteUnitMaterial>();
