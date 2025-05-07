@@ -2,13 +2,17 @@ package app.controllers;
 
 import app.Main;
 import app.entities.Carport;
+import app.entities.CompleteUnitMaterial;
+import app.entities.User;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
+import app.persistence.OrderMapper;
 import app.utilities.Calculator;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 public class CarportMakerController {
@@ -60,6 +64,24 @@ public class CarportMakerController {
             ctx.sessionAttribute("loginRequired", true);
             ctx.redirect("/carport-form");
             return;
+        }
+        int carportLength = Integer.parseInt(ctx.formParam("length"));
+        int carportWidth = Integer.parseInt(ctx.formParam("width"));
+
+        Carport carport = new Carport(carportWidth, carportLength);
+
+        User user = ctx.sessionAttribute("currentUser");
+
+        Calculator calculator = new Calculator(carport.getCarportWidth(), carport.getCarportLength(), carport.getCarportHeight(), connectionPool);
+
+        OrderMapper.registerOrder(user.getUserID(), carport.getCarportWidth(), carport.getCarportLength(), carport.getCarportHeight(),
+                calculator.getTotalPrice(), 1, connectionPool);
+
+        int newOrderID = OrderMapper.getOrderID(user.getUserID(), connectionPool);
+
+        List<CompleteUnitMaterial> billOfMaterials = calculator.getOrderMaterials();
+        for(CompleteUnitMaterial material: billOfMaterials) {
+            OrderMapper.registerCUMToOrder(material.getQuantity(), newOrderID, material.getMaterial().getLengthID(connectionPool))
         }
 
         ctx.attribute("orderSend", true);

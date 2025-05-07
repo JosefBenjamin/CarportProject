@@ -211,10 +211,6 @@ public class Calculator {
 
     }
 
-    public List<CompleteUnitMaterial> getOrderMaterials() {
-        return orderMaterials;
-    }
-
     /**
      * totalPrice equation:
      * Material length / 100 <- divides by 100 to get the length(cm) in meters
@@ -237,5 +233,9 @@ public class Calculator {
 
     public double getTotalPrice() {
         return totalPrice;
+    }
+
+    public List<CompleteUnitMaterial> getOrderMaterials() {
+        return orderMaterials;
     }
 }

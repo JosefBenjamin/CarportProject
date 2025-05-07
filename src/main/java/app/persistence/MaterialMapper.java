@@ -44,4 +44,26 @@ public class MaterialMapper {
         return materials;
     }
 
+    public static int getLengthID(int materialID, int length, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "SELECT ml_id FROM material_length" +
+                " WHERE material_id = ? AND length = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+             ps.setInt(1, materialID);
+             ps.setInt(2, length);
+
+             try (ResultSet rs = ps.executeQuery()) {
+                 if (rs.next()) {
+                     return rs.getInt("ml_id");
+                 }
+             }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error fetching materials by length", e);
+        }
+        return 0;
+    }
+
 }

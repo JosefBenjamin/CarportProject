@@ -1,5 +1,9 @@
 package app.entities;
 
+import app.exceptions.DatabaseException;
+import app.persistence.ConnectionPool;
+import app.persistence.MaterialMapper;
+
 public class Material {
 
     private int materialID;
@@ -57,6 +61,11 @@ public class Material {
     public void setLength(int length) {
         this.length = length;
     }
+
+    public int getLengthID(ConnectionPool connectionPool) {
+        MaterialMapper.getLengthID(this.materialID, this.length, connectionPool);
+    }
+
 
     @Override
     public String toString() {
