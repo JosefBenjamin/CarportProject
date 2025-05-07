@@ -81,7 +81,7 @@ public class CarportMakerController {
 
         List<CompleteUnitMaterial> billOfMaterials = calculator.getOrderMaterials();
         for(CompleteUnitMaterial material: billOfMaterials) {
-            OrderMapper.registerCUMToOrder(material.getQuantity(), newOrderID, material.getMaterial().getLengthID(connectionPool))
+            //OrderMapper.registerCUMToOrder(material.getQuantity(), newOrderID, material.getMaterial().getLengthID(connectionPool))
         }
 
         ctx.attribute("orderSend", true);
