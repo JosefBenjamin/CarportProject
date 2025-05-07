@@ -5,6 +5,7 @@ public class CompleteUnitMaterial {
     private int cumId;
     private int quantity;
     private String description;
+    private String materialName;
     private int ordersId;
     private int MaterialLengthId;
     private int msdId;
@@ -18,9 +19,10 @@ public class CompleteUnitMaterial {
         this.MaterialLengthId = materialLengthId;
     }
 
-    public CompleteUnitMaterial(int cumId, int quantity, int ordersId, int mlId, int msdId) {
+    public CompleteUnitMaterial(int cumId, int quantity, String materialName, int ordersId, int mlId, int msdId) {
         this.cumId = cumId;
         this.quantity = quantity;
+        this.materialName = materialName;
         this.ordersId = ordersId;
         this.MaterialLengthId = mlId;
         this.msdId = msdId;
@@ -52,6 +54,14 @@ public class CompleteUnitMaterial {
         this.description = description;
     }
 
+    public String getMaterialName() {
+        return materialName;
+    }
+
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
+    }
+
     public int getOrdersId() {
         return ordersId;
     }
@@ -66,6 +76,14 @@ public class CompleteUnitMaterial {
 
     public void setMaterialLengthId(int materialLengthId) {
         MaterialLengthId = materialLengthId;
+    }
+
+    public int getMsdId() {
+        return msdId;
+    }
+
+    public void setMsdId(int msdId) {
+        this.msdId = msdId;
     }
 
     @Override

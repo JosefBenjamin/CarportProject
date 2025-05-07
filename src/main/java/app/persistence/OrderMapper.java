@@ -15,6 +15,27 @@ import java.util.Map;
 
 public class OrderMapper {
 
+    public static Map<Integer, String> getDescriptions(ConnectionPool connectionPool) throws DatabaseException {
+        Map<Integer, String> descriptions = new HashMap<>();
+        String descriptionSql = "SELECT msd_id, description FROM public.material_setup_descriptions";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(descriptionSql)) {
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int msdId = rs.getInt("msd_id");
+                String description = rs.getString("description");
+                descriptions.put(msdId, description);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DatabaseException("Error fetching material setup descriptions", e);
+        }
+
+        return descriptions;
+    }
+
     public static List<Order> getAllOrdersWithDetails(ConnectionPool connectionPool) throws DatabaseException {
         List<Order> orders = new ArrayList<>();
         Map<Integer, List<CompleteUnitMaterial>> orderMaterialsMap = new HashMap<>();
@@ -22,8 +43,11 @@ public class OrderMapper {
         String orderSql = "SELECT order_id, user_id, carport_width, carport_length, carport_height, date, total_price, status FROM public.orders";
 
         String materialSql = """
-                SELECT cum.cum_id, cum.quantity, cum.orders_id, cum.ml_id, cum.ms_description_id
+                SELECT cum.cum_id, cum.quantity, cum.orders_id, cum.ml_id, cum.ms_description_id,
+                       m.name AS material_name
                 FROM public.complete_unit_material cum
+                JOIN public.material_length ml ON cum.ml_id = ml.ml_id
+                JOIN public.materials m ON ml.material_id = m.material_id
                 WHERE cum.orders_id = ?
                 """;
 
@@ -54,10 +78,12 @@ public class OrderMapper {
                     while (materialRs.next()) {
                         int cumId = materialRs.getInt("cum_id");
                         int quantity = materialRs.getInt("quantity");
+                        int ordersId = materialRs.getInt("orders_id");
                         int mlId = materialRs.getInt("ml_id");
                         int msdId = materialRs.getInt("ms_description_id");
+                        String materialName = materialRs.getString("material_name");
 
-                        CompleteUnitMaterial cum = new CompleteUnitMaterial(cumId, quantity, orderId, mlId, msdId);
+                        CompleteUnitMaterial cum = new CompleteUnitMaterial(cumId, quantity, materialName, ordersId, mlId, msdId);
                         materials.add(cum);
                     }
                     orderMaterialsMap.put(orderId, materials);
