@@ -40,7 +40,7 @@ public class Calculator {
 
     // Tag
     private final List<Material> roof;
-    private final int roofWidth = 109;
+    private final int roofPanelWidth = 109;
 
 
 
@@ -65,7 +65,7 @@ public class Calculator {
         calculateRafters();
 
         this.roof = getMaterialByID(ROOFS);
-        calculateRoof();
+        selectsRoof();
 
         this.totalPrice = calculateTotalPrice();
 
@@ -169,28 +169,35 @@ public class Calculator {
      * @param selectedBeams A list of selected beams with the right lengths.
      *
      *                      Final bit:
-     *      the compute method of the hashmap gives us the opportunity to update a values for a specific key.
+     *
      *      The loop run through the selected beams, puts in the length of the material and checks the CompleteUnitMaterial.
-     *      If it's null (there isn't a completeUnitMaterial) we put it in as a value.
-     *      The grouped.compute is there if we have beams with the same length. So if the second beam is the same as the first one.
-     *      cum is not null and will then jumnp to the else statement, which just adds the quantity of the already
-     *      added CompleteUnitMaterial.
+     *      If its length isn't there. The the material will be added as a CompleteUnitMaterial
+     *      The if-statement is there so if we have beams with the same length. So if the second beam is the same as the first one.
+     *      It just adds the quantity of the already added CompleteUnitMaterial.
      */
 
     private void calculateBeamAmount(List<Material> selectedBeams) {
+        // Map to store beam length as key and the CompleteUnitMaterial as value
         Map<Integer, CompleteUnitMaterial> grouped = new HashMap<>();
+
         for (Material m : selectedBeams) {
-            grouped.compute(m.getLength(), (len, cum) -> {
-                if (cum == null) {
-                    return new CompleteUnitMaterial(2, "Remme i sider, sadles ned i stolper", m);
-                } else {
-                    cum.setQuantity(cum.getQuantity() + 2);
-                    return cum;
-                }
-            });
+            int length = m.getLength();
+
+            // If this beam length hasn't been added yet
+            if (!grouped.containsKey(length)) {
+                CompleteUnitMaterial newItem = new CompleteUnitMaterial(2, "Remme i sider, sadles ned i stolper", m);
+                grouped.put(length, newItem);
+            } else {
+                // If this length is already added, just increase its quantity
+                CompleteUnitMaterial existingItem = grouped.get(length);
+                int currentQuantity = existingItem.getQuantity();
+                existingItem.setQuantity(currentQuantity + 2);
+            }
         }
+        // Add all the collected materials to the order
         orderMaterials.addAll(grouped.values());
     }
+
 
     /**
      * Decided only to have one length for the rafters (600 cm)
@@ -216,53 +223,83 @@ public class Calculator {
 
     }
 
+    /**
+     * Finds the roof panels needed across the carports length.
+     * Out of our roof lengths: 600, 480, 360. Which are needed across a carport length
+     * Will find the longest that can fit and then find others until the remainLength hits 0.
+     * If we can find a perfect fit, it will pick the smallest roof panel (will have the least waste to it)
+     */
     // Tag
-    private void calculateRoof() {
-        // Identify the three types of roof panels
-        Material panel600 = roof.stream().filter(m -> m.getLength() == 600).findFirst()
-                .orElseThrow(() -> new IllegalStateException("Missing 600 cm roof panel."));
-        Material panel480 = roof.stream().filter(m -> m.getLength() == 480).findFirst()
-                .orElseThrow(() -> new IllegalStateException("Missing 480 cm roof panel."));
-        Material panel360 = roof.stream().filter(m -> m.getLength() == 360).findFirst()
-                .orElseThrow(() -> new IllegalStateException("Missing 360 cm roof panel."));
+    private void selectsRoof() {
+        List<Material> panels = new ArrayList<>(roof);
+        panels.sort((a, b) -> Integer.compare(b.getLength(), a.getLength())); // Sorts roof materials by length. Descending order.
 
-        List<Material> panels = List.of(panel600, panel480, panel360);
 
-        int panelsInWidth = (int) Math.ceil((double) width / roofWidth);
 
-        List<Material> selectedPanelsForLength = new ArrayList<>();
+        List<Material> selectedPanelsForLength = new ArrayList<>(); // Determine arrangement along the length
         int remainingLength = length;
 
         while (remainingLength > 0) {
-            boolean added = false;
+            boolean panelAdded = false;
+
+            // Try to fit the longest possible panel first
             for (Material panel : panels) {
                 if (remainingLength >= panel.getLength()) {
                     selectedPanelsForLength.add(panel);
                     remainingLength -= panel.getLength();
-                    added = true;
+                    panelAdded = true;
                     break;
                 }
             }
 
-            // If none of the panels fit, choose the one with the least waste
-            if (!added) {
-                Material bestFit = panels.stream()
-                        .min(Comparator.comparingInt(p -> Math.abs(p.getLength() - remainingLength)))
-                        .orElse(panel360); // fallback
-                selectedPanelsForLength.add(bestFit);
+            // If nothing fits, use the smallest panel (least waste)
+            if (!panelAdded) {
+                selectedPanelsForLength.add(panels.get(panels.size() - 1));
                 break;
             }
         }
+        calculateRoofAmount(selectedPanelsForLength);
 
+    }
+
+    /**
+     *
+     * @param selectedPanelsForLength List of roof panels picked for a carport length.
+     *                                We now need to find how many of that combination we need.
+     *
+     * First equation:
+     * Calculates how many panels we need across the carport width.
+     *
+     * First for loop:
+     * Goes thought the picked list and puts them in a hashmap with the quantity ( how many we need across the carport width).
+     * If there are duplicates (2 with 600 length for example) add to the quantity.
+     */
+    private void calculateRoofAmount(List<Material> selectedPanelsForLength) {
+        // Calculate how many panels are needed across the width of the carport
+        int panelsInWidth = (int) Math.ceil((double) width / roofPanelWidth);
+
+        // Create a map to count how many of each panel type we need
         Map<Material, Integer> grouped = new HashMap<>();
+
         for (Material m : selectedPanelsForLength) {
-            grouped.compute(m, (mat, existing) -> (existing == null) ? panelsInWidth : existing + panelsInWidth);
+            // If this panel type hasn't been added yet, put it in the map
+            if (!grouped.containsKey(m)) {
+                grouped.put(m, panelsInWidth);
+            } else {
+                // If it already exists, add more panels
+                int currentCount = grouped.get(m);
+                grouped.put(m, currentCount + panelsInWidth);
+            }
         }
 
+        // Add all the counted panels to the order materials list
         for (Map.Entry<Material, Integer> entry : grouped.entrySet()) {
-            orderMaterials.add(new CompleteUnitMaterial(entry.getValue(), "Tagplader monteres på spær", entry.getKey()));
+            int quantity = entry.getValue();
+            Material material = entry.getKey();
+            orderMaterials.add(new CompleteUnitMaterial(quantity, "Tagplader monteres på spær", material));
         }
     }
+
 
 
 
