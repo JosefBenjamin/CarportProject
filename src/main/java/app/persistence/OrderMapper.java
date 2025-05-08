@@ -32,25 +32,10 @@ public class OrderMapper {
                 }
             }
             } catch (SQLException e) {
-                throw new DatabaseException("Databaserror registering carport query", e);
+                throw new DatabaseException("Database error registering carport query", e);
             }
         return 0;
 
     }
 
-    public static int getOrderID(int userID, ConnectionPool connectionPool) {
-        String sql = "SELECT * FROM orders WHERE user_id = ? ORDER BY order_id DESC LIMIT 1";
-
-        try (Connection conn = connectionPool.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, (userID));
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("order_id");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
 }

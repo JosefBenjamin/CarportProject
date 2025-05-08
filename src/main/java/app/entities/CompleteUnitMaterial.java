@@ -1,5 +1,9 @@
 package app.entities;
 
+import app.exceptions.DatabaseException;
+import app.persistence.CompleteUnitMaterialMapper;
+import app.persistence.ConnectionPool;
+
 public class CompleteUnitMaterial {
 
     private int cumId;
@@ -61,6 +65,14 @@ public class CompleteUnitMaterial {
 
     public void setMaterial(Material material) {
         this.material = material;
+    }
+
+    public int getDescriptionId(ConnectionPool connectionPool) {
+        try {
+            return CompleteUnitMaterialMapper.getDescriptionId(this.description, connectionPool);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -16,7 +16,7 @@ public class Calculator {
     private static final int POSTS = 6;
     private static final int BEAMS = 5;
     private static final int RAFTERS = 5;
-    private static final int ROOFS =
+    private static final int ROOFS = 8;
 
     // Carport dimensions
     private final int width;
@@ -39,7 +39,7 @@ public class Calculator {
 */
 
     // Tag
-    private final List<Material> roof;
+    //private final List<Material> roof;
     private final int roofWidth = 109;
 
 
@@ -179,7 +179,7 @@ public class Calculator {
         for (Material m : selectedBeams) {
             grouped.compute(m.getLength(), (len, cum) -> {
                 if (cum == null) {
-                    return new CompleteUnitMaterial(2, "Remme i sider, sadles ned i stopler", m);
+                    return new CompleteUnitMaterial(2, "Remme i sider, sadles ned i stolper", m);
                 } else {
                     cum.setQuantity(cum.getQuantity() + 2);
                     return cum;

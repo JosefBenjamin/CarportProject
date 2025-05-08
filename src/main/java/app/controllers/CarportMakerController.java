@@ -5,6 +5,7 @@ import app.entities.Carport;
 import app.entities.CompleteUnitMaterial;
 import app.entities.User;
 import app.exceptions.DatabaseException;
+import app.persistence.CompleteUnitMaterialMapper;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.utilities.Calculator;
@@ -85,7 +86,12 @@ public class CarportMakerController {
 
         List<CompleteUnitMaterial> billOfMaterials = calculator.getOrderMaterials();
         for(CompleteUnitMaterial material: billOfMaterials) {
-            //OrderMapper.registerCUMToOrder(material.getQuantity(), newOrderID, material.getMaterial().getLengthID(connectionPool))
+            try {
+                CompleteUnitMaterialMapper.registerCUMToOrder(material.getQuantity(), newOrderID, material.getMaterial().getLengthID(connectionPool),
+                        material.getDescriptionId(connectionPool), connectionPool);
+            } catch (DatabaseException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         ctx.attribute("orderSend", true);
