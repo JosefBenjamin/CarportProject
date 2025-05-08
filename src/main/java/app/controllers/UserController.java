@@ -1,6 +1,5 @@
 package app.controllers;
 
-import app.Main;
 import app.entities.User;
 import app.entities.ZipCode;
 import app.exceptions.DatabaseException;
@@ -14,14 +13,14 @@ import java.util.logging.Logger;
 
 public class UserController {
 
-    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
 
     public static void routes(Javalin app, ConnectionPool connectionPool) {
         app.get("/register", ctx -> ctx.render("register.html")); // show register page
         app.post("/register", ctx -> register(ctx, connectionPool)); // handle form submission
         app.get("/login", ctx -> ctx.render("login.html"));  // show login page
         app.post("/login", ctx -> login(ctx, connectionPool));   // handle login request
-
+        app.get("/logout", ctx -> logout(ctx, connectionPool));
     }
 
 
@@ -121,7 +120,7 @@ public class UserController {
             String matchedCity = ZipCodeMapper.getCityByZip(zipInt, connectionPool);
 
             // zip exists but with different city
-            if (matchedCity != null && !matchedCity.equalsIgnoreCase(city)) {
+            if ((matchedCity != null) && (!matchedCity.equalsIgnoreCase(city))) {
                 saveAttributes(ctx, email, tlf, address, zip, city);
                 ctx.attribute("message", "Postnummeret findes allerede med en anden by.");
                 ctx.render("register.html");
@@ -129,7 +128,7 @@ public class UserController {
             }
 
             // city exists but with different zip
-            if (matchedZip != null && matchedZip != zipInt) {
+            if ((matchedZip != null) && (matchedZip != zipInt)) {
                 saveAttributes(ctx, email, tlf, address, zip, city);
                 ctx.attribute("message", "Byen findes allerede med et andet postnummer.");
                 ctx.render("register.html");
@@ -155,6 +154,8 @@ public class UserController {
             ctx.sessionAttribute("savedEmail", null);
             ctx.sessionAttribute("savedPhone", null);
             ctx.sessionAttribute("savedAddress", null);
+            ctx.sessionAttribute("savedZip", null);
+            ctx.sessionAttribute("savedCity", null);
             ctx.redirect("/login");
         } catch (DatabaseException e) {
             ctx.attribute("message", "Noget gik galt under oprettelsen: " + e.getCause());
@@ -201,5 +202,9 @@ public class UserController {
         }
     }
 
+    public static void logout(Context ctx, ConnectionPool connectionPool) {
+        ctx.sessionAttribute("currentUser", null);
+        ctx.redirect("/");
+    }
 
 }

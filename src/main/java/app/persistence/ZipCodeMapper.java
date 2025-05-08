@@ -23,7 +23,7 @@ public class ZipCodeMapper {
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setInt(1, zip);
-            ps.setString(2, city);
+            ps.setString(2, city.trim().toUpperCase());
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -54,7 +54,7 @@ public class ZipCodeMapper {
                  PreparedStatement ps = connection.prepareStatement(sql)) {
 
                 ps.setInt(1, zip);
-                ps.setString(2, city);
+                ps.setString(2, city.trim().toUpperCase());
 
                 try (ResultSet rs = ps.executeQuery()) {
                     return rs.next(); // If a row exists return true, false if no row exists
@@ -89,7 +89,7 @@ public class ZipCodeMapper {
           try (Connection connection = connectionPool.getConnection();
                PreparedStatement ps = connection.prepareStatement(sql)) {
 
-              ps.setString(1, city);
+              ps.setString(1, city.trim().toUpperCase());
 
               try (ResultSet rs = ps.executeQuery()) {
                   if (rs.next()) {
