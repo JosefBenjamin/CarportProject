@@ -39,7 +39,7 @@ public class Calculator {
 */
 
     // Tag
-    //private final List<Material> roof;
+    private final List<Material> roof;
     private final int roofWidth = 109;
 
 
@@ -63,6 +63,9 @@ public class Calculator {
 
         this.rafter = getMaterialByID(RAFTERS).get(0);
         calculateRafters();
+
+        this.roof = getMaterialByID(ROOFS);
+        calculateRoof();
 
         this.totalPrice = calculateTotalPrice();
 
@@ -212,6 +215,61 @@ public class Calculator {
         orderMaterials.add(new CompleteUnitMaterial(quantity, "Spær, monteres på rem", rafter));
 
     }
+
+    // Tag
+    private void calculateRoof() {
+        // Identify the three types of roof panels
+        Material panel600 = roof.stream().filter(m -> m.getLength() == 600).findFirst()
+                .orElseThrow(() -> new IllegalStateException("Missing 600 cm roof panel."));
+        Material panel480 = roof.stream().filter(m -> m.getLength() == 480).findFirst()
+                .orElseThrow(() -> new IllegalStateException("Missing 480 cm roof panel."));
+        Material panel360 = roof.stream().filter(m -> m.getLength() == 360).findFirst()
+                .orElseThrow(() -> new IllegalStateException("Missing 360 cm roof panel."));
+
+        List<Material> panels = List.of(panel600, panel480, panel360);
+
+        int panelsInWidth = (int) Math.ceil((double) width / roofWidth);
+
+        List<Material> selectedPanelsForLength = new ArrayList<>();
+        int remainingLength = length;
+
+        while (remainingLength > 0) {
+            boolean added = false;
+            for (Material panel : panels) {
+                if (remainingLength >= panel.getLength()) {
+                    selectedPanelsForLength.add(panel);
+                    remainingLength -= panel.getLength();
+                    added = true;
+                    break;
+                }
+            }
+
+            // If none of the panels fit, choose the one with the least waste
+            if (!added) {
+                Material bestFit = panels.stream()
+                        .min(Comparator.comparingInt(p -> Math.abs(p.getLength() - remainingLength)))
+                        .orElse(panel360); // fallback
+                selectedPanelsForLength.add(bestFit);
+                break;
+            }
+        }
+
+        Map<Material, Integer> grouped = new HashMap<>();
+        for (Material m : selectedPanelsForLength) {
+            grouped.compute(m, (mat, existing) -> (existing == null) ? panelsInWidth : existing + panelsInWidth);
+        }
+
+        for (Map.Entry<Material, Integer> entry : grouped.entrySet()) {
+            orderMaterials.add(new CompleteUnitMaterial(entry.getValue(), "Tagplader monteres på spær", entry.getKey()));
+        }
+    }
+
+
+
+
+
+
+
 
     /**
      * totalPrice equation:
