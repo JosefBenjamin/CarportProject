@@ -234,8 +234,6 @@ public class Calculator {
         List<Material> panels = new ArrayList<>(roof);
         panels.sort((a, b) -> Integer.compare(b.getLength(), a.getLength())); // Sorts roof materials by length. Descending order.
 
-
-
         List<Material> selectedPanelsForLength = new ArrayList<>(); // Determine arrangement along the length
         int remainingLength = length;
 
@@ -259,7 +257,6 @@ public class Calculator {
             }
         }
         calculateRoofAmount(selectedPanelsForLength);
-
     }
 
     /**
