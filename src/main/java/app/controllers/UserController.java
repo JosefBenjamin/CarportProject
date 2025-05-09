@@ -19,7 +19,8 @@ public class UserController {
         app.get("/register", ctx -> ctx.render("register.html")); // show register page
         app.post("/register", ctx -> register(ctx, connectionPool)); // handle form submission
         app.get("/login", ctx -> ctx.render("login.html"));  // show login page
-        app.post("/login", ctx -> login(ctx, connectionPool));   // handle login request
+        app.post("/login", ctx -> login(ctx, connectionPool));// handle login request
+        app.get("/carportmaker", ctx -> ctx.render("carportmaker.html"));
 
     }
 

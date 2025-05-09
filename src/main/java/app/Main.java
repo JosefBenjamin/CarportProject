@@ -3,6 +3,7 @@ package app;
 
 import app.config.SessionConfig;
 import app.config.ThymeleafConfig;
+import app.controllers.CarportMakerController;
 import app.controllers.UserController;
 import app.persistence.ConnectionPool;
 import io.javalin.Javalin;
@@ -21,6 +22,7 @@ public class Main {
     private static final String DB = "cupcake";
 
     public static final ConnectionPool connectionPool = ConnectionPool.getInstance(USER, PASSWORD, URL, DB);
+
 
     public static void main(String[] args) {
         Javalin app = Javalin.create(config -> {
@@ -46,6 +48,7 @@ public class Main {
         });
 
         UserController.routes(app, connectionPool);
+        CarportMakerController.routes(app, connectionPool);
 
     }
 
