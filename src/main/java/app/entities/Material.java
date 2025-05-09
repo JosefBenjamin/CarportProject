@@ -2,13 +2,15 @@ package app.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import app.exceptions.DatabaseException;
+import app.persistence.ConnectionPool;
+import app.persistence.MaterialMapper;
 
 public class Material {
 
     private int materialId;
     private String name;
     private String unitName;
-    private double price;
     private double meterPrice;
     private int length;
     private List<Integer> lengths;
@@ -17,7 +19,7 @@ public class Material {
         this.materialId = materialId;
         this.name = name;
         this.unitName = unitName;
-        this.price = price;
+        this.meterPrice = price;
         this.length = length;
     }
 
@@ -28,6 +30,7 @@ public class Material {
         this.meterPrice = meterPrice;
         this.lengths = new ArrayList<>();
     }
+
 
     public int getMaterialID() {
         return materialId;
@@ -53,12 +56,12 @@ public class Material {
         this.unitName = unitName;
     }
 
-    public double getPrice() {
-        return price;
+    public double getMeterPrice() {
+        return meterPrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setMeterPrice(double meterPrice) {
+        this.meterPrice = meterPrice;
     }
 
     public double getMeterPrice() {
@@ -77,6 +80,7 @@ public class Material {
         this.length = length;
     }
 
+
     public List<Integer> getLengths() {
         return lengths;
     }
@@ -89,13 +93,22 @@ public class Material {
         this.lengths.add(length);
     }
 
+    public int getLengthID(ConnectionPool connectionPool) {
+        try {
+            return MaterialMapper.getLengthID(this.materialID, this.length, connectionPool);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     @Override
     public String toString() {
         return "Material{" +
                 "materialID=" + materialId +
                 ", name='" + name + '\'' +
                 ", unitName='" + unitName + '\'' +
-                ", price=" + price +
+                ", meterPrice=" + meterPrice +
                 ", length=" + length +
                 '}';
     }

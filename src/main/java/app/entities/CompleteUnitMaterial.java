@@ -1,5 +1,9 @@
 package app.entities;
 
+import app.exceptions.DatabaseException;
+import app.persistence.CompleteUnitMaterialMapper;
+import app.persistence.ConnectionPool;
+
 public class CompleteUnitMaterial {
 
     private int cumId;
@@ -9,9 +13,10 @@ public class CompleteUnitMaterial {
     private int ordersId;
     private int MaterialLengthId;
     private int msdId;
+    private Material material;
 
 
-    public CompleteUnitMaterial(int cumId, int quantity, String description, int ordersId, int materialLengthId) {
+    public CompleteUnitMaterial(int cumId, int quantity, String description, int ordersId, Material material) {
         this.cumId = cumId;
         this.quantity = quantity;
         this.description = description;
@@ -26,8 +31,14 @@ public class CompleteUnitMaterial {
         this.ordersId = ordersId;
         this.MaterialLengthId = mlId;
         this.msdId = msdId;
+        this.material = material;
     }
 
+    public CompleteUnitMaterial(int quantity, String description, Material material) {
+        this.quantity = quantity;
+        this.description = description;
+        this.material = material;
+    }
 
 
     public int getCumId() {
@@ -70,12 +81,20 @@ public class CompleteUnitMaterial {
         this.ordersId = ordersId;
     }
 
-    public int getMaterialLengthId() {
-        return MaterialLengthId;
+    public Material getMaterial() {
+        return material;
     }
 
-    public void setMaterialLengthId(int materialLengthId) {
-        MaterialLengthId = materialLengthId;
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
+    public int getDescriptionId(ConnectionPool connectionPool) {
+        try {
+            return CompleteUnitMaterialMapper.getDescriptionId(this.description, connectionPool);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public int getMsdId() {
@@ -93,7 +112,7 @@ public class CompleteUnitMaterial {
                 ", quantity=" + quantity +
                 ", description='" + description + '\'' +
                 ", ordersId=" + ordersId +
-                ", MaterialLengthId=" + MaterialLengthId +
+                ", material=" + material +
                 '}';
     }
 }

@@ -9,6 +9,18 @@
 </head>
 
 <body>
+<nav class="navbar">
+    <div class="navigation-links">
+        <a href="/" th:href="@{/}">
+            <img src="/images/carportmenuicon.png" th:src="@{/images/carportmenuicon.png}" alt="carport menu icon" class="carport-menuicon" style="width: 50px; height: 50px;">
+        </a>
+        <a href="/admin" th:href="@{/admin}" th:if="${session.currentUser != null and session.currentUser.isAdmin}">Kunder</a>
+        <a href="/login" th:href="@{/login}" th:if="${session.currentUser == null}">Log på</a>
+        <a href="/register" th:href="@{/register}" th:if="${session.currentUser == null}">Opret bruger</a>
+        <span th:if="${session.currentUser != null}" th:text="${session.currentUser.email}">Email</span>
+        <a href="/logout" th:href="@{/logout}" th:if="${session.currentUser != null}" class="logout-button">Log ud</a>
+    </div>
+</nav>
 
 <div class="register-header">
     <h1>Opret en bruger nu for at komme tættere på din drømme carport 💙</h1>
@@ -23,20 +35,22 @@
     <label>Gentag kodeord</label>
     <input type="password" name="regpassword2" placeholder="" required minlength="8" maxlength="64"/>
     <label>Telefonnummer</label>
-    <input type="tel" name="phonenumber" placeholder="" th:value="${session.savedPhone}" />
+    <input type="tel" name="phonenumber" placeholder="" th:value="${session.savedPhone}" required/>
     <label>Adresse</label>
-    <input type="text" name="address" placeholder="Gammel kongevej 17" th:value="${session.savedAddress}" />
+    <input type="text" name="address" placeholder="Gammel kongevej 17" th:value="${session.savedAddress}" required/>
+    <label>Postnummer</label>
+    <input type="text" name="zip" placeholder="2800" th:value="${session.savedZip}" required/>
+    <label>By</label>
+    <input type="text" name="city" placeholder="Lyngby" th:value="${session.savedCity}" required/>
 
     <div class="register-button">
-    <button type="submit" formaction="/register">Opret Bruger</button>
+        <button type="submit" formaction="/register">Opret Bruger</button>
     </div>
 
     <div>
-        <p class="register-message"  th:text="${message}"> </p>
+        <p class="register-message" th:text="${message}"></p>
     </div>
 </form>
-
-
 
 
 <footer>

@@ -8,48 +8,40 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class MaterialMapper {
 
-    public static List<Material> getAllMaterials(ConnectionPool connectionPool) throws DatabaseException {
+    public static List<Material> getMaterialsByID(int materialID, ConnectionPool connectionPool) throws DatabaseException {
         List<Material> materials = new ArrayList<>();
-        Map<Integer, Material> materialMap = new HashMap<>();
 
-        String materialSql = "SELECT material_id, name, unit_name, meter_price FROM public.materials";
-        String lengthSql = "SELECT material_id, length FROM public.material_length";
+        String sql = "SELECT materials.material_id, materials.name, unit_name, meter_price, material_length.length " +
+                "FROM materials " +
+                "JOIN material_length ON materials.material_id = material_length.material_id " +
+                "WHERE materials.material_id = ? ";
 
-        try (Connection connection = connectionPool.getConnection()) {
-            // Fetch materials
-            try (PreparedStatement materialPs = connection.prepareStatement(materialSql)) {
-                ResultSet rs = materialPs.executeQuery();
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, materialID);
+
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    int materialId = rs.getInt("material_id");
+                    int id = rs.getInt("material_id");
                     String name = rs.getString("name");
                     String unitName = rs.getString("unit_name");
-                    double meterPrice = rs.getDouble("meter_price");
-                    Material material = new Material(materialId, name, unitName, meterPrice);
-                    materialMap.put(materialId, material);
-                    materials.add(material);
+                    double price = rs.getDouble("meter_price");
+                    int length = rs.getInt("length");
+
+                    materials.add(new Material(id, name, unitName, price, length));
                 }
             }
 
-            // Fetch lengths and associate them with materials
-            try (PreparedStatement lengthPs = connection.prepareStatement(lengthSql)) {
-                ResultSet rs = lengthPs.executeQuery();
-                while (rs.next()) {
-                    int materialId = rs.getInt("material_id");
-                    int length = rs.getInt("length");
-                    Material material = materialMap.get(materialId);
-                    if (material != null) {
-                        material.addLength(length);
-                    }
-                }
-            }
         } catch (SQLException e) {
-            throw new DatabaseException("Error fetching materials and lengths: " + e.getMessage(), e);
+            throw new DatabaseException("Error fetching materials by type", e);
         }
 
         return materials;
@@ -113,4 +105,64 @@ public class MaterialMapper {
             throw new DatabaseException("Error deleting material: " + e.getMessage(), e);
         }
     }
+}
+    
+public static int getLengthID(int materialID, int length, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "SELECT ml_id FROM material_length" +
+                " WHERE material_id = ? AND length = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+             ps.setInt(1, materialID);
+             ps.setInt(2, length);
+
+             try (ResultSet rs = ps.executeQuery()) {
+                 if (rs.next()) {
+                     return rs.getInt("ml_id");
+                 }
+             }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error fetching materials by length", e);
+        }
+        return 0;
+    }
+        public static List<Material> getAllMaterials(ConnectionPool connectionPool) throws DatabaseException {
+        List<Material> materials = new ArrayList<>();
+        Map<Integer, Material> materialMap = new HashMap<>();
+
+        String materialSql = "SELECT material_id, name, unit_name, meter_price FROM public.materials";
+        String lengthSql = "SELECT material_id, length FROM public.material_length";
+
+        try (Connection connection = connectionPool.getConnection()) {
+            // Fetch materials
+            try (PreparedStatement materialPs = connection.prepareStatement(materialSql)) {
+                ResultSet rs = materialPs.executeQuery();
+                while (rs.next()) {
+                    int materialId = rs.getInt("material_id");
+                    String name = rs.getString("name");
+                    String unitName = rs.getString("unit_name");
+                    double meterPrice = rs.getDouble("meter_price");
+                    Material material = new Material(materialId, name, unitName, meterPrice);
+                    materialMap.put(materialId, material);
+                    materials.add(material);
+                }
+            }
+
+            // Fetch lengths and associate them with materials
+            try (PreparedStatement lengthPs = connection.prepareStatement(lengthSql)) {
+                ResultSet rs = lengthPs.executeQuery();
+                while (rs.next()) {
+                    int materialId = rs.getInt("material_id");
+                    int length = rs.getInt("length");
+                    Material material = materialMap.get(materialId);
+                    if (material != null) {
+                        material.addLength(length);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Error fetching materials and lengths: " + e.getMessage(), e);
+
 }

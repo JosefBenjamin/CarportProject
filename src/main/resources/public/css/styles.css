@@ -243,3 +243,57 @@
     font-weight: bold;
     min-height: 1.2em;
 }
+
+.navbar {
+    background-color: #FCFCFC;
+    color: #003D76;
+    padding: 10px 20px;
+    border-bottom: 5px solid #003D76;
+    font-size: 1rem;
+}
+
+.navigation-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navigation-links a,
+.navigation-links span {
+    color: #003D76;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+}
+
+.navigation-links a:first-child {
+    padding: 0;
+    margin-right: auto;
+}
+
+.carport-menuicon {
+    display: block;
+}
+
+.navigation-links a:not(:first-child):not(.logout-button):hover,
+.navigation-links span:hover {
+    background-color: #F2F2FF;
+}
+
+.logout-button {
+    background-color: antiquewhite;
+    color: #002a50;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.logout-button:active {
+    transform: translateY(1px);
+}
