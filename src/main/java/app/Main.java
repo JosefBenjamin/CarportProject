@@ -3,6 +3,7 @@ package app;
 
 import app.config.SessionConfig;
 import app.config.ThymeleafConfig;
+import app.controllers.AdminController;
 import app.controllers.CarportMakerController;
 import app.controllers.UserController;
 import app.persistence.ConnectionPool;
@@ -48,6 +49,7 @@ public class Main {
         });
 
         UserController.routes(app, connectionPool);
+        AdminController.routes(app, connectionPool);
         CarportMakerController.routes(app, connectionPool);
 
     }

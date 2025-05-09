@@ -1,21 +1,163 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Fog Carport</title>
+    <title>Fog Carport - Admin Page</title>
     <link rel="icon" href="/images/carportfavicon64.png" th:href="@{/images/carportfavicon64.png}" type="image/png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .order-details {
+            margin-left: 20px;
+        }
+        .admin-header a, .admin-header form {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .add-material-form {
+            margin: 20px 0;
+        }
+        .add-material-form input {
+            margin-right: 10px;
+        }
+    </style>
 </head>
-
 <body>
+<div class="admin-header">
+    <h1>Admin Page - Forespørgelser</h1>
+    <a href="/" th:href="@{/}">Tilbage til forsiden</a>
+    <form th:action="@{/admin/show-materials}" method="post" style="display: inline;">
+        <button type="submit">Se materialer</button>
+    </form>
+    <form th:action="@{/admin/show-orders}" method="post" style="display: inline;" th:if="${view == 'materials'}">
+        <button type="submit">Se ordrer</button>
+    </form>
+</div>
 
+<div class="admin-content">
+    <div th:if="${error}" class="error-message">
+        <p th:text="${error}"></p>
+    </div>
+
+    <!-- Orders View -->
+    <div th:if="${view == 'orders'}">
+        <div th:if="${orders != null and !orders.isEmpty}">
+            <table>
+                <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>User ID</th>
+                    <th>Carport Mål (B x L x H)</th>
+                    <th>Dato</th>
+                    <th>Total Pris</th>
+                    <th>Status</th>
+                    <th>Materialer</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td th:text="${order.orderID}"></td>
+                    <td th:text="${order.userID}"></td>
+                    <td th:text="${order.carport.carportWidth} + ' x ' + ${order.carport.carportLength} + ' x ' + ${order.carport.carportHeight} + ' cm'"></td>
+                    <td th:text="${order.date}"></td>
+                    <td th:text="${order.totalPrice} + ' DKK'"></td>
+                    <td th:text="${order.status}"></td>
+                    <td>
+                        <div th:if="${order.billOfMaterials != null and !order.billOfMaterials.completeUnitMaterials.isEmpty}">
+                            <ul>
+                                <li th:each="material : ${order.billOfMaterials.completeUnitMaterials}">
+                                    <span th:text="'Materiale: ' + ${material.materialName} + ', Antal: ' + ${material.quantity} + ', Beskrivelse: ' + (${descriptions[material.msdId] != null} ? ${descriptions[material.msdId]} : 'Ukendt beskrivelse')"></span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div th:unless="${order.billOfMaterials != null and !order.billOfMaterials.completeUnitMaterials.isEmpty}">
+                            Ingen materialer tilknyttet.
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:unless="${orders != null and !orders.isEmpty}">
+            <p>Ingen forespørgelser fundet.</p>
+        </div>
+    </div>
+
+    <!-- Materials View -->
+    <div th:if="${view == 'materials'}">
+        <h2>Materialer</h2>
+
+        <!-- Form to Add a New Material -->
+        <div class="add-material-form">
+            <form th:action="@{/admin/add-material}" method="post">
+                <input type="text" name="name" placeholder="Navn" required />
+                <input type="text" name="unit_name" placeholder="Enhed" required />
+                <input type="number" name="meter_price" placeholder="Pris per meter" step="0.01" required />
+                <input type="text" name="lengths" placeholder="Længder (kommasepareret, f.eks. 300,360,420)" />
+                <button type="submit">Tilføj materiale</button>
+            </form>
+        </div>
+
+        <!-- Materials Table -->
+        <div th:if="${materials != null and !materials.isEmpty}">
+            <table>
+                <thead>
+                <tr>
+                    <th>Materiale ID</th>
+                    <th>Navn</th>
+                    <th>Enhed</th>
+                    <th>Pris per meter</th>
+                    <th>Længder (cm)</th>
+                    <th>Handling</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="material : ${materials}">
+                    <td th:text="${material.materialId}"></td>
+                    <td th:text="${material.name}"></td>
+                    <td th:text="${material.unitName}"></td>
+                    <td th:text="${material.meterPrice} + ' DKK'"></td>
+                    <td>
+                        <span th:if="${material.lengths != null and !material.lengths.isEmpty()}">
+                            <span th:each="length, iterStat : ${material.lengths}" th:text="${length + (iterStat.last ? '' : ', ')}"></span>
+                        </span>
+                        <span th:unless="${material.lengths != null and !material.lengths.isEmpty()}">Ingen længder tilgængelige</span>
+                    </td>
+                    <td>
+                        <form th:action="@{/admin/delete-material}" method="post" style="display: inline;">
+                            <input type="hidden" name="material_id" th:value="${material.materialId}" />
+                            <button type="submit">Slet</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:unless="${materials != null and !materials.isEmpty}">
+            <p>Ingen materialer fundet.</p>
+        </div>
+    </div>
+</div>
 
 <footer>
     <div class="footer-content">
-        <p>&copy; 2025 Fog Carport. Alle rettigheder forbeholdes.</p>
+        <p>© 2025 Fog Carport. Alle rettigheder forbeholdes.</p>
     </div>
 </footer>
-
 </body>
 </html>

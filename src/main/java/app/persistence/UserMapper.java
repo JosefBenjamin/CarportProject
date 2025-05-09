@@ -12,7 +12,6 @@ import java.sql.SQLException;
 
 public class UserMapper {
 
-
     /**
      * ALERT! The user must type their password twice for confirmation,
      * that will be taken care of upstream before reaching this mapper

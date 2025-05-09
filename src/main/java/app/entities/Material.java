@@ -1,33 +1,43 @@
 package app.entities;
 
+import java.util.ArrayList;
+import java.util.List;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.MaterialMapper;
 
 public class Material {
 
-    private int materialID;
+    private int materialId;
     private String name;
     private String unitName;
     private double meterPrice;
     private int length;
+    private List<Integer> lengths;
 
-    public Material(int materialID, String name, String unitName, double price, int length) {
-        this.materialID = materialID;
+    public Material(int materialId, String name, String unitName, double price, int length) {
+        this.materialId = materialId;
         this.name = name;
         this.unitName = unitName;
         this.meterPrice = price;
         this.length = length;
     }
 
+    public Material(int materialId, String name, String unitName, double meterPrice) {
+        this.materialId = materialId;
+        this.name = name;
+        this.unitName = unitName;
+        this.meterPrice = meterPrice;
+        this.lengths = new ArrayList<>();
+    }
 
 
     public int getMaterialID() {
-        return materialID;
+        return materialId;
     }
 
     public void setMaterialID(int materialID) {
-        this.materialID = materialID;
+        this.materialId = materialID;
     }
 
     public String getName() {
@@ -54,12 +64,33 @@ public class Material {
         this.meterPrice = meterPrice;
     }
 
+    public double getMeterPrice() {
+        return meterPrice;
+    }
+
+    public void setMeterPrice(double meterPrice) {
+        this.meterPrice = meterPrice;
+    }
+
     public int getLength() {
         return length;
     }
 
     public void setLength(int length) {
         this.length = length;
+    }
+
+
+    public List<Integer> getLengths() {
+        return lengths;
+    }
+
+    public void setLengths(List<Integer> lengths) {
+        this.lengths = lengths;
+    }
+
+    public void addLength(int length) {
+        this.lengths.add(length);
     }
 
     public int getLengthID(ConnectionPool connectionPool) {
@@ -74,11 +105,13 @@ public class Material {
     @Override
     public String toString() {
         return "Material{" +
-                "materialID=" + materialID +
+                "materialID=" + materialId +
                 ", name='" + name + '\'' +
                 ", unitName='" + unitName + '\'' +
                 ", meterPrice=" + meterPrice +
                 ", length=" + length +
                 '}';
     }
+
+
 }
