@@ -10,6 +10,19 @@
 
 <body>
 
+<nav class="navbar">
+    <div class="navigation-links">
+        <a href="/" th:href="@{/}">
+            <img src="/images/carportmenuicon.png" th:src="@{/images/carportmenuicon.png}" alt="carport menu icon" class="carport-menuicon" style="width: 50px; height: 50px;">
+        </a>
+        <a href="/admin" th:href="@{/admin}" th:if="${session.currentUser != null and session.currentUser.isAdmin}">Kunder</a>
+        <a href="/login" th:href="@{/login}" th:if="${session.currentUser == null}">Log på</a>
+        <a href="/register" th:href="@{/register}" th:if="${session.currentUser == null}">Opret bruger</a>
+        <span th:if="${session.currentUser != null}" th:text="${session.currentUser.email}">Email</span>
+        <a href="/logout" th:href="@{/logout}" th:if="${session.currentUser != null}" class="logout-button">Log ud</a>
+    </div>
+</nav>
+
 <div class="register-header">
     <h1>Log på og følg med i din carport 💙</h1>
 </div>

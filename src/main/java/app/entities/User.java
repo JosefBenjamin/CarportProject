@@ -7,7 +7,7 @@ public class User {
     private int tlf;
     private boolean isAdmin;
     private String address;
-    private String zipCode;
+    private ZipCode zipCode;
 
     public User(int userID, String email, String password, int tlf, boolean isAdmin) {
         this.userID = userID;
@@ -33,6 +33,8 @@ public class User {
         this.isAdmin = isAdmin;
         this.address = address;
     }
+
+
 
     public int getUserID() {
         return userID;
@@ -82,11 +84,11 @@ public class User {
         this.address = address;
     }
 
-    public String getZipCode() {
+    public ZipCode getZipCode() {
         return zipCode;
     }
 
-    public void setZipCode(String zipCode) {
+    public void setZipCode(ZipCode zipCode) {
         this.zipCode = zipCode;
     }
 

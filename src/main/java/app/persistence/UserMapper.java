@@ -1,6 +1,7 @@
 package app.persistence;
 
 import app.entities.User;
+import app.entities.ZipCode;
 import app.exceptions.DatabaseException;
 import app.utilities.PasswordUtil;
 
@@ -27,29 +28,34 @@ public class UserMapper {
         int tlf = user.getTlf();
         boolean isAdmin = user.isAdmin();
         String address = user.getAddress();
+        int zip = user.getZipCode().getZipCode();
+        String city = user.getZipCode().getCity();
 
-
-        String sql = "INSERT INTO public.users (email, password, tlf, is_admin, address) VALUES (?, ?, ?, ?, ?) RETURNING user_id";
+        String sql = "INSERT INTO public.users (email, password, tlf, is_admin, address, zip_code) " +
+                     "VALUES (?, ?, ?, ?, ?, ?) RETURNING user_id";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
 
             String hashedPassword = PasswordUtil.hashPassword(password);
-            ps.setString(1, email);
+            ps.setString(1, email.trim());
             ps.setString(2, hashedPassword);
             ps.setInt(3, tlf);
             ps.setBoolean(4, isAdmin);
             ps.setString(5, address);
+            ps.setInt(6, zip);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     int id = rs.getInt("user_id");
-                    return new User(id, email, hashedPassword, tlf, isAdmin, address);
+                    User newUser = new User(id, email, hashedPassword, tlf, isAdmin, address);
+                    newUser.setZipCode(new ZipCode(zip, city));
+                    return newUser;
 
                 }
             }
-            throw new DatabaseException("No user data was returned");
+            throw new DatabaseException("No user data was returned from the database");
 
         } catch (SQLException e) {
             throw new DatabaseException("Database error during registration", e);
@@ -122,7 +128,10 @@ public class UserMapper {
     }
 
     public static User getUserByEmail(String email, ConnectionPool connectionPool) throws DatabaseException {
-        String sql = "SELECT user_id, email, password, tlf, is_admin, address FROM public.users WHERE email = ?";
+        String sql = "SELECT u.user_id, u.email, u.password, u.tlf, u.is_admin, u.address, z.zip_code, z.city " +
+                     "FROM public.users u " +
+                     "JOIN public.zip_codes z ON u.zip_code = z.zip_code " +
+                     "WHERE u.email = ?";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -132,18 +141,22 @@ public class UserMapper {
                 if (rs.next()) {
                     int id = rs.getInt("user_id");
                     String emailFromDb = rs.getString("email");
-                    String password = rs.getString("password");
+                    String passwordFromDb = rs.getString("password"); // Hashed password
                     int tlf = rs.getInt("tlf");
                     boolean isAdmin = rs.getBoolean("is_admin");
                     String address = rs.getString("address");
+                    int zipCodeInt = rs.getInt("zip_code");
+                    String cityName = rs.getString("city");
 
-                    return new User(id, emailFromDb, password, tlf, isAdmin, address);
+                    User user = new User(id, emailFromDb, passwordFromDb, tlf, isAdmin, address);
+                    user.setZipCode(new ZipCode(zipCodeInt, cityName));
+                    return user;
                 } else {
-                    return null;
+                    return null; // User not found
                 }
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Error retrieving hashed password", e);
+            throw new DatabaseException("Error retrieving user by email: " + e.getMessage(), e);
         }
     }
 
