@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Fog Carport</title>
+    <link rel="icon" href="/images/carportfavicon64.png" th:href="@{/images/carportfavicon64.png}" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="navigation-links">
+        <a href="/" th:href="@{/}">
+            <img src="/images/carportmenuicon.png" th:src="@{/images/carportmenuicon.png}" alt="carport menu icon" class="carport-menuicon" style="width: 50px; height: 50px;">
+        </a>
+        <a href="/admin" th:href="@{/admin}" th:if="${session.currentUser != null and session.currentUser.isAdmin}">Kunder</a>
+        <a href="/login" th:href="@{/login}" th:if="${session.currentUser == null}">Log på</a>
+        <a href="/register" th:href="@{/register}" th:if="${session.currentUser == null}">Opret bruger</a>
+        <span th:if="${session.currentUser != null}" th:text="${session.currentUser.email}">Email</span>
+        <a href="/logout" th:href="@{/logout}" th:if="${session.currentUser != null}" class="logout-button">Log ud</a>
+    </div>
+</nav>
+
+<div class="index-header1">
+    <h1>BYG DIN CARPORT HOS FOG I DAG!</h1>
+</div>
+
+<div class="landingpage-boxes">
+
+    <div class="press-to-carport">
+        <a href="carportmaker.html" th:href="@{/carportmaker}">
+            <h2>LAV DIN EGEN CARPORT</h2>
+            <p>Byg din egen carport med egne mål og få et godt tilbud med det samme!</p>
+        </a>
+    </div>
+
+
+    <div class="press-to-login">
+        <a href="login.html" th:href="@{/login}">
+            <h2>LOG PÅ</h2>
+            <p>Har du allerede en bruger? Så log på her</p>
+        </a>
+    </div>
+
+
+    <div class="press-to-register">
+        <a href="register.html" th:href="@{/register}" class="box">
+            <h2>REGISTRER DIG</h2>
+            <p>Har du ikke en bruger endnu? Registrer dig nu og bliv tildelt en salgsperson der kan vejlede dig gennem
+                din carport rejse</p>
+        </a>
+    </div>
+
+    <div class="press-to-admin">
+        <a href="/admin" th:if="${session.currentUser != null and session.currentUser.isAdmin}" class="box">
+            <h2>GÅ TIL ADMIN PAGE</h2>
+            <p>Tjek kunders forespørgelser</p>
+        </a>
+    </div>
+
+</div>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2025 Fog Carport. Alle rettigheder forbeholdes.</p>
+    </div>
+</footer>
+
+</body>
+</html>

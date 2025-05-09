@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Fog Carport</title>
+    <link rel="icon" href="/images/carportfavicon64.png" th:href="@{/images/carportfavicon64.png}" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="navigation-links">
+        <a href="/" th:href="@{/}">
+            <img src="/images/carportmenuicon.png" th:src="@{/images/carportmenuicon.png}" alt="carport menu icon" class="carport-menuicon" style="width: 50px; height: 50px;">
+        </a>
+        <a href="/admin" th:href="@{/admin}" th:if="${session.currentUser != null and session.currentUser.isAdmin}">Kunder</a>
+        <a href="/login" th:href="@{/login}" th:if="${session.currentUser == null}">Log på</a>
+        <a href="/register" th:href="@{/register}" th:if="${session.currentUser == null}">Opret bruger</a>
+        <span th:if="${session.currentUser != null}" th:text="${session.currentUser.email}">Email</span>
+        <a href="/logout" th:href="@{/logout}" th:if="${session.currentUser != null}" class="logout-button">Log ud</a>
+    </div>
+</nav>
+
+
+<div th:if="${orderSend}" class="conformation-message center">
+    <h2>Tak for din forespørgsel!</h2>
+    <p>Din forespørgsel på din carport er modtaget. Vores Fog repræsentant vender tilbage hurtigst muligt</p>
+    <p>Du kan holde styr på statussen af din forespørgsel på din profil side</p>
+</div>
+
+<div th:unless="${orderSend}">
+
+    <h3 class="center">Nedenfor kan du lave en forespørgsel på din egen carport ud fra dine egne mål</h3>
+
+
+    <form class="carport-form" method="post">
+        <label for="length">Længde:</label>
+        <input class="lb" type="number" id="length"  name="length" placeholder="Længde" min="400" max="2000" required/>
+        <label for="width">Bredde:</label>
+        <input class="lb" type="number" id="width" name="width" placeholder="Bredde" min="300" max="2000" required/>
+
+    <div class="btn">
+        <input type="submit" formaction="/sendOrder" value="Send forespørgsel til Fog" name="button"/>
+        <input type="submit" formaction="/calculatePrice" value="Se pris" name="button"/>
+    </div>
+    <p class="center">Alle mål angives i centimeter </p>
+
+    <div><p class="error" th:unless="${#strings.isEmpty(message)}" th:text="${message}"> </p></div>
+
+    <div th:if="${loginRequired}" class="login-warning">
+    <p>Du skal være logget ind for at bestille en carport.</p>
+        <a href="/login" class="login-button">Gå til login</a>
+    </div>
+
+</form>
+</div>
+
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2025 Fog Carport. Alle rettigheder forbeholdes.</p>
+    </div>
+</footer>
+
+</body>
+</html>
