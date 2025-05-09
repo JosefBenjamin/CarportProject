@@ -16,13 +16,6 @@ public class CompleteUnitMaterial {
     private Material material;
 
 
-    public CompleteUnitMaterial(int cumId, int quantity, String description, int ordersId, Material material) {
-        this.cumId = cumId;
-        this.quantity = quantity;
-        this.description = description;
-        this.ordersId = ordersId;
-        this.MaterialLengthId = materialLengthId;
-    }
 
     public CompleteUnitMaterial(int cumId, int quantity, String materialName, int ordersId, int mlId, int msdId) {
         this.cumId = cumId;
@@ -31,7 +24,6 @@ public class CompleteUnitMaterial {
         this.ordersId = ordersId;
         this.MaterialLengthId = mlId;
         this.msdId = msdId;
-        this.material = material;
     }
 
     public CompleteUnitMaterial(int quantity, String description, Material material) {

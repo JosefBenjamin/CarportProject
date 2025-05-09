@@ -105,8 +105,7 @@ public class MaterialMapper {
             throw new DatabaseException("Error deleting material: " + e.getMessage(), e);
         }
     }
-}
-    
+
 public static int getLengthID(int materialID, int length, ConnectionPool connectionPool) throws DatabaseException {
         String sql = "SELECT ml_id FROM material_length" +
                 " WHERE material_id = ? AND length = ?";
@@ -129,40 +128,43 @@ public static int getLengthID(int materialID, int length, ConnectionPool connect
         return 0;
     }
         public static List<Material> getAllMaterials(ConnectionPool connectionPool) throws DatabaseException {
-        List<Material> materials = new ArrayList<>();
-        Map<Integer, Material> materialMap = new HashMap<>();
+            List<Material> materials = new ArrayList<>();
+            Map<Integer, Material> materialMap = new HashMap<>();
 
-        String materialSql = "SELECT material_id, name, unit_name, meter_price FROM public.materials";
-        String lengthSql = "SELECT material_id, length FROM public.material_length";
+            String materialSql = "SELECT material_id, name, unit_name, meter_price FROM public.materials";
+            String lengthSql = "SELECT material_id, length FROM public.material_length";
 
-        try (Connection connection = connectionPool.getConnection()) {
-            // Fetch materials
-            try (PreparedStatement materialPs = connection.prepareStatement(materialSql)) {
-                ResultSet rs = materialPs.executeQuery();
-                while (rs.next()) {
-                    int materialId = rs.getInt("material_id");
-                    String name = rs.getString("name");
-                    String unitName = rs.getString("unit_name");
-                    double meterPrice = rs.getDouble("meter_price");
-                    Material material = new Material(materialId, name, unitName, meterPrice);
-                    materialMap.put(materialId, material);
-                    materials.add(material);
-                }
-            }
-
-            // Fetch lengths and associate them with materials
-            try (PreparedStatement lengthPs = connection.prepareStatement(lengthSql)) {
-                ResultSet rs = lengthPs.executeQuery();
-                while (rs.next()) {
-                    int materialId = rs.getInt("material_id");
-                    int length = rs.getInt("length");
-                    Material material = materialMap.get(materialId);
-                    if (material != null) {
-                        material.addLength(length);
+            try (Connection connection = connectionPool.getConnection()) {
+                // Fetch materials
+                try (PreparedStatement materialPs = connection.prepareStatement(materialSql)) {
+                    ResultSet rs = materialPs.executeQuery();
+                    while (rs.next()) {
+                        int materialId = rs.getInt("material_id");
+                        String name = rs.getString("name");
+                        String unitName = rs.getString("unit_name");
+                        double meterPrice = rs.getDouble("meter_price");
+                        Material material = new Material(materialId, name, unitName, meterPrice);
+                        materialMap.put(materialId, material);
+                        materials.add(material);
                     }
                 }
-            }
-        } catch (SQLException e) {
-            throw new DatabaseException("Error fetching materials and lengths: " + e.getMessage(), e);
 
+                // Fetch lengths and associate them with materials
+                try (PreparedStatement lengthPs = connection.prepareStatement(lengthSql)) {
+                    ResultSet rs = lengthPs.executeQuery();
+                    while (rs.next()) {
+                        int materialId = rs.getInt("material_id");
+                        int length = rs.getInt("length");
+                        Material material = materialMap.get(materialId);
+                        if (material != null) {
+                            material.addLength(length);
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                throw new DatabaseException("Error fetching materials and lengths: " + e.getMessage(), e);
+
+            }
+            return materials;
+        }
 }

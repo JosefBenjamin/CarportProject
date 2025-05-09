@@ -64,13 +64,6 @@ public class Material {
         this.meterPrice = meterPrice;
     }
 
-    public double getMeterPrice() {
-        return meterPrice;
-    }
-
-    public void setMeterPrice(double meterPrice) {
-        this.meterPrice = meterPrice;
-    }
 
     public int getLength() {
         return length;
@@ -95,7 +88,7 @@ public class Material {
 
     public int getLengthID(ConnectionPool connectionPool) {
         try {
-            return MaterialMapper.getLengthID(this.materialID, this.length, connectionPool);
+            return MaterialMapper.getLengthID(this.materialId, this.length, connectionPool);
         } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }
