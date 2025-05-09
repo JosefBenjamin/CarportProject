@@ -24,9 +24,9 @@ public class UserController {
         app.get("/logout", ctx -> logout(ctx, connectionPool));
         app.get("/carportmaker", ctx -> ctx.render("carportmaker.html"));
     }
- 
 
-        
+
+
 
 
     public static void saveAttributes(Context ctx, String email, String phone, String address, String zip, String city) {
@@ -119,13 +119,14 @@ public class UserController {
             return;
         }
 
-        ZipCode zipCode = new ZipCode(zipInt, city);
+        city = city.trim();
+        ZipCode zipCode = null;
         try {
             Integer matchedZip = ZipCodeMapper.getZipByCity(city, connectionPool);
             String matchedCity = ZipCodeMapper.getCityByZip(zipInt, connectionPool);
 
             // zip exists but with different city
-            if ((matchedCity != null) && (!matchedCity.equalsIgnoreCase(city))) {
+            if (matchedCity != null && !matchedCity.trim().equalsIgnoreCase(city)) {
                 saveAttributes(ctx, email, tlf, address, zip, city);
                 ctx.attribute("message", "Postnummeret findes allerede med en anden by.");
                 ctx.render("register.html");
@@ -133,13 +134,13 @@ public class UserController {
             }
 
             // city exists but with different zip
-            if ((matchedZip != null) && (matchedZip != zipInt)) {
-                saveAttributes(ctx, email, tlf, address, zip, city);
+            if (matchedZip != null && matchedZip != zipInt) {
+                saveAttributes(ctx, email, tlf,   address, zip, city);
                 ctx.attribute("message", "Byen findes allerede med et andet postnummer.");
                 ctx.render("register.html");
                 return;
             }
-
+            zipCode = new ZipCode(zipInt, city);
             // zip + city combo is new and consistent → insert
             if (!ZipCodeMapper.zipChecker(zipCode, connectionPool)) {
                 ZipCodeMapper.registerZipCode(zipCode, connectionPool);
