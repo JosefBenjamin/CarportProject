@@ -1,23 +1,36 @@
 package app.controllers;
 
+import app.entities.Order;
 import app.entities.User;
 import app.entities.ZipCode;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
+import app.persistence.OrderMapper;
 import app.persistence.UserMapper;
 import app.persistence.ZipCodeMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class ProfileController {
     public static void routes(Javalin app, ConnectionPool connectionPool) {
-        app.get("/userprofile", ctx -> ctx.render("userprofile.html"));
+        app.get("/userprofile", ctx -> {
+            fetchOrders(ctx, connectionPool);
+            ctx.render("userprofile.html");
+        });
         app.post("updateMail", ctx -> updateMail(ctx, connectionPool));
         app.post("updatePassword", ctx -> updatePassword(ctx, connectionPool));
         app.post("updateTlf", ctx -> updateTlf(ctx, connectionPool));
         app.post("updateAddress", ctx -> updateAddress(ctx, connectionPool));
         app.post("updateCityAndZip", ctx -> updateCityAndZipCode(ctx, connectionPool));
+    }
+
+    private static void fetchOrders(Context ctx, ConnectionPool connectionPool) {
+        User user = ctx.sessionAttribute("currentUser");
+
+        List<Order> userOrders = OrderMapper.getAllOrdersByUserId(user.getUserID(), connectionPool);
     }
 
     private static void updateCityAndZipCode(Context ctx, ConnectionPool connectionPool) {
@@ -118,7 +131,14 @@ public class ProfileController {
 
     private static void updatePassword(Context ctx, ConnectionPool connectionPool)  {
         String password = ctx.formParam("password");
+        String passwordConfirm = ctx.formParam("confirmPassword");
         User user = ctx.sessionAttribute("currentUser");
+
+        if (!password.equals(passwordConfirm)) {
+            ctx.attribute("message", "Password mismatch. Skriv det samme to gange");
+            ctx.render("userprofile.html");
+            return;
+        }
 
         if(user != null) {
             try {
@@ -127,7 +147,7 @@ public class ProfileController {
                 user.setPassword(password);
                 ctx.sessionAttribute("currentUser", user);
 
-                ctx.attribute("message", "password er ændret");
+                ctx.attribute("message", "Password er ændret");
                 ctx.render("userprofile.html");
 
 

@@ -37,10 +37,13 @@
         </tr>
         <tr>
             <td>Password:</td>
-            <td th:text="${session.currentUser.password}"></td>
-            <td><input type="text" name="password" placeholder="Nyt password her"></td>
-            <td><button type="submit" name="profilepassword" th:value="${session.currentUser.password}" formaction="updatePassword">Opdater</button></td>
+            <td><input type="password" name="password" placeholder="Nyt password her"></td>
+            <td><input type="password" name="confirmPassword" placeholder="Gentag passwordet"></td>
+            <td>
+                <button type="submit" formaction="updatePassword">Opdater</button>
+            </td>
         </tr>
+
         <tr>
             <td>Tlf-nummer:</td>
             <td th:text="${session.currentUser.tlf}"></td>

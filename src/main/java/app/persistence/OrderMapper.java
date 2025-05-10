@@ -131,4 +131,9 @@ public class OrderMapper {
         return 0;
 
     }
+
+    public static List<Order> getAllOrdersByUserId(int userID, ConnectionPool connectionPool) {
+        List<Order> orders = new ArrayList<>();
+        return orders;
+    }
 }

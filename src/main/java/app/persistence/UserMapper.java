@@ -146,6 +146,7 @@ public class UserMapper {
                     String address = rs.getString("address");
                     int zipCodeInt = rs.getInt("zip_code");
                     String cityName = rs.getString("city");
+                    cityName = cityName.substring(0, 1).toUpperCase() + cityName.substring(1).toLowerCase();
 
                     User user = new User(id, emailFromDb, passwordFromDb, tlf, isAdmin, address);
                     user.setZipCode(new ZipCode(zipCodeInt, cityName));
@@ -184,7 +185,9 @@ public class UserMapper {
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            ps.setString(1, password);
+            String hashedPassword = PasswordUtil.hashPassword(password);
+
+            ps.setString(1, hashedPassword);
             ps.setInt(2, userId);
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected != 1)
