@@ -18,7 +18,9 @@
         <a href="/admin" th:href="@{/admin}" th:if="${session.currentUser != null and session.currentUser.isAdmin}">Kunder</a>
         <a href="/login" th:href="@{/login}" th:if="${session.currentUser == null}">Log på</a>
         <a href="/register" th:href="@{/register}" th:if="${session.currentUser == null}">Opret bruger</a>
-        <span th:if="${session.currentUser != null}" th:text="${session.currentUser.email}">Email</span>
+
+        <a th:if="${session.currentUser != null}" th:href="@{/userprofile}" th:text="${session.currentUser.email}">Email</a>
+
         <a href="/logout" th:href="@{/logout}" th:if="${session.currentUser != null}" class="logout-button">Log ud</a>
     </div>
 </nav>

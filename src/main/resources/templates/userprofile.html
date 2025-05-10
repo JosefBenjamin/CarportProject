@@ -17,10 +17,58 @@
         <a href="/admin" th:href="@{/admin}" th:if="${session.currentUser != null and session.currentUser.isAdmin}">Kunder</a>
         <a href="/login" th:href="@{/login}" th:if="${session.currentUser == null}">Log på</a>
         <a href="/register" th:href="@{/register}" th:if="${session.currentUser == null}">Opret bruger</a>
-        <span th:if="${session.currentUser != null}" th:text="${session.currentUser.email}">Email</span>
+
+        <a th:if="${session.currentUser != null}" th:href="@{/userprofile}" th:text="${session.currentUser.email}">Email</a>
+
         <a href="/logout" th:href="@{/logout}" th:if="${session.currentUser != null}" class="logout-button">Log ud</a>
     </div>
 </nav>
+
+<h2>Profile</h2>
+
+<form method="post">
+
+    <table>
+        <tr>
+            <td>E-mail:</td>
+            <td th:text="${session.currentUser.email}"></td>
+            <td><input type="text" name="mail" placeholder="Ny e-mail her" ></td>
+            <td><button type="submit" name="profilemail" th:value="${session.currentUser.email}" formaction="updateMail">Opdater</button></td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td th:text="${session.currentUser.password}"></td>
+            <td><input type="text" name="password" placeholder="Nyt password her"></td>
+            <td><button type="submit" name="profilepassword" th:value="${session.currentUser.password}" formaction="updatePassword">Opdater</button></td>
+        </tr>
+        <tr>
+            <td>Tlf-nummer:</td>
+            <td th:text="${session.currentUser.tlf}"></td>
+            <td><input type="text" name="tlf" placeholder="Nyt tlf nummer her" ></td>
+            <td><button type="submit" name="profiletlf" th:value="${session.currentUser.tlf}" formaction="updateTlf">Opdater</button></td>
+        </tr>
+        <tr>
+            <td>Adresse:</td>
+            <td th:text="${session.currentUser.address}"></td>
+            <td><input type="text" name="address" placeholder="Ny adresse her" ></td>
+            <td><button type="submit" name="profileaddress" th:value="${session.currentUser.address}" formaction="updateAddress">Opdater</button></td>
+        </tr>
+        <tr>
+            <td>By:</td>
+            <td th:text="${session.currentUser.zipCode.city}"></td>
+            <td><input type="text" name="city" placeholder="Ny by her"></td>
+        </tr>
+        <tr>
+            <td>Postnummer:</td>
+            <td th:text="${session.currentUser.zipCode.zipCode}"></td>
+            <td><input type="text" name="zipcode" placeholder="Nyt postnummer her"></td>
+            <td><button type="submit" name="profilecityandzipcode" formaction="updateCityAndZip">Opdater By og Postnummer</button></td>
+        </tr>
+    </table>
+</form>
+
+<div><p class="error" th:unless="${#strings.isEmpty(message)}" th:text="${message}"> </p></div>
+
 
 
 <footer>
