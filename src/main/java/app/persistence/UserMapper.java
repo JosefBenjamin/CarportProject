@@ -234,4 +234,22 @@ public class UserMapper {
         }
 
     }
+
+    public static void updateCityAndZipCode(int zipInt, int userID, ConnectionPool connectionPool) throws DatabaseException {
+        String sql ="update users set zip_code = ? where user_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, zipInt);
+            ps.setInt(2, userID);
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected != 1) {
+                throw new DatabaseException("Fejl i opdatering af by og postnummer");
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Fejl i opdatering af by og postnummer", e.getMessage());
+        }
+    }
 }

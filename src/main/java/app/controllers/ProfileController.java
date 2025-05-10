@@ -1,9 +1,11 @@
 package app.controllers;
 
 import app.entities.User;
+import app.entities.ZipCode;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.UserMapper;
+import app.persistence.ZipCodeMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.jetbrains.annotations.NotNull;
@@ -20,17 +22,43 @@ public class ProfileController {
 
     private static void updateCityAndZipCode(Context ctx, ConnectionPool connectionPool) {
         String city = ctx.formParam("city");
-        int zipCode = Integer.parseInt(ctx.formParam("zipCode"));
+        city = city.trim();
+
+        int zipInt = Integer.parseInt(ctx.formParam("zipcode"));
+        ZipCode zipCode = null;
+
         User user = ctx.sessionAttribute("currentUser");
+
+        try {
+            Integer matchedZip = ZipCodeMapper.getZipByCity(city, connectionPool);
+            String matchedCity = ZipCodeMapper.getCityByZip(zipInt, connectionPool);
+
+            // zip exists but with different city
+            if (matchedCity != null && !matchedCity.trim().equalsIgnoreCase(city)) {
+                ctx.attribute("message", "Postnummeret findes allerede med en anden by.");
+                ctx.render("userprofile.html");
+                return;
+            }
+            if (matchedZip != null && matchedZip != zipInt) {
+                ctx.attribute("message", "Byen findes allerede med et andet postnummer.");
+                ctx.render("userprofile.html");
+                return;
+            }
+            zipCode = new ZipCode(zipInt, city);
+            if (!ZipCodeMapper.zipChecker(zipCode, connectionPool)) {
+                ZipCodeMapper.registerZipCode(zipCode, connectionPool);
+            }
+        } catch (DatabaseException e) {
+            ctx.attribute("message", "Fejl ved behandling af postnummer: " + e.getMessage());
+            ctx.render("userprofile.html");
+        }
 
         if(user != null) {
             try {
-                UserMapper.updateCityAndZipCode(address, user.getUserID(), connectionPool);
+                UserMapper.updateCityAndZipCode(zipInt, user.getUserID(), connectionPool);
 
-                user.getZipCode().setZipCode(zipCode);
-                user.getZipCode().setCity(city);
+                user.setZipCode(zipCode);
 
-                ctx.sessionAttribute("currentUser", user);
 
                 ctx.attribute("message", "By og postnummer ændret");
                 ctx.render("userprofile.html");
