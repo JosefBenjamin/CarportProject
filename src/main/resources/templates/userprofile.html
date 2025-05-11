@@ -72,6 +72,37 @@
 
 <div><p class="error" th:unless="${#strings.isEmpty(message)}" th:text="${message}"> </p></div>
 
+<h2>Dine forespørgsler</h2>
+
+<div class="orders-section">
+    <table>
+        <thead>
+        <tr>
+            <th>Ordre ID</th>
+            <th>Dato</th>
+            <th>Status</th>
+            <th>Total Pris</th>
+            <th>Detaljer</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${userOrders}">
+            <td th:text="${order.orderID}">123</td>
+            <td th:text="${order.date}">01-01-2025</td>
+            <td th:text="${StatusChecker.getStatusText(order.status)}">Behandler</td>
+            <td th:text="${order.totalPrice} + ' kr'">1000 kr</td>
+            <td>
+                <a th:href="@{/orderdetails/{id}(id=${order.orderID})}">Se detaljer</a>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(userOrders)}">
+            <td colspan="5">Du har ingen ordrer endnu.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
 
 
 <footer>

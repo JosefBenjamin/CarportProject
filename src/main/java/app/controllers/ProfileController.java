@@ -8,6 +8,7 @@ import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.persistence.UserMapper;
 import app.persistence.ZipCodeMapper;
+import app.utilities.StatusChecker;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,14 @@ public class ProfileController {
     private static void fetchOrders(Context ctx, ConnectionPool connectionPool) {
         User user = ctx.sessionAttribute("currentUser");
 
-        List<Order> userOrders = OrderMapper.getAllOrdersByUserId(user.getUserID(), connectionPool);
+        try {
+            List<Order> userOrders = OrderMapper.getAllOrdersByUserId(user.getUserID(), connectionPool);
+            ctx.attribute("StatusChecker", new StatusChecker());
+            ctx.attribute("userOrders", userOrders);
+        } catch (DatabaseException e) {
+            ctx.attribute("message", e.getMessage());
+            ctx.render("index.html");
+        }
     }
 
     private static void updateCityAndZipCode(Context ctx, ConnectionPool connectionPool) {

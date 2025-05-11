@@ -132,8 +132,32 @@ public class OrderMapper {
 
     }
 
-    public static List<Order> getAllOrdersByUserId(int userID, ConnectionPool connectionPool) {
+    public static List<Order> getAllOrdersByUserId(int userID, ConnectionPool connectionPool) throws DatabaseException {
         List<Order> orders = new ArrayList<>();
-        return orders;
+        String sql = "SELECT * FROM orders WHERE user_id = ?";
+        try (Connection conn = connectionPool.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int orderId = rs.getInt("order_id");
+                    int userId = rs.getInt("user_id");
+                    int carportWidth = rs.getInt("carport_width");
+                    int carportLength = rs.getInt("carport_length");
+                    int carportHeight = rs.getInt("carport_height");
+                    LocalDate date = rs.getDate("date").toLocalDate();
+                    double totalPrice = rs.getDouble("total_price");
+                    int status = rs.getInt("status");
+
+                    orders.add(new Order(orderId, userId, new Carport(carportWidth, carportLength, carportHeight), date, totalPrice, status));
+                }
+                return orders;
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Database error fetching orders", e);
+        }
     }
 }
