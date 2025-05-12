@@ -98,7 +98,8 @@
                 </form>
 
                 <!-- Show "See details" link only if status >= 3 -->
-                <a th:if="${order.status >= 3}" th:href="@{/orderdetails}">Se detaljer</a>
+                <a th:if="${order.status >= 3}"
+                   th:href="@{/orderdetails(orderId=${order.orderID})}">Se detaljer</a>
             </td>
         </tr>
 

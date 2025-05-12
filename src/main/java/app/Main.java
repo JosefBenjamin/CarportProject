@@ -3,10 +3,7 @@ package app;
 
 import app.config.SessionConfig;
 import app.config.ThymeleafConfig;
-import app.controllers.AdminController;
-import app.controllers.CarportMakerController;
-import app.controllers.ProfileController;
-import app.controllers.UserController;
+import app.controllers.*;
 import app.persistence.ConnectionPool;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
@@ -53,6 +50,7 @@ public class Main {
         AdminController.routes(app, connectionPool);
         CarportMakerController.routes(app, connectionPool);
         ProfileController.routes(app, connectionPool);
+        OrderDetailsController.routes(app, connectionPool);
 
     }
 

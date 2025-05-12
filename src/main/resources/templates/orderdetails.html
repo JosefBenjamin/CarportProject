@@ -7,7 +7,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
 </head>
+
 <body>
+<nav class="navbar">
+    <div class="navigation-links">
+        <a href="/" th:href="@{/}">
+            <img src="/images/carportmenuicon.png" th:src="@{/images/carportmenuicon.png}" alt="carport menu icon" class="carport-menuicon" style="width: 50px; height: 50px;">
+        </a>
+        <a href="/admin" th:href="@{/admin}" th:if="${session.currentUser != null and session.currentUser.isAdmin}">Kunder</a>
+        <a href="/login" th:href="@{/login}" th:if="${session.currentUser == null}">Log på</a>
+        <a href="/register" th:href="@{/register}" th:if="${session.currentUser == null}">Opret bruger</a>
+
+        <a th:if="${session.currentUser != null}" th:href="@{/userprofile}" th:text="${session.currentUser.email}">Email</a>
+
+        <a href="/logout" th:href="@{/logout}" th:if="${session.currentUser != null}" class="logout-button">Log ud</a>
+    </div>
+</nav>
+
+<h2>Stykliste</h2>
+
+<div class="billOfMaterial">
+    <table>
+        <thead>
+        <tr>
+            <th>Beskrivelse</th>
+            <th>Længde</th>
+            <th>Antal</th>
+            <th>Enhed</th>
+            <th>Beskrivelse</th>
+        </tr>
+        <tr>
+            <th>Træ & Tagplader</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="completeUnitMaterial : ${billOfMaterial}">
+            <td th:text="${completeUnitMaterial.material.name}"></td>
+            <td th:text="${completeUnitMaterial.material.length}"></td>
+            <td th:text="${completeUnitMaterial.quantity}"></td>
+            <td th:text="${completeUnitMaterial.material.unitName}"></td>
+            <td th:text="${completeUnitMaterial.description}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <a th:href="@{/userprofile}">Tilbage til din profil</a>
+</div>
+
 
 
 </body>
