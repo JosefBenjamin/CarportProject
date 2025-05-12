@@ -1,12 +1,11 @@
 package app.controllers;
 
-import app.entities.Order;
-import app.entities.User;
-import app.entities.Material;
+import app.entities.*;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.persistence.MaterialMapper;
+import app.utilities.Calculator;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -23,6 +22,7 @@ public class AdminController {
         app.post("/admin/show-orders", ctx -> showOrders(ctx, connectionPool));
         app.post("/admin/add-material", ctx -> addMaterial(ctx, connectionPool));
         app.post("/admin/delete-material", ctx -> deleteMaterial(ctx, connectionPool));
+        app.post("/admin/update-order", ctx -> updateOrder(ctx, connectionPool));
     }
 
     public static void showAdminPage(Context ctx, ConnectionPool connectionPool) {
@@ -75,7 +75,7 @@ public class AdminController {
         try {
             String name = ctx.formParam("name");
             String unitName = ctx.formParam("unit_name");
-            double meterPrice = Double.parseDouble(ctx.formParam("meter_price")); // Reverted to meter_price
+            double meterPrice = Double.parseDouble(ctx.formParam("meter_price"));
             String lengths = ctx.formParam("lengths");
             MaterialMapper.addMaterial(name, unitName, meterPrice, lengths, connectionPool);
             ctx.redirect("/admin/show-materials");
@@ -95,6 +95,33 @@ public class AdminController {
             ctx.attribute("error", "Error deleting material: " + e.getMessage());
             ctx.attribute("view", "materials");
             ctx.render("admin.html");
+        }
+    }
+
+    public static void updateOrder(Context ctx, ConnectionPool connectionPool) {
+        try {
+            int orderId = Integer.parseInt(ctx.formParam("orderId"));
+            int carportWidth = Integer.parseInt(ctx.formParam("carportWidth"));
+            int carportLength = Integer.parseInt(ctx.formParam("carportLength"));
+            int carportHeight = Integer.parseInt(ctx.formParam("carportHeight"));
+            int status = Integer.parseInt(ctx.formParam("status"));
+
+            // Recalculate price and materials using Calculator
+            Calculator calculator = new Calculator(carportWidth, carportLength, carportHeight, connectionPool);
+            double newPrice = calculator.getTotalPrice();
+            List<CompleteUnitMaterial> newMaterials = calculator.getOrderMaterials();
+
+            // Update the order in the database
+            OrderMapper.updateOrder(orderId, carportWidth, carportLength, carportHeight, status, newPrice, newMaterials, connectionPool);
+
+            ctx.attribute("successMessage", "Order updated successfully");
+            showOrders(ctx, connectionPool);
+        } catch (NumberFormatException e) {
+            ctx.attribute("error", "Invalid input format for dimensions, status, or order ID.");
+            showOrders(ctx, connectionPool);
+        } catch (DatabaseException e) {
+            ctx.attribute("error", "Database error, order not updated: " + e.getMessage());
+            showOrders(ctx, connectionPool);
         }
     }
 }

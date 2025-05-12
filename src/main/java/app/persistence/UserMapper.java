@@ -159,5 +159,41 @@ public class UserMapper {
         }
     }
 
+    public static User getUserById(int userId, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "SELECT u.user_id, u.email, u.password, u.tlf, u.is_admin, u.address, " +
+                "z.zip_code, z.city " +
+                "FROM users u " +
+                "LEFT JOIN zip_codes z ON u.zip_code = z.zip_code " +
+                "WHERE u.user_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int id = rs.getInt("user_id");
+                String email = rs.getString("email");
+                String password = rs.getString("password");
+                int tlf = rs.getInt("tlf");
+                boolean isAdmin = rs.getBoolean("is_admin");
+                String address = rs.getString("address");
+                int zipCodeValue = rs.getInt("zip_code");
+                String city = rs.getString("city");
+
+                User user = new User(id, email, password, tlf, isAdmin, address);
+                if (!rs.wasNull()) {
+                    ZipCode zipCode = new ZipCode(zipCodeValue, city);
+                    user.setZipCode(zipCode);
+                }
+                return user;
+            } else {
+                throw new DatabaseException("User with ID " + userId + " not found.");
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Error fetching user by ID: " + e.getMessage());
+        }
+    }
 
 }

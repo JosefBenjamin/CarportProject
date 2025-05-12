@@ -68,6 +68,11 @@ public class OrderMapper {
 
                 Carport carport = new Carport(carportWidth, carportLength, carportHeight);
                 Order order = new Order(orderId, userId, carport, date, totalPrice, status);
+
+                // Fetch the associated user
+                User user = UserMapper.getUserById(userId, connectionPool);
+                order.setUser(user);
+
                 orders.add(order);
 
                 // Fetch materials for this order
@@ -130,5 +135,56 @@ public class OrderMapper {
             }
         return 0;
 
+    }
+
+    public static void updateOrder(int orderId, int width, int length, int height, int status, double totalPrice, List<CompleteUnitMaterial> materials, ConnectionPool connectionPool) throws DatabaseException {
+        String updateOrderSql = "UPDATE orders " +
+                "SET carport_width = ?, carport_length = ?, carport_height = ?, status = ?, total_price = ? " +
+                "WHERE order_id = ?";
+
+        String deleteMaterialsSql = "DELETE FROM complete_unit_material WHERE orders_id = ?";
+
+        try (Connection connection = connectionPool.getConnection()) {
+            connection.setAutoCommit(false);
+
+            try {
+                // Update the order details
+                try (PreparedStatement ps = connection.prepareStatement(updateOrderSql)) {
+                    ps.setInt(1, width);
+                    ps.setInt(2, length);
+                    ps.setInt(3, height);
+                    ps.setInt(4, status);
+                    ps.setDouble(5, totalPrice);
+                    ps.setInt(6, orderId);
+                    int rowsAffected = ps.executeUpdate();
+
+                    if (rowsAffected == 0) {
+                        throw new DatabaseException("Order " + orderId + " not found.");
+                    }
+                }
+
+                // Delete existing materials
+                try (PreparedStatement psDelete = connection.prepareStatement(deleteMaterialsSql)) {
+                    psDelete.setInt(1, orderId);
+                    psDelete.executeUpdate();
+                }
+
+                // Insert new materials
+                for (CompleteUnitMaterial material : materials) {
+                    int descriptionId = CompleteUnitMaterialMapper.getDescriptionId(material.getDescription(), connectionPool);
+                    int lengthId = MaterialMapper.getLengthID(material.getMaterial().getMaterialID(), material.getMaterial().getLength(), connectionPool);
+                    CompleteUnitMaterialMapper.registerCUMToOrder(material.getQuantity(), orderId, lengthId, descriptionId, connectionPool);
+                }
+
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                throw new DatabaseException("Error updating order: " + e.getMessage());
+            } finally {
+                connection.setAutoCommit(true);
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Database connection error: " + e.getMessage());
+        }
     }
 }
