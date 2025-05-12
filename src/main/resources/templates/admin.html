@@ -39,9 +39,7 @@
 <div class="admin-header">
     <h1>Admin Page - Forespørgelser</h1>
     <a href="/" th:href="@{/}">Tilbage til forsiden</a>
-    <form th:action="@{/admin/show-materials}" method="post" style="display: inline;">
-        <button type="submit">Se materialer</button>
-    </form>
+    <a href="/admin/show-materials" th:href="@{/admin/show-materials}">Se materialer</a>
     <form th:action="@{/admin/show-orders}" method="post" style="display: inline;" th:if="${view == 'materials'}">
         <button type="submit">Se ordrer</button>
     </form>

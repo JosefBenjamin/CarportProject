@@ -18,6 +18,7 @@ public class AdminController {
 
     public static void routes(Javalin app, ConnectionPool connectionPool) {
         app.get("/admin", ctx -> showAdminPage(ctx, connectionPool));
+        app.get("/admin/show-materials", ctx -> showMaterials(ctx, connectionPool));
         app.post("/admin/show-materials", ctx -> showMaterials(ctx, connectionPool));
         app.post("/admin/show-orders", ctx -> showOrders(ctx, connectionPool));
         app.post("/admin/add-material", ctx -> addMaterial(ctx, connectionPool));

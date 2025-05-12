@@ -82,27 +82,43 @@ public class MaterialMapper {
     }
 
     public static void deleteMaterial(int materialId, ConnectionPool connectionPool) throws DatabaseException {
-        String checkSql = "SELECT COUNT(*) FROM public.material_length WHERE material_id = ?";
-        String deleteSql = "DELETE FROM public.materials WHERE material_id = ?";
+        // SQL to delete from material_length first
+        String deleteLengthsSql = "DELETE FROM material_length WHERE material_id = ?";
+        // SQL to delete from materials
+        String deleteMaterialSql = "DELETE FROM materials WHERE material_id = ?";
 
         try (Connection connection = connectionPool.getConnection()) {
-            try (PreparedStatement checkPs = connection.prepareStatement(checkSql)) {
-                checkPs.setInt(1, materialId);
-                ResultSet rs = checkPs.executeQuery();
-                if (rs.next() && rs.getInt(1) > 0) {
-                    throw new DatabaseException("Cannot delete material with ID " + materialId + " because it is used in material_length");
-                }
-            }
+            // Start a transaction to ensure atomicity
+            connection.setAutoCommit(false);
 
-            try (PreparedStatement deletePs = connection.prepareStatement(deleteSql)) {
-                deletePs.setInt(1, materialId);
-                int rowsAffected = deletePs.executeUpdate();
-                if (rowsAffected == 0) {
-                    throw new DatabaseException("Material with ID " + materialId + " not found");
+            try {
+                // Step 1: Delete associated lengths from material_length
+                try (PreparedStatement psLengths = connection.prepareStatement(deleteLengthsSql)) {
+                    psLengths.setInt(1, materialId);
+                    psLengths.executeUpdate();
                 }
+
+                // Step 2: Delete the material from materials
+                try (PreparedStatement psMaterial = connection.prepareStatement(deleteMaterialSql)) {
+                    psMaterial.setInt(1, materialId);
+                    int rowsAffected = psMaterial.executeUpdate();
+                    if (rowsAffected == 0) {
+                        throw new DatabaseException("Material with ID " + materialId + " not found.");
+                    }
+                }
+
+                // Commit the transaction
+                connection.commit();
+            } catch (SQLException e) {
+                // Rollback the transaction on error
+                connection.rollback();
+                throw new DatabaseException("Error deleting material with ID " + materialId + ": " + e.getMessage());
+            } finally {
+                // Restore auto-commit mode
+                connection.setAutoCommit(true);
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Error deleting material: " + e.getMessage(), e);
+            throw new DatabaseException("Database connection error: " + e.getMessage());
         }
     }
 
