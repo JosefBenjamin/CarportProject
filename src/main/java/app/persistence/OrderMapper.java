@@ -160,4 +160,20 @@ public class OrderMapper {
             throw new DatabaseException("Database error fetching orders", e);
         }
     }
+
+    public static void updateStatus(int orderId, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "UPDATE orders SET status = ? WHERE order_id = ?";
+
+        try (Connection conn = connectionPool.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, 3);
+            ps.setInt(2, orderId);
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Database error updating status", e);
+        }
+    }
 }

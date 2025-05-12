@@ -82,7 +82,6 @@
             <th>Dato</th>
             <th>Status</th>
             <th>Total Pris</th>
-            <th>Detaljer</th>
         </tr>
         </thead>
         <tbody>
@@ -92,12 +91,17 @@
             <td th:text="${StatusChecker.getStatusText(order.status)}">Behandler</td>
             <td th:text="${order.totalPrice} + ' kr'">1000 kr</td>
             <td>
-                <a th:href="@{/orderdetails/{id}(id=${order.orderID})}">Se detaljer</a>
+                <!-- Show "Pay" button if status is 2 -->
+                <form th:if="${order.status == 2}" method="post" th:action="@{/orderconfirmation}">
+                    <input type="hidden" name="orderId" th:value="${order.orderID}" />
+                    <button type="submit">Betal</button>
+                </form>
+
+                <!-- Show "See details" link only if status >= 3 -->
+                <a th:if="${order.status >= 3}" th:href="@{/orderdetails}">Se detaljer</a>
             </td>
         </tr>
-        <tr th:if="${#lists.isEmpty(userOrders)}">
-            <td colspan="5">Du har ingen ordrer endnu.</td>
-        </tr>
+
         </tbody>
     </table>
 </div>

@@ -26,10 +26,29 @@ public class ProfileController {
         app.post("updateTlf", ctx -> updateTlf(ctx, connectionPool));
         app.post("updateAddress", ctx -> updateAddress(ctx, connectionPool));
         app.post("updateCityAndZip", ctx -> updateCityAndZipCode(ctx, connectionPool));
+        app.post("/orderconfirmation", ctx -> handlePayment(ctx, connectionPool));
+    }
+
+    private static void handlePayment(Context ctx, ConnectionPool connectionPool) {
+        int orderId = Integer.parseInt(ctx.formParam("orderId"));
+
+
+        try {
+            OrderMapper.updateStatus(orderId, connectionPool);
+            ctx.render("orderconfirmation.html");
+
+        } catch (DatabaseException e) {
+            ctx.attribute("message", e.getMessage());
+            ctx.render("index.html");
+
+        }
+
+
     }
 
     private static void fetchOrders(Context ctx, ConnectionPool connectionPool) {
         User user = ctx.sessionAttribute("currentUser");
+
 
         try {
             List<Order> userOrders = OrderMapper.getAllOrdersByUserId(user.getUserID(), connectionPool);
