@@ -7,9 +7,11 @@ import app.controllers.AdminController;
 import app.controllers.CarportMakerController;
 import app.controllers.UserController;
 import app.persistence.ConnectionPool;
+import app.utilities.MailSender;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
 
+import java.io.IOException;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -51,6 +53,14 @@ public class Main {
         UserController.routes(app, connectionPool);
         AdminController.routes(app, connectionPool);
         CarportMakerController.routes(app, connectionPool);
+        MailSender mailSender = new MailSender();
+        try {
+            mailSender.sendCarportRequestMail("10", "12", "14", "blue plastic", "Biege", "customeremail@email.org");
+            System.out.println("is sending mail..");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
