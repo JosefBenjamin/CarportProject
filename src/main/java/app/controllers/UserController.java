@@ -19,13 +19,10 @@ public class UserController {
         app.get("/register", ctx -> ctx.render("register.html")); // show register page
         app.post("/register", ctx -> register(ctx, connectionPool)); // handle form submission
         app.get("/login", ctx -> ctx.render("login.html"));  // show login page
-
         app.post("/login", ctx -> login(ctx, connectionPool));   // handle login request
         app.get("/logout", ctx -> logout(ctx, connectionPool));
         app.get("/carportmaker", ctx -> ctx.render("carportmaker.html"));
     }
-
-
 
 
 
@@ -98,7 +95,7 @@ public class UserController {
         } catch (NumberFormatException e) {
             saveAttributes(ctx, email, tlf, address, zip, city);
             ctx.attribute("message", "Ugyldigt telefonnummer");
-            ctx.render("register.html"); // Re-render form with error
+            ctx.render("register.html");
             return;
         }
 
@@ -115,10 +112,17 @@ public class UserController {
         } catch (NumberFormatException e) {
             saveAttributes(ctx, email, tlf, address, zip, city);
             ctx.attribute("message", "Postnummer skal være et tal");
-            ctx.render("register.html"); // Re-render form with error
+            ctx.render("register.html");
             return;
         }
 
+
+        if(city == null || city.isBlank()) {
+            saveAttributes(ctx, email, tlf, address, zip, city);
+            ctx.attribute("message", "By skal udfyldes");
+            ctx.render("/register");
+            return;
+        }
         city = city.trim();
         ZipCode zipCode = null;
         try {
@@ -126,7 +130,7 @@ public class UserController {
             String matchedCity = ZipCodeMapper.getCityByZip(zipInt, connectionPool);
 
             // zip exists but with different city
-            if (matchedCity != null && !matchedCity.trim().equalsIgnoreCase(city)) {
+            if ((matchedCity != null) && (!matchedCity.trim().equalsIgnoreCase(city))) {
                 saveAttributes(ctx, email, tlf, address, zip, city);
                 ctx.attribute("message", "Postnummeret findes allerede med en anden by.");
                 ctx.render("register.html");

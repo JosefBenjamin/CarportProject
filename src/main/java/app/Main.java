@@ -53,6 +53,7 @@ public class Main {
         CarportMakerController.routes(app, connectionPool);
         ProfileController.routes(app, connectionPool);
         OrderDetailsController.routes(app, connectionPool);
+        ContactController.routes(app, connectionPool);
 
 
     }

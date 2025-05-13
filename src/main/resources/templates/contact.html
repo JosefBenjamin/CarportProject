@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Fog Carport</title>
+    <link rel="icon" href="/images/carportfavicon64.png" th:href="@{/images/carportfavicon64.png}" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body>
+<nav class="navbar">
+    <div class="navigation-links">
+        <a href="/" th:href="@{/}">
+            <img src="/images/carportmenuicon.png" th:src="@{/images/carportmenuicon.png}" alt="carport menu icon" class="carport-menuicon" style="width: 50px; height: 50px;">
+        </a>
+        <a href="/admin" th:href="@{/admin}" th:if="${session.currentUser != null and session.currentUser.isAdmin}">Kunder</a>
+        <a href="/login" th:href="@{/login}" th:if="${session.currentUser == null}">Log på</a>
+        <a href="/register" th:href="@{/register}" th:if="${session.currentUser == null}">Opret bruger</a>
+
+        <a th:if="${session.currentUser != null}" th:href="@{/userprofile}" th:text="${session.currentUser.email}">Email</a>
+
+        <a href="/logout" th:href="@{/logout}" th:if="${session.currentUser != null}" class="logout-button">Log ud</a>
+    </div>
+</nav>
+
+<header>
+
+    <h1>Kom i kontakt med os</h1>
+
+</header>
+
+<main>
+
+    <div>
+        <p>Kontakt os på mail</p>
+        <span th:text="${contactEmail}"></span>
+    </div>
+
+    <div>
+        <p>Kontakt per telefon</p>
+        <span th:text="${contactPhone}"></span>
+
+    </div>
+
+    <div>
+        <p>Besøg os i virkeligheden</p>
+        <span th:text="${contactAddress}"></span>
+
+    </div>
+
+</main>
+
+</body>
+</html>
