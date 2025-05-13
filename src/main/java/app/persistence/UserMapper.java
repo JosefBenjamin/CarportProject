@@ -146,6 +146,7 @@ public class UserMapper {
                     String address = rs.getString("address");
                     int zipCodeInt = rs.getInt("zip_code");
                     String cityName = rs.getString("city");
+                    cityName = cityName.substring(0, 1).toUpperCase() + cityName.substring(1).toLowerCase();
 
                     User user = new User(id, emailFromDb, passwordFromDb, tlf, isAdmin, address);
                     user.setZipCode(new ZipCode(zipCodeInt, cityName));
@@ -196,4 +197,98 @@ public class UserMapper {
         }
     }
 
+    public static void updateMail(String email, int userID, ConnectionPool connectionPool) throws DatabaseException {
+        String sql ="update users set email = ? where user_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+            ps.setInt(2, userID);
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected != 1) {
+                throw new DatabaseException("Fejl i opdatering af mail");
+            }
+        }
+        catch (SQLException | DatabaseException e) {
+            throw new DatabaseException("Fejl i opdatering mail", e.getMessage());
+        }
+    }
+
+    public static void updatePassword(String password, int userId, ConnectionPool connectionPool) throws DatabaseException {
+        String sql ="update users set password = ? where user_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            String hashedPassword = PasswordUtil.hashPassword(password);
+
+            ps.setString(1, hashedPassword);
+            ps.setInt(2, userId);
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected != 1)
+            {
+                throw new DatabaseException("Fejl i opdatering af password");
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DatabaseException("Fejl i opdatering password", e.getMessage());
+        }
+    }
+
+    public static void updateTlf(int tlf, int userID, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "update users set tlf = ? where user_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, tlf);
+            ps.setInt(2, userID);
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected != 1) {
+                throw new DatabaseException("Fejl i opdatering af tlf");
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Fejl i opdatering af tlf nummer", e.getMessage());
+        }
+    }
+
+    public static void updateAddress(String address, int userID, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "update users set address = ? where user_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, address);
+            ps.setInt(2, userID);
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected != 1) {
+                throw new DatabaseException("Fejl i opdatering af adresse");
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Fejl i opdatering af adresse", e.getMessage());
+        }
+
+    }
+
+    public static void updateCityAndZipCode(int zipInt, int userID, ConnectionPool connectionPool) throws DatabaseException {
+        String sql ="update users set zip_code = ? where user_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, zipInt);
+            ps.setInt(2, userID);
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected != 1) {
+                throw new DatabaseException("Fejl i opdatering af by og postnummer");
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Fejl i opdatering af by og postnummer", e.getMessage());
+        }
+    }
 }
