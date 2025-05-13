@@ -30,7 +30,7 @@ public class UserMapper {
         int zip = user.getZipCode().getZipCode();
         String city = user.getZipCode().getCity();
 
-        String sql = "INSERT INTO public.users (email, password, tlf, is_admin, address, zip_code) " +
+        String sql = "INSERT INTO users (email, password, tlf, is_admin, address, zip_code) " +
                      "VALUES (?, ?, ?, ?, ?, ?) RETURNING user_id";
 
         try (Connection connection = connectionPool.getConnection();
@@ -74,7 +74,7 @@ public class UserMapper {
     public static boolean login(String email, String plainPassword, ConnectionPool connectionPool) throws DatabaseException {
 
 
-        String SQL = "SELECT password FROM  public.users WHERE  email = ?";
+        String SQL = "SELECT password FROM  users WHERE  email = ?";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(SQL)) {
