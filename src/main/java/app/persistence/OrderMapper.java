@@ -185,6 +185,8 @@ public class OrderMapper {
             }
         } catch (SQLException e) {
             throw new DatabaseException("Database connection error: " + e.getMessage());
+        }
+    }
 
           public static List<Order> getAllOrdersByUserId(int userID, ConnectionPool connectionPool) throws DatabaseException {
         List<Order> orders = new ArrayList<>();
