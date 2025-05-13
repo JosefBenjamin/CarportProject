@@ -50,6 +50,7 @@ public class Calculator {
 
     public Calculator(int width, int length, int height, ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
+        this.materialMapper = new MaterialMapper();
 
         this.width = width;
         this.length = length;

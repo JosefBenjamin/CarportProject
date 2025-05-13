@@ -11,6 +11,7 @@ public class Order {
     private double totalPrice;
     private int status;
     private BillOfMaterials billOfMaterials;
+    private User user;
 
     public Order(int orderID, int userID, Carport carport, LocalDate date, double totalPrice, int status) {
         this.orderID = orderID;
@@ -75,6 +76,14 @@ public class Order {
 
     public void setBillOfMaterials(BillOfMaterials billOfMaterials) {
         this.billOfMaterials = billOfMaterials;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

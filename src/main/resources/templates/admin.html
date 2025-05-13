@@ -33,21 +33,47 @@
         .add-material-form input {
             margin-right: 10px;
         }
+        .edit-order-form {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+        .edit-order-form input, .edit-order-form select {
+            margin: 5px 0;
+        }
+        .success-message, .error-message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
     </style>
 </head>
 <body>
 <div class="admin-header">
     <h1>Admin Page - Forespørgelser</h1>
     <a href="/" th:href="@{/}">Tilbage til forsiden</a>
-    <form th:action="@{/admin/show-materials}" method="post" style="display: inline;">
-        <button type="submit">Se materialer</button>
-    </form>
+    <a href="/admin/show-materials" th:href="@{/admin/show-materials}">Se materialer</a>
     <form th:action="@{/admin/show-orders}" method="post" style="display: inline;" th:if="${view == 'materials'}">
         <button type="submit">Se ordrer</button>
     </form>
 </div>
 
 <div class="admin-content">
+    <!-- Success Message -->
+    <div th:if="${successMessage}" class="success-message">
+        <p th:text="${successMessage}"></p>
+    </div>
+
+    <!-- Error Message -->
     <div th:if="${error}" class="error-message">
         <p th:text="${error}"></p>
     </div>
@@ -69,7 +95,9 @@
                 </thead>
                 <tbody>
                 <tr th:each="order : ${orders}">
-                    <td th:text="${order.orderID}"></td>
+                    <td>
+                        <a href="#" th:text="${order.orderID}" th:onclick="'showEditForm(' + ${order.orderID} + ')'"></a>
+                    </td>
                     <td th:text="${order.userID}"></td>
                     <td th:text="${order.carport.carportWidth} + ' x ' + ${order.carport.carportLength} + ' x ' + ${order.carport.carportHeight} + ' cm'"></td>
                     <td th:text="${order.date}"></td>
@@ -90,6 +118,25 @@
                 </tr>
                 </tbody>
             </table>
+
+            <!-- Edit Order Form (Hidden by Default) -->
+            <div th:each="order : ${orders}" th:id="'edit-form-' + ${order.orderID}" style="display: none;" class="edit-order-form">
+                <h3>Rediger Ordre <span th:text="${order.orderID}"></span></h3>
+                <form th:action="@{/admin/update-order}" method="post">
+                    <input type="hidden" name="orderId" th:value="${order.orderID}" />
+                    <p><strong>Kunde Email:</strong> <span th:text="${order.user.email}"></span></p>
+                    <p><strong>Kunde Telefonnummer:</strong> <span th:text="${order.user.tlf}"></span></p>
+                    <label>Carport Bredde (cm):</label>
+                    <input type="number" name="carportWidth" th:value="${order.carport.carportWidth}" required /><br/>
+                    <label>Carport Længde (cm):</label>
+                    <input type="number" name="carportLength" th:value="${order.carport.carportLength}" required /><br/>
+                    <label>Carport Højde (cm):</label>
+                    <input type="number" name="carportHeight" th:value="${order.carport.carportHeight}" required /><br/>
+                    <label>Status:</label>
+                    <input type="number" name="status" th:value="${order.status}" required /><br/>
+                    <button type="submit">Update Order</button>
+                </form>
+            </div>
         </div>
 
         <div th:unless="${orders != null and !orders.isEmpty}">
@@ -159,5 +206,12 @@
         <p>© 2025 Fog Carport. Alle rettigheder forbeholdes.</p>
     </div>
 </footer>
+
+<script>
+    function showEditForm(orderId) {
+        document.querySelectorAll('.edit-order-form').forEach(form => form.style.display = 'none');
+        document.getElementById('edit-form-' + orderId).style.display = 'block';
+    }
+</script>
 </body>
 </html>
