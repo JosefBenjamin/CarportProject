@@ -106,19 +106,22 @@ class MaterialMapperTest {
                 stmt.execute("DELETE FROM test.material_setup_descriptions");
                 stmt.execute("INSERT INTO test.material_setup_descriptions SELECT * FROM public.material_setup_descriptions");
 
-                // Reset sequences for tables that have them (example for users)
-                stmt.execute("SELECT setval('test.users_user_id_seq', COALESCE((SELECT MAX(user_id) FROM test.users), 1), true)");
-                stmt.execute("SELECT setval('test.complete_unit_material_cum_id_seq', COALESCE((SELECT MAX(cum_id) FROM test.complete_unit_material), 1), true)");
+                // Reset sequences
+                // These tables are cleared and you want predictable ID starts from 1
+                stmt.execute("SELECT setval('test.users_user_id_seq', 1, false)");
+                stmt.execute("SELECT setval('test.complete_unit_material_cum_id_seq', 1, false)");
+                stmt.execute("SELECT setval('test.orders_order_id_seq', 1, false)");
+
+                // These tables are repopulated from public schema, so continue after MAX(id)
                 stmt.execute("SELECT setval('test.material_length_ml_id_seq', COALESCE((SELECT MAX(ml_id) FROM test.material_length), 1), true)");
                 stmt.execute("SELECT setval('test.material_setup_descriptions_msd_id_seq', COALESCE((SELECT MAX(msd_id) FROM test.material_setup_descriptions), 1), true)");
                 stmt.execute("SELECT setval('test.materials_material_id_seq', COALESCE((SELECT MAX(material_id) FROM test.materials), 1), true)");
-                stmt.execute("SELECT setval('test.orders_order_id_seq', COALESCE((SELECT MAX(order_id) FROM test.orders), 1), true)");
-                // Add more setval calls for other tables if needed
             }
         } catch (SQLException e) {
             fail("Database setup failed: " + e.getMessage());
         }
     }
+
 
 
     //Connection is all good
