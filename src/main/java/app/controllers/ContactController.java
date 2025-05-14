@@ -14,7 +14,7 @@ public class ContactController {
 
 
     public static void routes(Javalin app, ConnectionPool connectionPool) {
-        app.get("/contact", ctx -> contactInfo(ctx, connectionPool), UserRole.VISITOR);
+        app.get("/contact", ctx -> contactInfo(ctx, connectionPool), UserRole.LOGGED_IN, UserRole.ADMIN);
     }
 
 

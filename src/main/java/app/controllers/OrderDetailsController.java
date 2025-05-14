@@ -17,7 +17,7 @@ public class OrderDetailsController {
         app.get("/orderdetails", ctx -> {
             fetchBillOfMaterials(ctx, connectionPool);
             ctx.render("orderdetails.html");
-        }, UserRole.LOGGED_IN);
+        }, UserRole.LOGGED_IN, UserRole.ADMIN);
 
     }
 

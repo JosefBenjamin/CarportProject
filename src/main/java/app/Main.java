@@ -43,16 +43,21 @@ public class Main {
             ctx.attribute("session", ctx.sessionAttributeMap());
         });
         app.beforeMatched(ctx -> {
+            String path = ctx.path();
+            // Skip auth for static files
+            if (path.startsWith("/css/") || path.startsWith("/images/")) {
+                return; // Don't check access for static files
+            }
             UserRole userRole = AuthUser.getUserRole(ctx);
             if (!ctx.routeRoles().contains(userRole)) {
                 throw new UnauthorizedResponse();
             }
+            System.out.println("Role at " + ctx.path() + " is " + AuthUser.getUserRole(ctx));
         });
 
         app.get("/", ctx -> {
             System.out.println("Visitor ID: " + ctx.sessionAttribute("currentVisitor"));
-            ctx.render("index.html");
-        }, UserRole.VISITOR);
+            ctx.render("index.html");}, UserRole.VISITOR, UserRole.LOGGED_IN, UserRole.ADMIN);
 
         UserController.routes(app, connectionPool);
         AdminController.routes(app, connectionPool);

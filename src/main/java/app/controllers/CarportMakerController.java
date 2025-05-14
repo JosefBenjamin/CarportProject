@@ -40,7 +40,7 @@ public class CarportMakerController {
         }, UserRole.VISITOR);
 
         app.post("/sendOrder", ctx -> sendAndSaveCarportQuery(ctx, connectionPool), UserRole.LOGGED_IN);
-        app.post("/calculatePrice", ctx -> calculateCarport(ctx, connectionPool), UserRole.VISITOR);
+        app.post("/calculatePrice", ctx -> calculateCarport(ctx, connectionPool), UserRole.VISITOR, UserRole.LOGGED_IN, UserRole.ADMIN);
 
     }
 

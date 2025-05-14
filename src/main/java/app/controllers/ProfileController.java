@@ -19,13 +19,13 @@ public class ProfileController {
         app.get("/userprofile", ctx -> {
             fetchOrders(ctx, connectionPool);
             ctx.render("userprofile.html");
-        }, UserRole.LOGGED_IN);
-        app.post("updateMail", ctx -> updateMail(ctx, connectionPool), UserRole.LOGGED_IN);
-        app.post("updatePassword", ctx -> updatePassword(ctx, connectionPool), UserRole.LOGGED_IN);
-        app.post("updateTlf", ctx -> updateTlf(ctx, connectionPool), UserRole.LOGGED_IN);
-        app.post("updateAddress", ctx -> updateAddress(ctx, connectionPool), UserRole.LOGGED_IN);
-        app.post("updateCityAndZip", ctx -> updateCityAndZipCode(ctx, connectionPool), UserRole.LOGGED_IN);
-        app.post("/orderconfirmation", ctx -> handlePayment(ctx, connectionPool), UserRole.LOGGED_IN);
+        }, UserRole.LOGGED_IN, UserRole.ADMIN);
+        app.post("updateMail", ctx -> updateMail(ctx, connectionPool), UserRole.LOGGED_IN, UserRole.ADMIN);
+        app.post("updatePassword", ctx -> updatePassword(ctx, connectionPool), UserRole.LOGGED_IN, UserRole.ADMIN);
+        app.post("updateTlf", ctx -> updateTlf(ctx, connectionPool), UserRole.LOGGED_IN, UserRole.ADMIN);
+        app.post("updateAddress", ctx -> updateAddress(ctx, connectionPool), UserRole.LOGGED_IN, UserRole.ADMIN);
+        app.post("updateCityAndZip", ctx -> updateCityAndZipCode(ctx, connectionPool), UserRole.LOGGED_IN, UserRole.ADMIN);
+        app.post("/orderconfirmation", ctx -> handlePayment(ctx, connectionPool), UserRole.LOGGED_IN, UserRole.ADMIN);
     }
 
     private static void handlePayment(Context ctx, ConnectionPool connectionPool) {

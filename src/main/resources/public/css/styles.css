@@ -1,10 +1,10 @@
 .footer-content {
-        background-color: #FCFCFC; /* Light background */
-        color: #003D76;          /* Dark blue text */
-        padding: 15px 0;         /* Padding below the bar */
-        text-align: center;      /* center text */
-        font-size: 0.9rem;
-        border-top: 5px solid #003D76; /* Solid color bar */
+    background-color: #FCFCFC; /* Light background */
+    color: #003D76;          /* Dark blue text */
+    padding: 15px 0;         /* Padding below the bar */
+    text-align: center;      /* center text */
+    font-size: 0.9rem;
+    border-top: 5px solid #003D76; /* Solid color bar */
 }
 
 .landingpage-boxes {
@@ -21,7 +21,8 @@
 .press-to-carport,
 .press-to-login,
 .press-to-admin,
-.press-to-register {
+.press-to-register,
+.press-to-contact { /* Added .press-to-contact here */
     background-color: #FCFCFC;
     border: 1px solid #d0d0e0; /* Subtle light grey border */
     border-radius: 6px;
@@ -59,7 +60,9 @@
 
 .press-to-carport:hover,
 .press-to-login:hover,
-.press-to-register:hover {
+.press-to-admin:hover,    /* Added .press-to-admin:hover */
+.press-to-register:hover,
+.press-to-contact:hover { /* Added .press-to-contact:hover */
     background-color: #F2F2FF; /* Accent background on hover */
     transform: translateY(-4px);
     box-shadow: 0 6px 12px rgba(0, 61, 118, 0.1); /* Subtle blue-tinted shadow */
@@ -69,13 +72,17 @@
 /* Keep text colors readable on light hover background */
 .press-to-carport:hover h2,
 .press-to-login:hover h2,
-.press-to-register:hover h2 {
+.press-to-admin:hover h2,    /* Added .press-to-admin:hover h2 */
+.press-to-register:hover h2,
+.press-to-contact:hover h2 { /* Added .press-to-contact:hover h2 */
     color: #003D76; /* Keep heading blue */
 }
 
 .press-to-carport:hover p,
 .press-to-login:hover p,
-.press-to-register:hover p {
+.press-to-admin:hover p,    /* Added .press-to-admin:hover p */
+.press-to-register:hover p,
+.press-to-contact:hover p { /* Added .press-to-contact:hover p */
     color: #333; /* Slightly darker paragraph for contrast */
 }
 
