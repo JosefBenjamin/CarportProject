@@ -5,6 +5,7 @@ import app.entities.User;
 import app.exceptions.DatabaseException;
 import app.persistence.CompleteUnitMaterialMapper;
 import app.persistence.ConnectionPool;
+import app.utilities.security.UserRole;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -16,7 +17,7 @@ public class OrderDetailsController {
         app.get("/orderdetails", ctx -> {
             fetchBillOfMaterials(ctx, connectionPool);
             ctx.render("orderdetails.html");
-        });
+        }, UserRole.LOGGED_IN);
 
     }
 

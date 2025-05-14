@@ -1,6 +1,7 @@
 package app.controllers;
 
 import app.persistence.ConnectionPool;
+import app.utilities.security.UserRole;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -13,7 +14,7 @@ public class ContactController {
 
 
     public static void routes(Javalin app, ConnectionPool connectionPool) {
-        app.get("/contact", ctx -> contactInfo(ctx, connectionPool));
+        app.get("/contact", ctx -> contactInfo(ctx, connectionPool), UserRole.VISITOR);
     }
 
 

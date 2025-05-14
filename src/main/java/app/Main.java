@@ -5,11 +5,11 @@ import app.config.SessionConfig;
 import app.config.ThymeleafConfig;
 import app.controllers.*;
 import app.persistence.ConnectionPool;
-import app.utilities.MailSender;
+import app.utilities.security.AuthUser;
+import app.utilities.security.UserRole;
 import io.javalin.Javalin;
+import io.javalin.http.UnauthorizedResponse;
 import io.javalin.rendering.template.JavalinThymeleaf;
-
-import java.io.IOException;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -42,11 +42,17 @@ public class Main {
             }
             ctx.attribute("session", ctx.sessionAttributeMap());
         });
+        app.beforeMatched(ctx -> {
+            UserRole userRole = AuthUser.getUserRole(ctx);
+            if (!ctx.routeRoles().contains(userRole)) {
+                throw new UnauthorizedResponse();
+            }
+        });
 
         app.get("/", ctx -> {
             System.out.println("Visitor ID: " + ctx.sessionAttribute("currentVisitor"));
             ctx.render("index.html");
-        });
+        }, UserRole.VISITOR);
 
         UserController.routes(app, connectionPool);
         AdminController.routes(app, connectionPool);

@@ -11,8 +11,7 @@ import app.persistence.ZipCodeMapper;
 import app.utilities.StatusChecker;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import org.jetbrains.annotations.NotNull;
-
+import app.utilities.security.UserRole;
 import java.util.List;
 
 public class ProfileController {
@@ -20,13 +19,13 @@ public class ProfileController {
         app.get("/userprofile", ctx -> {
             fetchOrders(ctx, connectionPool);
             ctx.render("userprofile.html");
-        });
-        app.post("updateMail", ctx -> updateMail(ctx, connectionPool));
-        app.post("updatePassword", ctx -> updatePassword(ctx, connectionPool));
-        app.post("updateTlf", ctx -> updateTlf(ctx, connectionPool));
-        app.post("updateAddress", ctx -> updateAddress(ctx, connectionPool));
-        app.post("updateCityAndZip", ctx -> updateCityAndZipCode(ctx, connectionPool));
-        app.post("/orderconfirmation", ctx -> handlePayment(ctx, connectionPool));
+        }, UserRole.LOGGED_IN);
+        app.post("updateMail", ctx -> updateMail(ctx, connectionPool), UserRole.LOGGED_IN);
+        app.post("updatePassword", ctx -> updatePassword(ctx, connectionPool), UserRole.LOGGED_IN);
+        app.post("updateTlf", ctx -> updateTlf(ctx, connectionPool), UserRole.LOGGED_IN);
+        app.post("updateAddress", ctx -> updateAddress(ctx, connectionPool), UserRole.LOGGED_IN);
+        app.post("updateCityAndZip", ctx -> updateCityAndZipCode(ctx, connectionPool), UserRole.LOGGED_IN);
+        app.post("/orderconfirmation", ctx -> handlePayment(ctx, connectionPool), UserRole.LOGGED_IN);
     }
 
     private static void handlePayment(Context ctx, ConnectionPool connectionPool) {

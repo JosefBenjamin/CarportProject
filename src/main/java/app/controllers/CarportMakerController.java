@@ -9,10 +9,9 @@ import app.persistence.CompleteUnitMaterialMapper;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.utilities.Calculator;
+import app.utilities.security.UserRole;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -38,10 +37,10 @@ public class CarportMakerController {
             ctx.sessionAttribute("orderSend", null);     // clear order flag
 
             ctx.render("carportmaker.html");
-        });
+        }, UserRole.VISITOR);
 
-        app.post("/sendOrder", ctx -> sendAndSaveCarportQuery(ctx, connectionPool));
-        app.post("/calculatePrice", ctx -> calculateCarport(ctx, connectionPool));
+        app.post("/sendOrder", ctx -> sendAndSaveCarportQuery(ctx, connectionPool), UserRole.LOGGED_IN);
+        app.post("/calculatePrice", ctx -> calculateCarport(ctx, connectionPool), UserRole.VISITOR);
 
     }
 
