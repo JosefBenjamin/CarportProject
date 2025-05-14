@@ -333,4 +333,41 @@ public class Calculator {
     public List<CompleteUnitMaterial> getOrderMaterials() {
         return orderMaterials;
     }
+
+
+    public MaterialMapper getMaterialMapper() {
+        return materialMapper;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public Material getPost() {
+        return post;
+    }
+
+    public List<Material> getBeams() {
+        return beams;
+    }
+
+    public Material getRafter() {
+        return rafter;
+    }
+
+    public List<Material> getRoof() {
+        return roof;
+    }
+
+    public int getRoofPanelWidth() {
+        return roofPanelWidth;
+    }
 }
