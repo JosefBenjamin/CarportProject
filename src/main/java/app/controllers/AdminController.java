@@ -6,6 +6,7 @@ import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.persistence.MaterialMapper;
 import app.utilities.Calculator;
+import app.utilities.StatusChecker;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -35,6 +36,7 @@ public class AdminController {
         try {
             List<Order> orders = OrderMapper.getAllOrdersWithDetails(connectionPool);
             System.out.println("Fetched orders: " + orders);
+
             Map<Integer, String> descriptions;
             try {
                 descriptions = OrderMapper.getDescriptions(connectionPool);
@@ -45,6 +47,7 @@ public class AdminController {
             }
 
             ctx.attribute("orders", orders);
+            ctx.attribute("StatusChecker", new StatusChecker());
             ctx.attribute("descriptions", descriptions);
             ctx.attribute("view", "orders");
             ctx.render("admin.html");
