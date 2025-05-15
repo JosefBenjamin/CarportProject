@@ -46,10 +46,18 @@ public class Main {
         });
 
         // Access management for admin routes
-        app.beforeMatched("/admin/*", ctx -> {
-            User user = ctx.sessionAttribute("currentUser");
-            if (user == null || user.getRole() != Role.ADMIN) {
-                ctx.redirect("/");
+        app.beforeMatched(ctx -> {
+            if (ctx.path().startsWith("/admin")) {
+                User user = ctx.sessionAttribute("currentUser");
+                if (user == null) {
+                    ctx.sessionAttribute("currentUser", null); // Clear any stale session
+                    ctx.redirect("/");
+                    return;
+                }
+                if (user.getRole() != Role.ADMIN) {
+                    ctx.redirect("/");
+                    return;
+                }
             }
         });
 
