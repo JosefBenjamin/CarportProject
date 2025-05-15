@@ -34,9 +34,7 @@
             margin-right: 10px;
         }
         .edit-order-form {
-            margin: 20px 0;
             padding: 10px;
-            border: 1px solid #ddd;
             background-color: #f9f9f9;
         }
         .edit-order-form input, .edit-order-form select {
@@ -94,49 +92,60 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="order : ${orders}">
-                    <td>
-                        <a href="#" th:text="${order.orderID}" th:onclick="'showEditForm(' + ${order.orderID} + ')'"></a>
-                    </td>
-                    <td th:text="${order.userID}"></td>
-                    <td th:text="${order.carport.carportWidth} + ' x ' + ${order.carport.carportLength} + ' x ' + ${order.carport.carportHeight} + ' cm'"></td>
-                    <td th:text="${order.date}"></td>
-                    <td th:text="${order.totalPrice} + ' DKK'"></td>
-                    <td th:text="${order.status}"></td>
-                    <td>
-                        <div th:if="${order.billOfMaterials != null and !order.billOfMaterials.completeUnitMaterials.isEmpty}">
-                            <ul>
-                                <li th:each="material : ${order.billOfMaterials.completeUnitMaterials}">
-                                    <span th:text="'Materiale: ' + ${material.materialName} + ', Antal: ' + ${material.quantity} + ', Beskrivelse: ' + (${descriptions[material.msdId] != null} ? ${descriptions[material.msdId]} : 'Ukendt beskrivelse')"></span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div th:unless="${order.billOfMaterials != null and !order.billOfMaterials.completeUnitMaterials.isEmpty}">
-                            Ingen materialer tilknyttet.
-                        </div>
-                    </td>
-                </tr>
+                <!-- Use th:block to group the data row and edit form row together -->
+                <th:block th:each="order : ${orders}">
+                    <!-- Order data row -->
+                    <tr>
+                        <td>
+                            <a href="#" th:text="${order.orderID}" th:onclick="'showEditForm(' + ${order.orderID} + ')'"></a>
+                        </td>
+                        <td th:text="${order.userID}"></td>
+                        <td th:text="${order.carport.carportWidth} + ' x ' + ${order.carport.carportLength} + ' x ' + ${order.carport.carportHeight} + ' cm'"></td>
+                        <td th:text="${order.date}"></td>
+                        <td th:text="${order.totalPrice} + ' DKK'"></td>
+                        <td th:text="${StatusChecker.getStatusText(order.status)}"></td>
+                        <td>
+                            <div th:if="${order.billOfMaterials != null and !order.billOfMaterials.completeUnitMaterials.isEmpty}">
+                                <ul>
+                                    <li th:each="material : ${order.billOfMaterials.completeUnitMaterials}">
+                                        <span th:text="'Materiale: ' + ${material.materialName} + ', Antal: ' + ${material.quantity} + ', Beskrivelse: ' + (${descriptions[material.msdId] != null} ? ${descriptions[material.msdId]} : 'Ukendt beskrivelse')"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div th:unless="${order.billOfMaterials != null and !order.billOfMaterials.completeUnitMaterials.isEmpty}">
+                                Ingen materialer tilknyttet.
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Edit form row immediately follows the data row -->
+                    <tr th:id="'edit-form-row-' + ${order.orderID}" style="display: none;">
+                        <td colspan="7">
+                            <div class="edit-order-form">
+                                <h3>Rediger Ordre <span th:text="${order.orderID}"></span></h3>
+                                <form th:action="@{/admin/update-order}" method="post">
+                                    <input type="hidden" name="orderId" th:value="${order.orderID}" />
+                                    <p><strong>Kunde Email:</strong> <span th:text="${order.user.email}"></span></p>
+                                    <p><strong>Kunde Telefonnummer:</strong> <span th:text="${order.user.tlf}"></span></p>
+                                    <label>Carport Bredde (cm):</label>
+                                    <input type="number" name="carportWidth" th:value="${order.carport.carportWidth}" required /><br/>
+                                    <label>Carport Længde (cm):</label>
+                                    <input type="number" name="carportLength" th:value="${order.carport.carportLength}" required /><br/>
+                                    <label>Carport Højde (cm):</label>
+                                    <input type="number" name="carportHeight" th:value="${order.carport.carportHeight}" required /><br/>
+                                    <label>Status:</label>
+                                    <select name="status" required>
+                                        <option value="1" th:selected="${order.status == 1}">Behandler</option>
+                                        <option value="2" th:selected="${order.status == 2}">Afventer betaling</option>
+                                        <option value="3" th:selected="${order.status == 3}">Forespørgsel afsluttet</option>
+                                    </select><br/>
+                                    <button type="submit">Update Order</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </th:block>
                 </tbody>
             </table>
-
-            <!-- Edit Order Form (Hidden by Default) -->
-            <div th:each="order : ${orders}" th:id="'edit-form-' + ${order.orderID}" style="display: none;" class="edit-order-form">
-                <h3>Rediger Ordre <span th:text="${order.orderID}"></span></h3>
-                <form th:action="@{/admin/update-order}" method="post">
-                    <input type="hidden" name="orderId" th:value="${order.orderID}" />
-                    <p><strong>Kunde Email:</strong> <span th:text="${order.user.email}"></span></p>
-                    <p><strong>Kunde Telefonnummer:</strong> <span th:text="${order.user.tlf}"></span></p>
-                    <label>Carport Bredde (cm):</label>
-                    <input type="number" name="carportWidth" th:value="${order.carport.carportWidth}" required /><br/>
-                    <label>Carport Længde (cm):</label>
-                    <input type="number" name="carportLength" th:value="${order.carport.carportLength}" required /><br/>
-                    <label>Carport Højde (cm):</label>
-                    <input type="number" name="carportHeight" th:value="${order.carport.carportHeight}" required /><br/>
-                    <label>Status:</label>
-                    <input type="number" name="status" th:value="${order.status}" required /><br/>
-                    <button type="submit">Update Order</button>
-                </form>
-            </div>
         </div>
 
         <div th:unless="${orders != null and !orders.isEmpty}">
@@ -209,8 +218,10 @@
 
 <script>
     function showEditForm(orderId) {
-        document.querySelectorAll('.edit-order-form').forEach(form => form.style.display = 'none');
-        document.getElementById('edit-form-' + orderId).style.display = 'block';
+        // Hide all edit forms
+        document.querySelectorAll('[id^="edit-form-row-"]').forEach(row => row.style.display = 'none');
+        // Show the edit form for the clicked order
+        document.getElementById('edit-form-row-' + orderId).style.display = 'table-row';
     }
 </script>
 </body>
