@@ -22,14 +22,14 @@
 .press-to-login,
 .press-to-admin,
 .press-to-register,
-.press-to-contact { /* Added .press-to-contact here */
+.press-to-contact { /* Added .press-to-contact to the group */
     background-color: #FCFCFC;
     border: 1px solid #d0d0e0; /* Subtle light grey border */
     border-radius: 6px;
     width: 280px; /* Slightly smaller width */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     text-align: center;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease; /* Base transition */
 }
 
 .landingpage-boxes a {
@@ -58,32 +58,51 @@
     transition: color 0.25s ease;
 }
 
+/* Enhancement from Brief: Smooth Hover & Active States (Section 2) & Accessibility (Section 7) */
+/* Applied to .press-to-* boxes on the landing page for more dynamic interaction and clear focus indication. */
 .press-to-carport:hover,
 .press-to-login:hover,
-.press-to-admin:hover,    /* Added .press-to-admin:hover */
+.press-to-admin:hover,
 .press-to-register:hover,
-.press-to-contact:hover { /* Added .press-to-contact:hover */
-    background-color: #F2F2FF; /* Accent background on hover */
-    transform: translateY(-4px);
-    box-shadow: 0 6px 12px rgba(0, 61, 118, 0.1); /* Subtle blue-tinted shadow */
-    border-color: #c0c0f0; /* Slightly darker border for accent */
+.press-to-contact:hover {
+    background-color: #F2F2FF;
+    transform: translateY(-4px) scale(1.025); /* Added scale */
+    box-shadow: 0 10px 24px rgba(0, 61, 118, 0.12); /* Enhanced shadow */
+    border-color: #b0b8ff; /* Refined border color */
+    transition: all 0.25s cubic-bezier(.4,2,.6,1); /* Smoother, custom transition from brief */
 }
 
-/* Keep text colors readable on light hover background */
+/* Enhancement from Brief: Accessibility - Focus Outlines (Section 2 & 7) */
+/* Ensures keyboard navigators get clear visual feedback matching the hover state. */
+.press-to-carport:focus-visible,
+.press-to-login:focus-visible,
+.press-to-admin:focus-visible,
+.press-to-register:focus-visible,
+.press-to-contact:focus-visible {
+    outline: 2px solid #003D76;
+    outline-offset: 2px;
+    /* Mirroring hover styles for focus-visible for consistency */
+    background-color: #F2F2FF;
+    transform: translateY(-4px) scale(1.025);
+    box-shadow: 0 10px 24px rgba(0, 61, 118, 0.12);
+    border-color: #b0b8ff;
+}
+
+
 .press-to-carport:hover h2,
 .press-to-login:hover h2,
-.press-to-admin:hover h2,    /* Added .press-to-admin:hover h2 */
+.press-to-admin:hover h2, /* Added .press-to-admin */
 .press-to-register:hover h2,
-.press-to-contact:hover h2 { /* Added .press-to-contact:hover h2 */
-    color: #003D76; /* Keep heading blue */
+.press-to-contact:hover h2 { /* Added .press-to-contact */
+    color: #003D76;
 }
 
 .press-to-carport:hover p,
 .press-to-login:hover p,
-.press-to-admin:hover p,    /* Added .press-to-admin:hover p */
+.press-to-admin:hover p, /* Added .press-to-admin */
 .press-to-register:hover p,
-.press-to-contact:hover p { /* Added .press-to-contact:hover p */
-    color: #333; /* Slightly darker paragraph for contrast */
+.press-to-contact:hover p { /* Added .press-to-contact */
+    color: #333;
 }
 
 /* ==================
@@ -135,7 +154,8 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.register-form input:focus {
+.register-form input:focus,
+.login-form input:focus { /* Grouped focus style for consistency */
     outline: none;
     border-color: #003D76;
     box-shadow: 0 0 0 2px rgba(0, 61, 118, 0.15);
@@ -169,9 +189,18 @@
 .register-message {
     text-align: center;
     margin-top: 20px;
-    color: #003D76;
+    color: #003D76; /* Default color, can be overridden for errors */
     font-weight: bold;
-    min-height: 1.2em;
+    min-height: 1.2em; /* Ensures space even if briefly empty before JS/Thymeleaf hides it */
+    transition: color 0.3s; /* From Brief */
+}
+
+/* Enhancement from Brief: Conditional Display (Section 3) */
+/* Ensures that empty message containers don't take up space or look broken. */
+/* This is often handled by th:if in Thymeleaf, but CSS can be a fallback or supplement. */
+.register-message:empty,
+.login-message:empty {
+    display: none;
 }
 
 
@@ -212,11 +241,7 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.login-form input:focus {
-    outline: none;
-    border-color: #003D76;
-    box-shadow: 0 0 0 2px rgba(0, 61, 118, 0.15);
-}
+/* Focus style grouped with register form inputs */
 
 .login-button {
     text-align: center;
@@ -246,10 +271,12 @@
 .login-message {
     text-align: center;
     margin-top: 20px;
-    color: #D9534F; /* Often error messages are red, adjust if needed */
+    color: #D9534F; /* Error messages often red */
     font-weight: bold;
-    min-height: 1.2em;
+    min-height: 1.2em; /* Ensures space */
+    transition: color 0.3s; /* From Brief */
 }
+
 
 .navbar {
     background-color: #FCFCFC;
@@ -291,6 +318,15 @@
     background-color: #F2F2FF;
 }
 
+/* Enhancement from Brief: Accessibility - Focus States for Nav Links */
+.navigation-links a:not(:first-child):not(.logout-button):focus-visible,
+.navigation-links span:focus-visible {
+    background-color: #F2F2FF; /* Match hover */
+    outline: 2px solid #003D76;
+    outline-offset: -2px; /* Adjust to be inside padding */
+}
+
+
 .logout-button {
     background-color: antiquewhite;
     color: #002a50;
@@ -303,4 +339,85 @@
 
 .logout-button:active {
     transform: translateY(1px);
+}
+
+/* Enhancement from Brief: Animations & Visual Polish (Section 4) */
+/* Subtle page fade-ins or section reveals. Apply .fade-in class to elements in HTML. */
+.fade-in {
+    animation: fadeIn 0.6s cubic-bezier(.4,2,.6,1);
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(25px);}
+    to   { opacity: 1; transform: none; }
+}
+
+/* Admin page specific styles - minor additions for consistency */
+.admin-header a:focus-visible,
+.admin-header form button:focus-visible,
+.add-material-form button:focus-visible,
+.edit-order-form button:focus-visible,
+table a:focus-visible, /* For order ID link */
+table button:focus-visible { /* For delete material button */
+    outline: 2px solid #003D76;
+    outline-offset: 1px;
+}
+
+/* Carportmaker page specific styles - for consistency */
+.carport-form input[type="submit"]:focus-visible,
+.login-warning a:focus-visible {
+    outline: 2px solid #003D76;
+    outline-offset: 1px;
+}
+
+/* Userprofile page specific styles - for consistency */
+.userprofile-page form button:focus-visible, /* Assuming a wrapper class might be good here */
+.orders-section table button:focus-visible,
+.orders-section table a:focus-visible {
+    outline: 2px solid #003D76;
+    outline-offset: 1px;
+}
+
+.landingpage-boxes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* or space-evenly/space-around, up to you */
+    gap: 2rem; /* space between boxes */
+    margin: 2rem auto;
+    max-width: 1200px; /* optional, for centering and responsive layout */
+}
+
+.landingpage-boxes > div {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #dde;
+    padding: 2rem 1.5rem;
+    min-width: 270px;
+    max-width: 340px;
+    flex: 1 1 300px; /* flex-grow, flex-shrink, flex-basis */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    text-align: center;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.landingpage-boxes > div:hover {
+    box-shadow: 0 6px 24px rgba(0,0,30,0.13);
+    transform: translateY(-4px) scale(1.03);
+}
+
+.landingpage-boxes a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+}
+
+@media (max-width: 900px) {
+    .landingpage-boxes {
+        flex-direction: column;
+        align-items: center;
+    }
+    .landingpage-boxes > div {
+        max-width: 90vw;
+        width: 100%;
+    }
 }
