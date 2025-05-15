@@ -40,26 +40,32 @@
     </div>
 
 
-    <div class="press-to-login">
-        <a href="login.html" th:href="@{/login}">
+    <div class="press-to-login" th:if="${session.currentUser == null}">
+        <a href="login.html" th:href="@{/login}" th:if="${session.currentUser == null}">
             <h2>LOG PÅ</h2>
             <p>Har du allerede en bruger? Så log på her</p>
         </a>
     </div>
 
 
-    <div class="press-to-register">
-        <a href="register.html" th:href="@{/register}" class="box">
+    <div class="press-to-register" th:if="${session.currentUser == null}">
+        <a href="register.html" th:href="@{/register}" th:if="${session.currentUser == null}" class="box">
             <h2>REGISTRER DIG</h2>
             <p>Har du ikke en bruger endnu? Registrer dig nu og bliv tildelt en salgsperson der kan vejlede dig gennem
                 din carport rejse</p>
         </a>
     </div>
 
-    <div class="press-to-admin">
+    <div class="press-to-admin" th:if="${session.currentUser != null and session.currentUser.isAdmin}">
         <a href="/admin" th:if="${session.currentUser != null and session.currentUser.isAdmin}" class="box">
             <h2>GÅ TIL ADMIN PAGE</h2>
             <p>Tjek kunders forespørgelser</p>
+        </a>
+    </div>
+
+    <div class="press-to-contact" th:if="${session.currentUser != null}">
+        <a href="/contact" th:if="${session.currentUser != null}" class="box">
+            <h2>KONTAKT</h2>
         </a>
     </div>
 

@@ -11,8 +11,6 @@ import app.persistence.ZipCodeMapper;
 import app.utilities.StatusChecker;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 public class ProfileController {

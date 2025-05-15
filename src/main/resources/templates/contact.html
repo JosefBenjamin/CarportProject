@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <title>Fog Carport</title>
     <link rel="icon" href="/images/carportfavicon64.png" th:href="@{/images/carportfavicon64.png}" type="image/png">
@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
 </head>
-
 <body>
 <nav class="navbar">
     <div class="navigation-links">
@@ -23,40 +22,32 @@
         <a href="/logout" th:href="@{/logout}" th:if="${session.currentUser != null}" class="logout-button">Log ud</a>
     </div>
 </nav>
+
+
 <div class="register-header">
-<h2>Stykliste</h2>
-</div>
-<div class="billOfMaterial">
-    <table>
-        <thead>
-        <tr>
-            <th>Beskrivelse</th>
-            <th>Længde</th>
-            <th>Antal</th>
-            <th>Enhed</th>
-            <th>Beskrivelse</th>
-        </tr>
-        <tr>
-            <th>Træ & Tagplader</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="completeUnitMaterial : ${billOfMaterial}">
-            <td th:text="${completeUnitMaterial.material.name}"></td>
-            <td th:text="${completeUnitMaterial.material.length}"></td>
-            <td th:text="${completeUnitMaterial.quantity}"></td>
-            <td th:text="${completeUnitMaterial.material.unitName}"></td>
-            <td th:text="${completeUnitMaterial.description}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <h1>Kom i kontakt med os</h1>
 </div>
 
-<div>
-    <a th:href="@{/userprofile}">Tilbage til din profil</a>
-</div>
+<main>
 
+    <div>
+        <p>Kontakt os på mail</p>
+        <span th:text="${contactEmail}"></span>
+    </div>
 
+    <div>
+        <p>Kontakt per telefon</p>
+        <span th:text="${contactPhone}"></span>
+
+    </div>
+
+    <div>
+        <p>Besøg os i virkeligheden</p>
+        <span th:text="${contactAddress}"></span>
+
+    </div>
+
+</main>
 
 </body>
 </html>

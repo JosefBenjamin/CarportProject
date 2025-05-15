@@ -31,19 +31,20 @@
 
 <form class="register-form" method="post">
     <label>Din email</label>
-    <input type="email" name="email" placeholder="example@example.org" th:value="${session.savedEmail}" required/>
+    <input type="email" name="email" placeholder="example@example.org" th:value="${session.savedEmail}"
+           autocomplete="email" required/>
     <label>Kodeord</label>
-    <input type="password" name="regpassword1" placeholder="" required minlength="8" maxlength="64"/>
+    <input type="password" name="regpassword1" placeholder="" autocomplete="new-password" required minlength="8" maxlength="64"/>
     <label>Gentag kodeord</label>
-    <input type="password" name="regpassword2" placeholder="" required minlength="8" maxlength="64"/>
+    <input type="password" name="regpassword2" placeholder="" autocomplete="new-password" required minlength="8" maxlength="64"/>
     <label>Telefonnummer</label>
-    <input type="tel" name="phonenumber" placeholder="" th:value="${session.savedPhone}" required/>
+    <input type="tel" name="phonenumber" placeholder="" th:value="${session.savedPhone}" autocomplete="tel" required/>
     <label>Adresse</label>
-    <input type="text" name="address" placeholder="Gammel kongevej 17" th:value="${session.savedAddress}" required/>
+    <input type="text" name="address" placeholder="Gammel kongevej 17" th:value="${session.savedAddress}" autocomplete="street-address" required/>
     <label>Postnummer</label>
-    <input type="text" name="zip" placeholder="2800" th:value="${session.savedZip}" required/>
+    <input type="text" name="zip" placeholder="2800" th:value="${session.savedZip}" autocomplete="postal-code" required/>
     <label>By</label>
-    <input type="text" name="city" placeholder="Lyngby" th:value="${session.savedCity}" required/>
+    <input type="text" name="city" placeholder="Lyngby" th:value="${session.savedCity}" autocomplete="address-level12" required/>
 
     <div class="register-button">
         <button type="submit" formaction="/register">Opret Bruger</button>

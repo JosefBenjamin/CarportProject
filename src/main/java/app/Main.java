@@ -10,8 +10,6 @@ import app.utilities.MailSender;
 import app.utilities.Role;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
-
-import java.io.IOException;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -71,7 +69,7 @@ public class Main {
         CarportMakerController.routes(app, connectionPool);
         ProfileController.routes(app, connectionPool);
         OrderDetailsController.routes(app, connectionPool);
-
+        ContactController.routes(app, connectionPool);
 
     }
 
