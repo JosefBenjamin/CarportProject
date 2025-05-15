@@ -18,7 +18,7 @@ public class OrderMapper {
 
     public static Map<Integer, String> getDescriptions(ConnectionPool connectionPool) throws DatabaseException {
         Map<Integer, String> descriptions = new HashMap<>();
-        String descriptionSql = "SELECT msd_id, description FROM public.material_setup_descriptions";
+        String descriptionSql = "SELECT msd_id, description FROM material_setup_descriptions";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(descriptionSql)) {
@@ -41,7 +41,7 @@ public class OrderMapper {
         List<Order> orders = new ArrayList<>();
         Map<Integer, List<CompleteUnitMaterial>> orderMaterialsMap = new HashMap<>();
 
-        String orderSql = "SELECT order_id, user_id, carport_width, carport_length, carport_height, date, total_price, status FROM public.orders";
+        String orderSql = "SELECT order_id, user_id, carport_width, carport_length, carport_height, date, total_price, status FROM orders";
 
         String materialSql = """
                 SELECT cum.cum_id, cum.quantity, cum.orders_id, cum.ml_id, cum.ms_description_id,

@@ -48,8 +48,8 @@ public class MaterialMapper {
     }
 
     public static void addMaterial(String name, String unitName, double meterPrice, String lengthsInput, ConnectionPool connectionPool) throws DatabaseException {
-        String insertMaterialSql = "INSERT INTO public.materials (name, unit_name, meter_price) VALUES (?, ?, ?) RETURNING material_id";
-        String insertLengthSql = "INSERT INTO public.material_length (material_id, length) VALUES (?, ?)";
+        String insertMaterialSql = "INSERT INTO materials (name, unit_name, meter_price) VALUES (?, ?, ?) RETURNING material_id";
+        String insertLengthSql = "INSERT INTO material_length (material_id, length) VALUES (?, ?)";
 
         try (Connection connection = connectionPool.getConnection()) {
             int materialId;
@@ -88,17 +88,17 @@ public class MaterialMapper {
         String deleteMaterialSql = "DELETE FROM materials WHERE material_id = ?";
 
         try (Connection connection = connectionPool.getConnection()) {
-            // Start a transaction to ensure atomicity
+
             connection.setAutoCommit(false);
 
             try {
-                // Step 1: Delete associated lengths from material_length
+                // Delete associated lengths from material_length
                 try (PreparedStatement psLengths = connection.prepareStatement(deleteLengthsSql)) {
                     psLengths.setInt(1, materialId);
                     psLengths.executeUpdate();
                 }
 
-                // Step 2: Delete the material from materials
+                // Delete the material from materials
                 try (PreparedStatement psMaterial = connection.prepareStatement(deleteMaterialSql)) {
                     psMaterial.setInt(1, materialId);
                     int rowsAffected = psMaterial.executeUpdate();
@@ -107,14 +107,11 @@ public class MaterialMapper {
                     }
                 }
 
-                // Commit the transaction
                 connection.commit();
             } catch (SQLException e) {
-                // Rollback the transaction on error
                 connection.rollback();
                 throw new DatabaseException("Error deleting material with ID " + materialId + ": " + e.getMessage());
             } finally {
-                // Restore auto-commit mode
                 connection.setAutoCommit(true);
             }
         } catch (SQLException e) {
@@ -147,8 +144,8 @@ public static int getLengthID(int materialID, int length, ConnectionPool connect
             List<Material> materials = new ArrayList<>();
             Map<Integer, Material> materialMap = new HashMap<>();
 
-            String materialSql = "SELECT material_id, name, unit_name, meter_price FROM public.materials";
-            String lengthSql = "SELECT material_id, length FROM public.material_length";
+            String materialSql = "SELECT material_id, name, unit_name, meter_price FROM materials";
+            String lengthSql = "SELECT material_id, length FROM material_length";
 
             try (Connection connection = connectionPool.getConnection()) {
                 // Fetch materials

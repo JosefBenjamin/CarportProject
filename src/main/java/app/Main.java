@@ -4,7 +4,10 @@ package app;
 import app.config.SessionConfig;
 import app.config.ThymeleafConfig;
 import app.controllers.*;
+import app.entities.User;
 import app.persistence.ConnectionPool;
+import app.utilities.MailSender;
+import app.utilities.Role;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
 import java.util.UUID;
@@ -38,6 +41,22 @@ public class Main {
                 ctx.sessionAttribute("currentVisitor", "guest-" + UUID.randomUUID());
             }
             ctx.attribute("session", ctx.sessionAttributeMap());
+        });
+
+        // Access management for admin routes
+        app.beforeMatched(ctx -> {
+            if (ctx.path().startsWith("/admin")) {
+                User user = ctx.sessionAttribute("currentUser");
+                if (user == null) {
+                    ctx.sessionAttribute("currentUser", null); // Clear any stale session
+                    ctx.redirect("/");
+                    return;
+                }
+                if (user.getRole() != Role.ADMIN) {
+                    ctx.redirect("/");
+                    return;
+                }
+            }
         });
 
         app.get("/", ctx -> {
