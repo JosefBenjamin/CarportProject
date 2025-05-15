@@ -1,9 +1,7 @@
-package app.utilities;
+package app.persistence;
 
-import app.entities.Material;
-import app.persistence.ConnectionPool;
-import app.persistence.MaterialMapper;
-import app.persistence.ZipCodeMapper;
+import app.entities.ZipCode;
+import app.exceptions.DatabaseException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,23 +9,23 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-class CalculatorTest {
+
+class ZipCodeMapperTest {
     private static final String USER = "postgres";
     private static final String PASSWORD = "postgres";
     private static final String URL = "jdbc:postgresql://localhost:5432/%s?currentSchema=public";
     private static final String DB = "cupcake";
 
     private static ConnectionPool connectionPool;
-    private static MaterialMapper materialMapper;
+    private static ZipCodeMapper zipCodeMapper;
 
     @BeforeAll
     public static void setUpClass() {
         try {
             connectionPool = ConnectionPool.getInstance(USER, PASSWORD, URL, DB);
-            materialMapper = new MaterialMapper();
+            zipCodeMapper = new ZipCodeMapper();
             try (Connection testConnection = connectionPool.getConnection()) {
                 try (Statement stmt = testConnection.createStatement()) {
                     stmt.execute("CREATE SCHEMA IF NOT EXISTS test");
@@ -132,48 +130,45 @@ class CalculatorTest {
     }
 
     @Test
-    void calculatePostAmount() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        int actual = calculator.calculatePostAmount();
+    void registerZipCodeAndCheck() {
+        ZipCode zipCode = new ZipCode(2800, "Lyngby");
+        try {
+            zipCodeMapper.registerZipCode(zipCode, connectionPool);
+            boolean actual = zipCodeMapper.zipChecker(zipCode, connectionPool);
 
-        assertEquals(6, actual);
-    }
-
-    @Test
-    void getTotalPrice() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        double actual = calculator.getTotalPrice();
-
-        assertEquals(9236.1, actual);
+            assertTrue(actual);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
 
     @Test
-    void getPost() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        Material post = calculator.getPost();
+    void getCityByZip() {
+        ZipCode zipCode = new ZipCode(2800, "Lyngby");
+        try {
+            zipCodeMapper.registerZipCode(zipCode, connectionPool);
+            String actual = zipCodeMapper.getCityByZip(zipCode.getZipCode(), connectionPool);
 
-        assertNotNull(post);
-        assertEquals("97x97 mm. trykimp. Stolpe", post.getName());
+
+            assertEquals("lyngby", actual.toLowerCase());
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    void getBeams() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        List<Material> beams = calculator.getBeams();
+    void getZipByCity() {
+        ZipCode zipCode = new ZipCode(2800, "Lyngby");
+        try {
+            zipCodeMapper.registerZipCode(zipCode, connectionPool);
+            int actual = zipCodeMapper.getZipByCity(zipCode.getCity(), connectionPool);
 
-        assertNotNull(beams);
-        assertEquals(5, beams.size());
+
+            assertEquals(2800, actual);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
-
-    @Test
-    void getRafter() {
-    }
-
-    @Test
-    void getRoof() {
-    }
-
-
 }

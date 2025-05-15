@@ -48,8 +48,8 @@ public class MaterialMapper {
     }
 
     public static void addMaterial(String name, String unitName, double meterPrice, String lengthsInput, ConnectionPool connectionPool) throws DatabaseException {
-        String insertMaterialSql = "INSERT INTO public.materials (name, unit_name, meter_price) VALUES (?, ?, ?) RETURNING material_id";
-        String insertLengthSql = "INSERT INTO public.material_length (material_id, length) VALUES (?, ?)";
+        String insertMaterialSql = "INSERT INTO materials (name, unit_name, meter_price) VALUES (?, ?, ?) RETURNING material_id";
+        String insertLengthSql = "INSERT INTO material_length (material_id, length) VALUES (?, ?)";
 
         try (Connection connection = connectionPool.getConnection()) {
             int materialId;
@@ -147,8 +147,8 @@ public static int getLengthID(int materialID, int length, ConnectionPool connect
             List<Material> materials = new ArrayList<>();
             Map<Integer, Material> materialMap = new HashMap<>();
 
-            String materialSql = "SELECT material_id, name, unit_name, meter_price FROM public.materials";
-            String lengthSql = "SELECT material_id, length FROM public.material_length";
+            String materialSql = "SELECT material_id, name, unit_name, meter_price FROM materials";
+            String lengthSql = "SELECT material_id, length FROM material_length";
 
             try (Connection connection = connectionPool.getConnection()) {
                 // Fetch materials

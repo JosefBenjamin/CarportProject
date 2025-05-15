@@ -17,7 +17,7 @@ public class ZipCodeMapper {
         int zip = zipCode.getZipCode();
         String city = zipCode.getCity();
 
-        String sql = "INSERT INTO public.zip_codes (zip_code, city) VALUES (?, ?) RETURNING zip_code, city";
+        String sql = "INSERT INTO zip_codes (zip_code, city) VALUES (?, ?) RETURNING zip_code, city";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {

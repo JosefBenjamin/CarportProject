@@ -1,9 +1,10 @@
-package app.utilities;
+package app.persistence;
 
-import app.entities.Material;
-import app.persistence.ConnectionPool;
-import app.persistence.MaterialMapper;
-import app.persistence.ZipCodeMapper;
+import app.entities.CompleteUnitMaterial;
+import app.entities.Order;
+import app.entities.User;
+import app.entities.ZipCode;
+import app.exceptions.DatabaseException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,20 +15,21 @@ import java.sql.Statement;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-class CalculatorTest {
+
+class CompleteUnitMaterialMapperTest {
     private static final String USER = "postgres";
     private static final String PASSWORD = "postgres";
     private static final String URL = "jdbc:postgresql://localhost:5432/%s?currentSchema=public";
     private static final String DB = "cupcake";
 
     private static ConnectionPool connectionPool;
-    private static MaterialMapper materialMapper;
+    private static CompleteUnitMaterialMapper completeUnitMaterialMapper;
 
     @BeforeAll
     public static void setUpClass() {
         try {
             connectionPool = ConnectionPool.getInstance(USER, PASSWORD, URL, DB);
-            materialMapper = new MaterialMapper();
+            completeUnitMaterialMapper = new CompleteUnitMaterialMapper();
             try (Connection testConnection = connectionPool.getConnection()) {
                 try (Statement stmt = testConnection.createStatement()) {
                     stmt.execute("CREATE SCHEMA IF NOT EXISTS test");
@@ -132,47 +134,38 @@ class CalculatorTest {
     }
 
     @Test
-    void calculatePostAmount() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        int actual = calculator.calculatePostAmount();
+    void getDescriptionId() {
+        try {
+            int actual = completeUnitMaterialMapper.getDescriptionId("Spær, monteres på rem", connectionPool);
 
-        assertEquals(6, actual);
+            assertEquals(10, actual);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    void getTotalPrice() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        double actual = calculator.getTotalPrice();
+    void registerCUMToOrderAndGet() {
+        User newUser = new User("test@mail.dk", "12345678", 42756486, false, "Test vej");
+        newUser.setZipCode(new ZipCode(2800, "Lyngby"));
+        try {
+            UserMapper.register(newUser, connectionPool).getUserID();
+            OrderMapper.registerOrder(1, 780, 600, 230, 10000.00, 1, connectionPool);
 
-        assertEquals(9236.1, actual);
-    }
+            List<Order> orders = OrderMapper.getAllOrdersWithDetails(connectionPool);
+            Order order = orders.get(0);
+
+            completeUnitMaterialMapper.registerCUMToOrder(6, order.getOrderID(), 31,  11, connectionPool);
+
+            List<CompleteUnitMaterial> cum = completeUnitMaterialMapper.getCompleteUnitMaterialsByOrderId(order.getOrderID(), connectionPool);
+
+            assertNotNull(cum);
+            assertEquals(1, cum.size());
 
 
-
-    @Test
-    void getPost() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        Material post = calculator.getPost();
-
-        assertNotNull(post);
-        assertEquals("97x97 mm. trykimp. Stolpe", post.getName());
-    }
-
-    @Test
-    void getBeams() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        List<Material> beams = calculator.getBeams();
-
-        assertNotNull(beams);
-        assertEquals(5, beams.size());
-    }
-
-    @Test
-    void getRafter() {
-    }
-
-    @Test
-    void getRoof() {
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
