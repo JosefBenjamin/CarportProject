@@ -6,7 +6,6 @@ import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.UserMapper;
 import app.persistence.ZipCodeMapper;
-import app.utilities.security.UserRole;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -17,12 +16,12 @@ public class UserController {
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
 
     public static void routes(Javalin app, ConnectionPool connectionPool) {
-        app.get("/register", ctx -> ctx.render("register.html"), UserRole.VISITOR); // show register page
-        app.post("/register", ctx -> register(ctx, connectionPool), UserRole.VISITOR); // handle form submission
-        app.get("/login", ctx -> ctx.render("login.html"), UserRole.VISITOR);  // show login page
-        app.post("/login", ctx -> login(ctx, connectionPool), UserRole.VISITOR);   // handle login request
-        app.get("/logout", ctx -> logout(ctx, connectionPool), UserRole.LOGGED_IN, UserRole.ADMIN);
-        app.get("/carportmaker", ctx -> ctx.render("carportmaker.html"), UserRole.LOGGED_IN, UserRole.VISITOR, UserRole.ADMIN);
+        app.get("/register", ctx -> ctx.render("register.html")); // show register page
+        app.post("/register", ctx -> register(ctx, connectionPool)); // handle form submission
+        app.get("/login", ctx -> ctx.render("login.html"));  // show login page
+        app.post("/login", ctx -> login(ctx, connectionPool));   // handle login request
+        app.get("/logout", ctx -> logout(ctx, connectionPool));
+        app.get("/carportmaker", ctx -> ctx.render("carportmaker.html"));
     }
 
 

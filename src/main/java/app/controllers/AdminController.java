@@ -6,7 +6,6 @@ import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.persistence.MaterialMapper;
 import app.utilities.Calculator;
-import app.utilities.security.UserRole;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -17,13 +16,13 @@ import java.util.Map;
 public class AdminController {
 
     public static void routes(Javalin app, ConnectionPool connectionPool) {
-        app.get("/admin", ctx -> showAdminPage(ctx, connectionPool), UserRole.ADMIN);
-        app.get("/admin/show-materials", ctx -> showMaterials(ctx, connectionPool), UserRole.ADMIN);
-        app.post("/admin/show-materials", ctx -> showMaterials(ctx, connectionPool), UserRole.ADMIN);
-        app.post("/admin/show-orders", ctx -> showOrders(ctx, connectionPool), UserRole.ADMIN);
-        app.post("/admin/add-material", ctx -> addMaterial(ctx, connectionPool), UserRole.ADMIN);
-        app.post("/admin/delete-material", ctx -> deleteMaterial(ctx, connectionPool), UserRole.ADMIN);
-        app.post("/admin/update-order", ctx -> updateOrder(ctx, connectionPool), UserRole.ADMIN);
+        app.get("/admin", ctx -> showAdminPage(ctx, connectionPool));
+        app.get("/admin/show-materials", ctx -> showMaterials(ctx, connectionPool));
+        app.post("/admin/show-materials", ctx -> showMaterials(ctx, connectionPool));
+        app.post("/admin/show-orders", ctx -> showOrders(ctx, connectionPool));
+        app.post("/admin/add-material", ctx -> addMaterial(ctx, connectionPool));
+        app.post("/admin/delete-material", ctx -> deleteMaterial(ctx, connectionPool));
+        app.post("/admin/update-order", ctx -> updateOrder(ctx, connectionPool));
     }
 
     public static void showAdminPage(Context ctx, ConnectionPool connectionPool) {
