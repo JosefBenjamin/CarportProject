@@ -421,3 +421,105 @@ table button:focus-visible { /* For delete material button */
         width: 100%;
     }
 }
+
+/********* OrderDetails ***************/
+.billOfMaterial table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.billOfMaterial th,
+.billOfMaterial td {
+    border: 1px solid #000;
+    padding: 8px 10px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.billOfMaterial th {
+    background-color: #e0e0e0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.billOfMaterial thead tr:first-child th {
+    font-size: 16px;
+    background-color: #d0d0d0;
+    text-decoration: underline;
+}
+
+/************ userProfile *********/
+h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+form table {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto 40px auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+form td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+form td:first-child {
+    font-weight: bold;
+    width: 150px;
+}
+
+form input[type="text"],
+form input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+form button {
+    padding: 8px 14px;
+    background-color: #005b99;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #004a7c;
+}
+
+/* Orders section */
+.orders-section table {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.orders-section th,
+.orders-section td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.orders-section th {
+    background-color: #e9f1f7;
+    font-weight: bold;
+    text-align: center;
+}
+
