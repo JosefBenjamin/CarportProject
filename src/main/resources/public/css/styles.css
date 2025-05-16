@@ -424,50 +424,12 @@ table button:focus-visible { /* For delete material button */
 /*
    admin page styles
 */
-.admin-header {
-    background-color: #FCFCFC;
-    border-bottom: 5px solid #003D76;
-    padding: 20px 15px;
-    text-align: center;
-}
 
-.admin-header h1 {
+.navigation-links span {
     color: #003D76;
-    font-size: 1.8em;
-    margin: 0 0 15px;
-}
-
-.admin-header a,
-.admin-header .admin-header-form button {
-    color: #003D76;
-    text-decoration: none;
     padding: 8px 12px;
-    border-radius: 4px;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    margin: 0 5px;
-    display: inline-flex;
-    align-items: center;
-    font-size: 0.9em;
+    font-size: 1rem;
     font-weight: bold;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.admin-header a:hover,
-.admin-header .admin-header-form button:hover {
-    background-color: #F2F2FF;
-}
-
-.admin-header a:focus-visible,
-.admin-header .admin-header-form button:focus-visible {
-    outline: 2px solid #003D76;
-    outline-offset: 1px;
-    background-color: #F2F2FF;
-}
-
-.admin-header .admin-header-form {
-    display: inline-block;
 }
 
 .admin-content {
@@ -690,16 +652,8 @@ table button:focus-visible { /* For delete material button */
         overflow-x: auto;
     }
 
-    .admin-header {
-        padding: 15px;
-    }
-
-    .admin-header h1 {
-        font-size: 1.5em;
-    }
-
-    .admin-header a,
-    .admin-header .admin-header-form button {
+    .navigation-links a,
+    .navigation-links span {
         display: block;
         margin: 5px 0;
     }

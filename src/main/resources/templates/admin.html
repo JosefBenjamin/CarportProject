@@ -8,14 +8,18 @@
     <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
 </head>
 <body>
-<div class="admin-header">
-    <h1>Admin Page - Forespørgelser</h1>
-    <a href="/" th:href="@{/}">Tilbage til forsiden</a>
-    <a href="/admin/show-materials" th:href="@{/admin/show-materials}">Se materialer</a>
-    <form th:action="@{/admin/show-orders}" method="post" class="admin-header-form" th:if="${view == 'materials'}">
-        <button type="submit">Se ordrer</button>
-    </form>
-</div>
+<nav class="navbar">
+    <div class="navigation-links">
+        <a href="/" th:href="@{/}">
+            <img src="/images/carportmenuicon.png" th:src="@{/images/carportmenuicon.png}" alt="carport menu icon" class="carport-menuicon" style="width: 50px; height: 50px;">
+        </a>
+        <span>Admin Page - Forespørgelser</span>
+        <a href="/admin/show-materials" th:href="@{/admin/show-materials}" th:if="${view == 'orders'}">Se materialer</a>
+        <a href="/admin/show-orders" th:href="@{/admin/show-orders}" th:if="${view == 'materials'}">Se ordrer</a>
+        <a th:if="${session.currentUser != null}" th:href="@{/userprofile}" th:text="${session.currentUser.email}"></a>
+        <a href="/logout" th:href="@{/logout}" th:if="${session.currentUser != null}" class="logout-button">Log ud</a>
+    </div>
+</nav>
 
 <div class="admin-content">
     <!-- Success Message -->
