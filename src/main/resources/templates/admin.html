@@ -6,54 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .order-details {
-            margin-left: 20px;
-        }
-        .admin-header a, .admin-header form {
-            display: inline-block;
-            margin-right: 10px;
-        }
-        .add-material-form {
-            margin: 20px 0;
-        }
-        .add-material-form input {
-            margin-right: 10px;
-        }
-        .edit-order-form {
-            padding: 10px;
-            background-color: #f9f9f9;
-        }
-        .edit-order-form input, .edit-order-form select {
-            margin: 5px 0;
-        }
-        .success-message, .error-message {
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .success-message {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .error-message {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-    </style>
 </head>
 <body>
 <div class="admin-header">
@@ -79,7 +31,7 @@
     <!-- Orders View -->
     <div th:if="${view == 'orders'}">
         <div th:if="${orders != null and !orders.isEmpty}">
-            <table>
+            <table class="admin-table">
                 <thead>
                 <tr>
                     <th>Order ID</th>
@@ -92,9 +44,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Use th:block to group the data row and edit form row together -->
                 <th:block th:each="order : ${orders}">
-                    <!-- Order data row -->
                     <tr>
                         <td>
                             <a href="#" th:text="${order.orderID}" th:onclick="'showEditForm(' + ${order.orderID} + ')'"></a>
@@ -117,7 +67,6 @@
                             </div>
                         </td>
                     </tr>
-                    <!-- Edit form row immediately follows the data row -->
                     <tr th:id="'edit-form-row-' + ${order.orderID}" style="display: none;">
                         <td colspan="7">
                             <div class="edit-order-form">
@@ -139,6 +88,7 @@
                                         <option value="3" th:selected="${order.status == 3}">Forespørgsel afsluttet</option>
                                     </select><br/>
                                     <button type="submit">Update Order</button>
+                                    <button type="button" th:onclick="'hideEditForm(' + ${order.orderID} + ')'">Cancel</button>
                                 </form>
                             </div>
                         </td>
@@ -147,7 +97,6 @@
                 </tbody>
             </table>
         </div>
-
         <div th:unless="${orders != null and !orders.isEmpty}">
             <p>Ingen forespørgelser fundet.</p>
         </div>
@@ -156,8 +105,6 @@
     <!-- Materials View -->
     <div th:if="${view == 'materials'}">
         <h2>Materialer</h2>
-
-        <!-- Form to Add a New Material -->
         <div class="add-material-form">
             <form th:action="@{/admin/add-material}" method="post">
                 <input type="text" name="name" placeholder="Navn" required />
@@ -167,10 +114,8 @@
                 <button type="submit">Tilføj materiale</button>
             </form>
         </div>
-
-        <!-- Materials Table -->
         <div th:if="${materials != null and !materials.isEmpty}">
-            <table>
+            <table class="admin-table">
                 <thead>
                 <tr>
                     <th>Materiale ID</th>
@@ -203,7 +148,6 @@
                 </tbody>
             </table>
         </div>
-
         <div th:unless="${materials != null and !materials.isEmpty}">
             <p>Ingen materialer fundet.</p>
         </div>
@@ -218,10 +162,11 @@
 
 <script>
     function showEditForm(orderId) {
-        // Hide all edit forms
         document.querySelectorAll('[id^="edit-form-row-"]').forEach(row => row.style.display = 'none');
-        // Show the edit form for the clicked order
         document.getElementById('edit-form-row-' + orderId).style.display = 'table-row';
+    }
+    function hideEditForm(orderId) {
+        document.getElementById('edit-form-row-' + orderId).style.display = 'none';
     }
 </script>
 </body>
