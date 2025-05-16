@@ -12,7 +12,7 @@
     <h1>Admin Page - Forespørgelser</h1>
     <a href="/" th:href="@{/}">Tilbage til forsiden</a>
     <a href="/admin/show-materials" th:href="@{/admin/show-materials}">Se materialer</a>
-    <form th:action="@{/admin/show-orders}" method="post" style="display: inline;" th:if="${view == 'materials'}">
+    <form th:action="@{/admin/show-orders}" method="post" class="admin-header-form" th:if="${view == 'materials'}">
         <button type="submit">Se ordrer</button>
     </form>
 </div>
@@ -45,9 +45,12 @@
                 </thead>
                 <tbody>
                 <th:block th:each="order : ${orders}">
-                    <tr>
+                    <tr class="order-row">
                         <td>
-                            <a href="#" th:text="${order.orderID}" th:onclick="'showEditForm(' + ${order.orderID} + ')'"></a>
+                            <a href="#" class="order-id-link" th:onclick="'showEditForm(' + ${order.orderID} + ')'">
+                                <span th:text="${order.orderID}"></span>
+                                <span class="edit-icon">✏️</span>
+                            </a>
                         </td>
                         <td th:text="${order.userID}"></td>
                         <td th:text="${order.carport.carportWidth} + ' x ' + ${order.carport.carportLength} + ' x ' + ${order.carport.carportHeight} + ' cm'"></td>
@@ -67,7 +70,7 @@
                             </div>
                         </td>
                     </tr>
-                    <tr th:id="'edit-form-row-' + ${order.orderID}" style="display: none;">
+                    <tr th:id="'edit-form-row-' + ${order.orderID}" class="edit-form-row" style="display: none;">
                         <td colspan="7">
                             <div class="edit-order-form">
                                 <h3>Rediger Ordre <span th:text="${order.orderID}"></span></h3>

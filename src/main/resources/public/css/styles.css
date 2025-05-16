@@ -421,7 +421,9 @@ table button:focus-visible { /* For delete material button */
         width: 100%;
     }
 }
-
+/*
+   admin page styles
+*/
 .admin-header {
     background-color: #FCFCFC;
     border-bottom: 5px solid #003D76;
@@ -436,7 +438,7 @@ table button:focus-visible { /* For delete material button */
 }
 
 .admin-header a,
-.admin-header form button {
+.admin-header .admin-header-form button {
     color: #003D76;
     text-decoration: none;
     padding: 8px 12px;
@@ -447,21 +449,24 @@ table button:focus-visible { /* For delete material button */
     align-items: center;
     font-size: 0.9em;
     font-weight: bold;
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
 .admin-header a:hover,
-.admin-header form button:hover {
+.admin-header .admin-header-form button:hover {
     background-color: #F2F2FF;
 }
 
 .admin-header a:focus-visible,
-.admin-header form button:focus-visible {
+.admin-header .admin-header-form button:focus-visible {
     outline: 2px solid #003D76;
     outline-offset: 1px;
     background-color: #F2F2FF;
 }
 
-.admin-header form {
+.admin-header .admin-header-form {
     display: inline-block;
 }
 
@@ -474,20 +479,16 @@ table button:focus-visible { /* For delete material button */
 .admin-table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0;
-    background-color: #FCFCFC;
-    border: 1px solid #d0d0e0;
-    border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border-spacing: 0 10px;
+    background-color: transparent;
     margin: 20px 0;
-    overflow: hidden;
 }
 
 .admin-table th,
 .admin-table td {
     padding: 12px 15px;
     text-align: left;
-    border-bottom: 1px solid #d0d0e0;
+    border: 1px solid #d0d0e0;
 }
 
 .admin-table th {
@@ -495,36 +496,52 @@ table button:focus-visible { /* For delete material button */
     color: #003D76;
     font-weight: bold;
     font-size: 0.9em;
+    border: none;
 }
 
-.admin-table tr:last-child td {
-    border-bottom: none;
+.admin-table .order-row,
+.admin-table .edit-form-row {
+    background-color: #FCFCFC;
+    border: 2px solid #003D76;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease;
 }
 
-.admin-table tr:hover {
-    background-color: #f9f9f9;
+.admin-table .order-row:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.admin-table a,
-.admin-table button {
+.admin-table .edit-form-row {
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+}
+
+.admin-table .order-id-link {
     color: #003D76;
-    text-decoration: none;
-    padding: 6px 10px;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 4px 8px;
     border-radius: 4px;
-    transition: background-color 0.2s ease;
-    font-size: 0.9em;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
 }
 
-.admin-table a:hover,
-.admin-table button:hover {
+.admin-table .order-id-link:hover {
     background-color: #F2F2FF;
+    color: #002a50;
 }
 
-.admin-table a:focus-visible,
-.admin-table button:focus-visible {
+.admin-table .order-id-link:focus-visible {
     outline: 2px solid #003D76;
     outline-offset: 1px;
     background-color: #F2F2FF;
+}
+
+.admin-table .edit-icon {
+    font-size: 0.8em;
 }
 
 .admin-table ul {
@@ -534,8 +551,30 @@ table button:focus-visible { /* For delete material button */
 
 .admin-table li {
     color: #555;
-    font-size: 0.9em;
+    font-size: 0.85em;
     line-height: 1.4;
+}
+
+.admin-table a:not(.order-id-link),
+.admin-table button {
+    color: #003D76;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    font-size: 0.9em;
+}
+
+.admin-table a:not(.order-id-link):hover,
+.admin-table button:hover {
+    background-color: #F2F2FF;
+}
+
+.admin-table a:not(.order-id-link):focus-visible,
+.admin-table button:focus-visible {
+    outline: 2px solid #003D76;
+    outline-offset: 1px;
+    background-color: #F2F2FF;
 }
 
 .add-material-form,
@@ -660,7 +699,7 @@ table button:focus-visible { /* For delete material button */
     }
 
     .admin-header a,
-    .admin-header form button {
+    .admin-header .admin-header-form button {
         display: block;
         margin: 5px 0;
     }
