@@ -1,4 +1,117 @@
 @startuml
-class BillOfMaterial {
+package "entities" {
+
+class BillOfMaterials {
+- List<CompleteUnitMaterial> completeUnitMaterial
 }
+
+class Carport {
+- int carportWidth
+- int carportLength
+- int carportHeight
+}
+
+class CompleteUnitMaterial {
+- int cumId
+- int quantity
+- String description
+- String materialName
+- int ordersId
+- int materialLengthId
+- int msdId
+- Material material
+}
+
+class Material {
+- int materialId
+- String name
+- String unitName
+- double meterPrice
+- int length
+- List<Integer> lengths
+}
+
+class Order {
+- int orderID
+- int userID
+- Carport carport
+- LocalDate date
+- double totalPrice
+- int status
+- BillOfMaterials billOfMaterials
+- User user
+}
+
+class User {
+- int userID
+- String email
+- String password
+- int tlf
+- boolean isAdmin
+- String address
+- ZipCode zipCode
+}
+
+class ZipCode {
+- int zipCode
+- String city
+}
+}
+
+package "utilities" {
+
+class Calculator {
+- ConnectionPool connectionPool;
+- MaterialMapper materialMapper;
+
+- static final int POSTS = 6;
+- static final int BEAMS = 5;
+- static final int RAFTERS = 5;
+- static final int ROOFS = 8;
+- final int width;
+- final int length;
+- final int height;
+- final Material post;
+- final List<Material> beams;
+- final Material rafter;
+- final List<Material> roof;
+- final int roofPanelWidth = 109;
+- final double totalPrice;
+- final List<CompleteUnitMaterial> orderMaterials
+}
+
+class CarportSVG {
+- int width
+- int length
+- Svg carportSvg
+}
+
+class MailSender {
+}
+
+class PasswordUtil {
+}
+
+enum Role {
+ADMIN
+USER
+}
+
+class StatusChecker {
+}
+
+class Svg {
+
+}
+
+}
+
+User *-- Order
+BillOfMaterials *-- Order
+BillOfMaterials *-- CompleteUnitMaterial
+CompleteUnitMaterial *-- Material
+Carport *-- BillOfMaterials
+User *-- ZipCode
+
+
 @enduml
