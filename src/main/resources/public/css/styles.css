@@ -450,7 +450,7 @@ table button:focus-visible { /* For delete material button */
 }
 
 /************ userProfile *********/
-h2 {
+h2, h1 {
     text-align: center;
     font-size: 24px;
     margin-bottom: 30px;
@@ -521,5 +521,72 @@ form button:hover {
     background-color: #e9f1f7;
     font-weight: bold;
     text-align: center;
+}
+
+/********** orderconfirmation *********/
+h4 {
+    text-align: center;
+}
+
+/********** carportmaker **********/
+.carport-form {
+    background-color: white;
+    width: 50%;
+    margin: 0 auto;
+    padding: 30px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    border-radius: 12px;
+}
+
+.carport-form label {
+    display: block;
+    font-weight: bold;
+    margin-top: 15px;
+    color: #333;
+}
+
+.carport-form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.btn {
+    margin-top: 25px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn input[type="submit"] {
+    background-color: #004b87;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn input[type="submit"]:hover {
+    background-color: #003366;
+}
+
+.conformation-message {
+    background-color: #e6f7ff;
+    border: 1px solid #91d5ff;
+    padding: 30px;
+    width: 50%;
+    margin: 50px auto;
+    border-radius: 10px;
+}
+
+.conformation-message h2 {
+    color: #003366;
+}
+
+p {
+    margin-top: 10px;
 }
 
