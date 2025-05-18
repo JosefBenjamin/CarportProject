@@ -8,8 +8,7 @@ public class Svg {
             "        viewBox=\"%s\"  width=\"%s\" \n"  +
             "        preserveAspectRatio=\"xMinYMin\">";
 
-    private static final String SVG_RECT_TEMPLATE = "<rect x=\"%.2f\" y=\"%.2f\" height=\"%f\" height=\"%d\" style=\"%s\" />";
-    private static final String SVG_ARROW_HEAD = "<defs>\n" +
+    private static final String SVG_RECT_TEMPLATE = "<rect x=\"%.2f\" y=\"%.2f\" height=\"%.2f\" width=\"%.2f\" style=\"%s\" />";    private static final String SVG_ARROW_HEAD = "<defs>\n" +
             "        <marker id=\"beginArrow\" markerWidth=\"12\" markerHeight=\"12\" refX=\"0\" refY=\"6\" orient=\"auto\">\n" +
             "            <path d=\"M0,6 L12,0 L12,12 L0,6\" style=\"fill: #000000;\" />\n" +
             "        </marker>\n" +

@@ -6,16 +6,12 @@ import app.config.ThymeleafConfig;
 import app.controllers.*;
 import app.entities.User;
 import app.persistence.ConnectionPool;
-import app.utilities.MailSender;
 import app.utilities.Role;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public class Main {
-
-    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
     private static final String USER = "postgres";
     private static final String PASSWORD = "postgres";
@@ -42,6 +38,7 @@ public class Main {
             }
             ctx.attribute("session", ctx.sessionAttributeMap());
         });
+
 
         // Access management for admin routes
         app.beforeMatched(ctx -> {

@@ -1,24 +1,24 @@
 package app.utilities;
 
-public class CarportSvg {
+public class CarportSvgSide {
 
     private int width;
     private int length;
     private Svg carportSvg;
 
 
-    public CarportSvg(int width, int height) {
+    public CarportSvgSide(int width, int height) {
 
         this.width = width;
         this.length = height;
         this.carportSvg = new Svg(0, 0, "0 0 855 690", "75%");
         carportSvg.addRectangle(0, 0, 600, 780, "stroke-width:1px; stroke:#000000; fill: #ffffff");
-        addBeams();
+        addPosts();
         addRafters();
 
     }
 
-    public void addBeams() {
+    public void addPosts() {
 
         carportSvg.addRectangle(0, 35, 4.5, 780, "stroke-width:1px; stroke:#000000; fill: #ffffff");
         carportSvg.addRectangle(0, 565, 4.5, 780, "stroke-width:1px; stroke:#000000; fill: #ffffff");

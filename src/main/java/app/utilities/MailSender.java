@@ -75,7 +75,6 @@ public class MailSender {
     }
 
     public boolean sendCarportRequestMail(String cpLength, String cpWidth, String cpHeight, String cpPrice, String mailRecipient) throws IOException {
-        // Erstat xyx@gmail.com med din egen email, som er afsender
         String senderEmail = System.getenv("SENDER_EMAIL");
         Email from = new Email(senderEmail);
         from.setName("Fog Carport");
@@ -87,8 +86,6 @@ public class MailSender {
 
         Personalization personalization = new Personalization();
 
-        /* Erstat kunde@gmail.com, name, email og zip med egne værdier ****/
-        /* I test-fasen - brug din egen email, så du kan modtage beskeden */
         personalization.addTo(new Email(mailRecipient));
         personalization.addDynamicTemplateData("cpLength", cpLength + " cm");
         personalization.addDynamicTemplateData("cpWidth", cpWidth + " cm");
@@ -132,14 +129,13 @@ public class MailSender {
 
         Personalization personalization = new Personalization();
 
-        /* Erstat kunde@gmail.com, name, email og zip med egne værdier ****/
-        /* I test-fasen - brug din egen email, så du kan modtage beskeden */
         personalization.addTo(new Email(mailRecipient));
         personalization.addDynamicTemplateData("cpOrderID", orderID);
         personalization.addDynamicTemplateData("cpLWH", carportHLW);
         personalization.addDynamicTemplateData("cpCurrentDate", "Bestilt d. " + currentDate);
         personalization.addDynamicTemplateData("cpTotalPrice", totalPrice + ",- DKK");
         personalization.addDynamicTemplateData("cpMaterials", materials);
+        mail.addPersonalization(personalization);
 
         mail.addCategory("carportapp");
 
@@ -153,11 +149,12 @@ public class MailSender {
             mail.templateId = "d-bac7e565b84541388cc72a5641e2a4f1";
             request.setBody(mail.build());
             Response response = sg.api(request);
-            return true;
             //For debugging
-            // System.out.println(response.getStatusCode());
-            // System.out.println(response.getBody());
-            // System.out.println(response.getHeaders());
+            //System.out.println(response.getStatusCode());
+            //System.out.println(response.getBody());
+            //System.out.println(response.getHeaders());
+            return response.getStatusCode() >= 200 && response.getStatusCode() < 300;
+
 
         } catch (IOException e) {
             throw e;

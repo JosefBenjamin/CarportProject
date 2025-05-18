@@ -233,4 +233,42 @@ public class OrderMapper {
 
         }
     }
+
+    public static Order getOrderById(int orderId, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "SELECT * FROM orders WHERE order_id = ?";
+        try (Connection conn = connectionPool.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, orderId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int userId = rs.getInt("user_id");
+                    int carportWidth = rs.getInt("carport_width");
+                    int carportLength = rs.getInt("carport_length");
+                    int carportHeight = rs.getInt("carport_height");
+                    LocalDate date = rs.getDate("date").toLocalDate();
+                    double totalPrice = rs.getDouble("total_price");
+                    int status = rs.getInt("status");
+
+                    // Build Carport and Order objects
+                    Carport carport = new Carport(carportWidth, carportLength, carportHeight);
+                    Order order = new Order(orderId, userId, carport, date, totalPrice, status);
+
+                    // Optionally fetch and set the User as well
+                    User user = UserMapper.getUserById(userId, connectionPool);
+                    order.setUser(user);
+
+                    return order;
+                }
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Database error fetching order by ID", e);
+        }
+        catch(Exception e) {
+
+        }
+       throw new DatabaseException("No such order");
+    }
+
 }
