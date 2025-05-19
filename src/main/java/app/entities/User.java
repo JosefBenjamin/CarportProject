@@ -98,8 +98,6 @@ public class User {
         return isAdmin ? Role.ADMIN : Role.USER;
     }
 
-
-
     @Override
     public String toString() {
         return "User{" +
