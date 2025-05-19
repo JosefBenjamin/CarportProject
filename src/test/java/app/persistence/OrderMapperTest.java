@@ -228,4 +228,28 @@ class OrderMapperTest {
             throw new RuntimeException(e);
         }
     }
+
+    @Test
+    void getOrderById() {
+        User newUser = new User("test@mail.dk", "12345678", 42756486, false, "Test vej");
+        newUser.setZipCode(new ZipCode(2800, "Lyngby"));
+        try {
+            UserMapper.register(newUser, connectionPool).getUserID();
+
+            int orderId1 = OrderMapper.registerOrder(1, 780, 600, 230, 10000.00, 1, connectionPool);
+            int orderId2 = OrderMapper.registerOrder(1, 780, 600, 230, 12000.00, 1, connectionPool);
+
+            Order order1 = OrderMapper.getOrderById(orderId1, connectionPool);
+            Order order2 = OrderMapper.getOrderById(orderId2, connectionPool);
+
+            assertEquals(orderId1, order1.getOrderID());
+            assertEquals(10000.00, order1.getTotalPrice());
+            assertEquals(orderId2, order2.getOrderID());
+            assertEquals(12000.00, order2.getTotalPrice());
+
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
