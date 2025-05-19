@@ -8,7 +8,8 @@ public class Svg {
             "        viewBox=\"%s\"  width=\"%s\" \n"  +
             "        preserveAspectRatio=\"xMinYMin\">";
 
-    private static final String SVG_RECT_TEMPLATE = "<rect x=\"%.2f\" y=\"%.2f\" height=\"%f\" height=\"%d\" style=\"%s\" />";
+    private static final String SVG_RECT_TEMPLATE = "<rect x=\"%.2f\" y=\"%.2f\" width=\"%.2f\" height=\"%.2f\" style=\"%s\" />";
+
     private static final String SVG_ARROW_HEAD = "<defs>\n" +
             "        <marker id=\"beginArrow\" markerWidth=\"12\" markerHeight=\"12\" refX=\"0\" refY=\"6\" orient=\"auto\">\n" +
             "            <path d=\"M0,6 L12,0 L12,12 L0,6\" style=\"fill: #000000;\" />\n" +
@@ -17,8 +18,11 @@ public class Svg {
             "            <path d=\"M0,0 L12,6 L0,12 L0,0 \" style=\"fill: #000000;\" />\n" +
             "        </marker>\n" +
             "    </defs>";
+
     private static final String SVG_LINE_TEMPLATE = "<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" style=\"%s\" />";
+
     private static final String SVG_TEXT_TEMPLATE = "<text x=\"%d\" y=\"%d\" fill=\"black\" style=\"font-family:Arial; font-size:12px;\">%s</text>";
+
     private StringBuilder svg = new StringBuilder();
 
     //SVG Constructor
@@ -31,10 +35,9 @@ public class Svg {
 
 
     //SVG drawing adjustment methods
-    public void addRectangle(double x, double y, double height, double width, String style) {
+    public void addRectangle(double x, double y, double width, double height, String style) {
 
-        svg.append(String.format(SVG_RECT_TEMPLATE, x, y, height, width, style));
-
+        svg.append(String.format(SVG_RECT_TEMPLATE, x, y, width, height, style));
 
     }
 

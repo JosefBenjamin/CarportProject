@@ -2,7 +2,6 @@ package app.utilities;
 
 import app.entities.CompleteUnitMaterial;
 import app.entities.Material;
-import app.entities.Order;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.MaterialMapper;

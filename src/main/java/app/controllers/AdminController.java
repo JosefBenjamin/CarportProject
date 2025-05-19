@@ -5,12 +5,15 @@ import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.persistence.MaterialMapper;
+import app.persistence.UserMapper;
 import app.utilities.Calculator;
+import app.utilities.MailSender;
 import app.utilities.Role;
 import app.utilities.StatusChecker;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -120,6 +123,49 @@ public class AdminController {
 
             // Update the order in the database
             OrderMapper.updateOrder(orderId, carportWidth, carportLength, carportHeight, status, newPrice, newMaterials, connectionPool);
+
+            if(status == 3) {
+                MailSender mailSender = new MailSender();
+                Order order = OrderMapper.getOrderById(orderId, connectionPool);
+                StringBuilder sb = new StringBuilder();
+                for (CompleteUnitMaterial material : newMaterials) {
+                    String matName = "Ukendt materiale";
+                    if (material.getMaterial() != null && material.getMaterial().getName() != null) {
+                        matName = material.getMaterial().getName();
+                    }else {
+                        matName = "Ukendt materiale";
+                    }
+                    String description;
+                    if (material.getDescription() != null) {
+                        description = material.getDescription();
+                    } else {
+                        description = "Ukendt beskrivelse";
+                    }
+                    sb.append("Materiale: ")
+                            .append(matName)
+                            .append(", Antal: ")
+                            .append(material.getQuantity())
+                            .append(", Beskrivelse: ")
+                            .append(description);
+                }
+                String formattedMaterials = sb.toString();
+                String currentDate = order.getDate().toString();
+                User user = UserMapper.getUserById(order.getUserID(), connectionPool);
+                String mailRecipient = user.getEmail();
+                String heightLengthWidth = String.valueOf(carportHeight) + " X " + String.valueOf(carportLength) + " X " + String.valueOf(carportWidth);
+                try {
+                    System.out.println("About to send mail to: " + mailRecipient);
+                    boolean success = mailSender.sendCUM(String.valueOf(orderId), heightLengthWidth, currentDate,
+                            String.valueOf(newPrice), String.valueOf(formattedMaterials), mailRecipient);
+                    if(success) {
+                        System.out.println("Email succesfully sent to " + mailRecipient);
+                    } else {
+                        System.out.println("Failed to send mail");
+                    }
+                } catch (IOException e) {
+                    throw new DatabaseException("Something went wrong sending an order confirmation mail to user");
+                }
+            }
 
             ctx.attribute("successMessage", "Order updated successfully");
             showOrders(ctx, connectionPool);
