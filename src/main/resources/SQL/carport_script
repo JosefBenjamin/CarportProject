@@ -1,0 +1,1072 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 16.2 (Debian 16.2-1.pgdg120+2)
+-- Dumped by pg_dump version 16.4
+
+-- Started on 2025-05-19 19:28:27 UTC
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 6 (class 2615 OID 16576)
+-- Name: test; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA test;
+
+
+ALTER SCHEMA test OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 221 (class 1259 OID 16503)
+-- Name: complete_unit_material; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.complete_unit_material (
+    cum_id integer NOT NULL,
+    quantity integer NOT NULL,
+    orders_id integer NOT NULL,
+    ml_id integer NOT NULL,
+    ms_description_id integer NOT NULL
+);
+
+
+ALTER TABLE public.complete_unit_material OWNER TO postgres;
+
+--
+-- TOC entry 220 (class 1259 OID 16502)
+-- Name: complete_unit_material_cum_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.complete_unit_material_cum_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.complete_unit_material_cum_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3497 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: complete_unit_material_cum_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.complete_unit_material_cum_id_seq OWNED BY public.complete_unit_material.cum_id;
+
+
+--
+-- TOC entry 219 (class 1259 OID 16496)
+-- Name: material_length; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.material_length (
+    ml_id integer NOT NULL,
+    length integer NOT NULL,
+    material_id integer NOT NULL
+);
+
+
+ALTER TABLE public.material_length OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 16495)
+-- Name: material_length_ml_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.material_length_ml_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.material_length_ml_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3498 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: material_length_ml_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.material_length_ml_id_seq OWNED BY public.material_length.ml_id;
+
+
+--
+-- TOC entry 228 (class 1259 OID 16563)
+-- Name: material_setup_descriptions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.material_setup_descriptions (
+    msd_id integer NOT NULL,
+    description character varying NOT NULL
+);
+
+
+ALTER TABLE public.material_setup_descriptions OWNER TO postgres;
+
+--
+-- TOC entry 227 (class 1259 OID 16562)
+-- Name: material_setup_descriptions_msd_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.material_setup_descriptions_msd_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.material_setup_descriptions_msd_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3499 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: material_setup_descriptions_msd_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.material_setup_descriptions_msd_id_seq OWNED BY public.material_setup_descriptions.msd_id;
+
+
+--
+-- TOC entry 217 (class 1259 OID 16487)
+-- Name: materials; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.materials (
+    material_id integer NOT NULL,
+    name character varying NOT NULL,
+    unit_name character varying NOT NULL,
+    meter_price numeric NOT NULL
+);
+
+
+ALTER TABLE public.materials OWNER TO postgres;
+
+--
+-- TOC entry 216 (class 1259 OID 16486)
+-- Name: materials_material_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.materials_material_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.materials_material_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3500 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: materials_material_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.materials_material_id_seq OWNED BY public.materials.material_id;
+
+
+--
+-- TOC entry 223 (class 1259 OID 16512)
+-- Name: orders; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.orders (
+    order_id integer NOT NULL,
+    user_id integer NOT NULL,
+    carport_width integer NOT NULL,
+    carport_length integer NOT NULL,
+    carport_height integer,
+    date date NOT NULL,
+    total_price numeric NOT NULL,
+    status integer NOT NULL
+);
+
+
+ALTER TABLE public.orders OWNER TO postgres;
+
+--
+-- TOC entry 222 (class 1259 OID 16511)
+-- Name: orders_order_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.orders_order_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.orders_order_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3501 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: orders_order_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.orders_order_id_seq OWNED BY public.orders.order_id;
+
+
+--
+-- TOC entry 225 (class 1259 OID 16521)
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    user_id integer NOT NULL,
+    email character varying NOT NULL,
+    password character varying NOT NULL,
+    tlf integer NOT NULL,
+    is_admin boolean DEFAULT false NOT NULL,
+    address character varying NOT NULL,
+    zip_code integer
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- TOC entry 224 (class 1259 OID 16520)
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.users_user_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3502 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users.user_id;
+
+
+--
+-- TOC entry 226 (class 1259 OID 16550)
+-- Name: zip_codes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.zip_codes (
+    zip_code integer NOT NULL,
+    city character varying NOT NULL
+);
+
+
+ALTER TABLE public.zip_codes OWNER TO postgres;
+
+--
+-- TOC entry 230 (class 1259 OID 16800)
+-- Name: complete_unit_material_cum_id_seq; Type: SEQUENCE; Schema: test; Owner: postgres
+--
+
+CREATE SEQUENCE test.complete_unit_material_cum_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE test.complete_unit_material_cum_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 236 (class 1259 OID 21754)
+-- Name: complete_unit_material; Type: TABLE; Schema: test; Owner: postgres
+--
+
+CREATE TABLE test.complete_unit_material (
+    cum_id integer DEFAULT nextval('test.complete_unit_material_cum_id_seq'::regclass) NOT NULL,
+    quantity integer NOT NULL,
+    orders_id integer NOT NULL,
+    ml_id integer NOT NULL,
+    ms_description_id integer NOT NULL
+);
+
+
+ALTER TABLE test.complete_unit_material OWNER TO postgres;
+
+--
+-- TOC entry 231 (class 1259 OID 16802)
+-- Name: material_length_ml_id_seq; Type: SEQUENCE; Schema: test; Owner: postgres
+--
+
+CREATE SEQUENCE test.material_length_ml_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE test.material_length_ml_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 237 (class 1259 OID 21760)
+-- Name: material_length; Type: TABLE; Schema: test; Owner: postgres
+--
+
+CREATE TABLE test.material_length (
+    ml_id integer DEFAULT nextval('test.material_length_ml_id_seq'::regclass) NOT NULL,
+    length integer NOT NULL,
+    material_id integer NOT NULL
+);
+
+
+ALTER TABLE test.material_length OWNER TO postgres;
+
+--
+-- TOC entry 232 (class 1259 OID 16804)
+-- Name: material_setup_descriptions_msd_id_seq; Type: SEQUENCE; Schema: test; Owner: postgres
+--
+
+CREATE SEQUENCE test.material_setup_descriptions_msd_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE test.material_setup_descriptions_msd_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 238 (class 1259 OID 21766)
+-- Name: material_setup_descriptions; Type: TABLE; Schema: test; Owner: postgres
+--
+
+CREATE TABLE test.material_setup_descriptions (
+    msd_id integer DEFAULT nextval('test.material_setup_descriptions_msd_id_seq'::regclass) NOT NULL,
+    description character varying NOT NULL
+);
+
+
+ALTER TABLE test.material_setup_descriptions OWNER TO postgres;
+
+--
+-- TOC entry 233 (class 1259 OID 16806)
+-- Name: materials_material_id_seq; Type: SEQUENCE; Schema: test; Owner: postgres
+--
+
+CREATE SEQUENCE test.materials_material_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE test.materials_material_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 239 (class 1259 OID 21774)
+-- Name: materials; Type: TABLE; Schema: test; Owner: postgres
+--
+
+CREATE TABLE test.materials (
+    material_id integer DEFAULT nextval('test.materials_material_id_seq'::regclass) NOT NULL,
+    name character varying NOT NULL,
+    unit_name character varying NOT NULL,
+    meter_price numeric NOT NULL
+);
+
+
+ALTER TABLE test.materials OWNER TO postgres;
+
+--
+-- TOC entry 234 (class 1259 OID 16808)
+-- Name: orders_order_id_seq; Type: SEQUENCE; Schema: test; Owner: postgres
+--
+
+CREATE SEQUENCE test.orders_order_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE test.orders_order_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 240 (class 1259 OID 21782)
+-- Name: orders; Type: TABLE; Schema: test; Owner: postgres
+--
+
+CREATE TABLE test.orders (
+    order_id integer DEFAULT nextval('test.orders_order_id_seq'::regclass) NOT NULL,
+    user_id integer NOT NULL,
+    carport_width integer NOT NULL,
+    carport_length integer NOT NULL,
+    carport_height integer,
+    date date NOT NULL,
+    total_price numeric NOT NULL,
+    status integer NOT NULL
+);
+
+
+ALTER TABLE test.orders OWNER TO postgres;
+
+--
+-- TOC entry 229 (class 1259 OID 16798)
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: test; Owner: postgres
+--
+
+CREATE SEQUENCE test.users_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE test.users_user_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 235 (class 1259 OID 21745)
+-- Name: users; Type: TABLE; Schema: test; Owner: postgres
+--
+
+CREATE TABLE test.users (
+    user_id integer DEFAULT nextval('test.users_user_id_seq'::regclass) NOT NULL,
+    email character varying NOT NULL,
+    password character varying NOT NULL,
+    tlf integer NOT NULL,
+    is_admin boolean DEFAULT false NOT NULL,
+    address character varying NOT NULL,
+    zip_code integer
+);
+
+
+ALTER TABLE test.users OWNER TO postgres;
+
+--
+-- TOC entry 241 (class 1259 OID 21790)
+-- Name: zip_codes; Type: TABLE; Schema: test; Owner: postgres
+--
+
+CREATE TABLE test.zip_codes (
+    zip_code integer NOT NULL,
+    city character varying NOT NULL
+);
+
+
+ALTER TABLE test.zip_codes OWNER TO postgres;
+
+--
+-- TOC entry 3269 (class 2604 OID 16506)
+-- Name: complete_unit_material cum_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.complete_unit_material ALTER COLUMN cum_id SET DEFAULT nextval('public.complete_unit_material_cum_id_seq'::regclass);
+
+
+--
+-- TOC entry 3268 (class 2604 OID 16499)
+-- Name: material_length ml_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.material_length ALTER COLUMN ml_id SET DEFAULT nextval('public.material_length_ml_id_seq'::regclass);
+
+
+--
+-- TOC entry 3273 (class 2604 OID 16566)
+-- Name: material_setup_descriptions msd_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.material_setup_descriptions ALTER COLUMN msd_id SET DEFAULT nextval('public.material_setup_descriptions_msd_id_seq'::regclass);
+
+
+--
+-- TOC entry 3267 (class 2604 OID 16490)
+-- Name: materials material_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.materials ALTER COLUMN material_id SET DEFAULT nextval('public.materials_material_id_seq'::regclass);
+
+
+--
+-- TOC entry 3270 (class 2604 OID 16515)
+-- Name: orders order_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders ALTER COLUMN order_id SET DEFAULT nextval('public.orders_order_id_seq'::regclass);
+
+
+--
+-- TOC entry 3271 (class 2604 OID 16524)
+-- Name: users user_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.users_user_id_seq'::regclass);
+
+
+--
+-- TOC entry 3469 (class 0 OID 16496)
+-- Dependencies: 219
+-- Data for Name: material_length; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.material_length VALUES (1, 600, 1);
+INSERT INTO public.material_length VALUES (2, 540, 1);
+INSERT INTO public.material_length VALUES (3, 480, 1);
+INSERT INTO public.material_length VALUES (4, 420, 1);
+INSERT INTO public.material_length VALUES (5, 360, 1);
+INSERT INTO public.material_length VALUES (6, 300, 1);
+INSERT INTO public.material_length VALUES (7, 240, 1);
+INSERT INTO public.material_length VALUES (8, 600, 2);
+INSERT INTO public.material_length VALUES (9, 540, 2);
+INSERT INTO public.material_length VALUES (10, 480, 2);
+INSERT INTO public.material_length VALUES (11, 420, 2);
+INSERT INTO public.material_length VALUES (12, 360, 2);
+INSERT INTO public.material_length VALUES (13, 300, 2);
+INSERT INTO public.material_length VALUES (14, 240, 2);
+INSERT INTO public.material_length VALUES (15, 540, 3);
+INSERT INTO public.material_length VALUES (16, 480, 3);
+INSERT INTO public.material_length VALUES (17, 420, 3);
+INSERT INTO public.material_length VALUES (18, 360, 3);
+INSERT INTO public.material_length VALUES (19, 300, 3);
+INSERT INTO public.material_length VALUES (20, 240, 3);
+INSERT INTO public.material_length VALUES (21, 210, 4);
+INSERT INTO public.material_length VALUES (22, 240, 4);
+INSERT INTO public.material_length VALUES (23, 270, 4);
+INSERT INTO public.material_length VALUES (24, 330, 4);
+INSERT INTO public.material_length VALUES (25, 360, 4);
+INSERT INTO public.material_length VALUES (26, 600, 5);
+INSERT INTO public.material_length VALUES (27, 540, 5);
+INSERT INTO public.material_length VALUES (28, 480, 5);
+INSERT INTO public.material_length VALUES (29, 420, 5);
+INSERT INTO public.material_length VALUES (30, 360, 5);
+INSERT INTO public.material_length VALUES (31, 300, 6);
+INSERT INTO public.material_length VALUES (32, 600, 7);
+INSERT INTO public.material_length VALUES (33, 540, 7);
+INSERT INTO public.material_length VALUES (34, 480, 7);
+INSERT INTO public.material_length VALUES (35, 420, 7);
+INSERT INTO public.material_length VALUES (36, 600, 8);
+INSERT INTO public.material_length VALUES (37, 480, 8);
+INSERT INTO public.material_length VALUES (38, 360, 8);
+
+
+--
+-- TOC entry 3478 (class 0 OID 16563)
+-- Dependencies: 228
+-- Data for Name: material_setup_descriptions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.material_setup_descriptions VALUES (2, 'understernbrædder til siderne');
+INSERT INTO public.material_setup_descriptions VALUES (3, 'oversternbrædder til forenden');
+INSERT INTO public.material_setup_descriptions VALUES (4, 'oversternbrædder til siderne');
+INSERT INTO public.material_setup_descriptions VALUES (1, 'understernbrædder til for & bag ende');
+INSERT INTO public.material_setup_descriptions VALUES (5, 'til z på bagside af dør');
+INSERT INTO public.material_setup_descriptions VALUES (6, 'løsholter til skur gavle');
+INSERT INTO public.material_setup_descriptions VALUES (7, 'løsholter til skur sider');
+INSERT INTO public.material_setup_descriptions VALUES (8, 'Remme i sider, sadles ned i stolper');
+INSERT INTO public.material_setup_descriptions VALUES (9, 'Remme i sider, sadles ned i stolper ( skur del, deles)');
+INSERT INTO public.material_setup_descriptions VALUES (10, 'Spær, monteres på rem');
+INSERT INTO public.material_setup_descriptions VALUES (11, 'Stolper nedgraves 90 cm. i jord');
+INSERT INTO public.material_setup_descriptions VALUES (12, 'til beklædning af skur 1 på 2');
+INSERT INTO public.material_setup_descriptions VALUES (13, 'vandbrædt på stern i sider');
+INSERT INTO public.material_setup_descriptions VALUES (14, 'vandbrædt på stern i forende');
+INSERT INTO public.material_setup_descriptions VALUES (15, 'Tagplader monteres på spær');
+
+
+--
+-- TOC entry 3467 (class 0 OID 16487)
+-- Dependencies: 217
+-- Data for Name: materials; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.materials VALUES (1, '25x200 mm. trykimp. Brædt', 'stk', 32.95);
+INSERT INTO public.materials VALUES (2, '25x125 mm. trykimp. Brædt', 'stk', 16.95);
+INSERT INTO public.materials VALUES (3, '38x73 mm. Lægte ubh.', 'stk', 13.95);
+INSERT INTO public.materials VALUES (4, '45x95 mm. Reglar ub.', 'stk', 24.95);
+INSERT INTO public.materials VALUES (5, '45x195 mm. spærtræ ubh.', 'stk', 45.95);
+INSERT INTO public.materials VALUES (6, '97x97 mm. trykimp. Stolpe', 'stk', 42.95);
+INSERT INTO public.materials VALUES (7, '19x100 mm. trykimp. Brædt', 'stk', 10.95);
+INSERT INTO public.materials VALUES (8, 'Plastmo Ecolite blåtonet', 'stk', 49.95);
+
+
+
+
+--
+-- TOC entry 3486 (class 0 OID 21754)
+-- Dependencies: 236
+-- Data for Name: complete_unit_material; Type: TABLE DATA; Schema: test; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 3487 (class 0 OID 21760)
+-- Dependencies: 237
+-- Data for Name: material_length; Type: TABLE DATA; Schema: test; Owner: postgres
+--
+
+INSERT INTO test.material_length VALUES (1, 600, 1);
+INSERT INTO test.material_length VALUES (2, 540, 1);
+INSERT INTO test.material_length VALUES (3, 480, 1);
+INSERT INTO test.material_length VALUES (4, 420, 1);
+INSERT INTO test.material_length VALUES (5, 360, 1);
+INSERT INTO test.material_length VALUES (6, 300, 1);
+INSERT INTO test.material_length VALUES (7, 240, 1);
+INSERT INTO test.material_length VALUES (8, 600, 2);
+INSERT INTO test.material_length VALUES (9, 540, 2);
+INSERT INTO test.material_length VALUES (10, 480, 2);
+INSERT INTO test.material_length VALUES (11, 420, 2);
+INSERT INTO test.material_length VALUES (12, 360, 2);
+INSERT INTO test.material_length VALUES (13, 300, 2);
+INSERT INTO test.material_length VALUES (14, 240, 2);
+INSERT INTO test.material_length VALUES (15, 540, 3);
+INSERT INTO test.material_length VALUES (16, 480, 3);
+INSERT INTO test.material_length VALUES (17, 420, 3);
+INSERT INTO test.material_length VALUES (18, 360, 3);
+INSERT INTO test.material_length VALUES (19, 300, 3);
+INSERT INTO test.material_length VALUES (20, 240, 3);
+INSERT INTO test.material_length VALUES (21, 210, 4);
+INSERT INTO test.material_length VALUES (22, 240, 4);
+INSERT INTO test.material_length VALUES (23, 270, 4);
+INSERT INTO test.material_length VALUES (24, 330, 4);
+INSERT INTO test.material_length VALUES (25, 360, 4);
+INSERT INTO test.material_length VALUES (26, 600, 5);
+INSERT INTO test.material_length VALUES (27, 540, 5);
+INSERT INTO test.material_length VALUES (28, 480, 5);
+INSERT INTO test.material_length VALUES (29, 420, 5);
+INSERT INTO test.material_length VALUES (30, 360, 5);
+INSERT INTO test.material_length VALUES (31, 300, 6);
+INSERT INTO test.material_length VALUES (32, 600, 7);
+INSERT INTO test.material_length VALUES (33, 540, 7);
+INSERT INTO test.material_length VALUES (34, 480, 7);
+INSERT INTO test.material_length VALUES (35, 420, 7);
+INSERT INTO test.material_length VALUES (36, 600, 8);
+INSERT INTO test.material_length VALUES (37, 480, 8);
+INSERT INTO test.material_length VALUES (38, 360, 8);
+
+
+--
+-- TOC entry 3488 (class 0 OID 21766)
+-- Dependencies: 238
+-- Data for Name: material_setup_descriptions; Type: TABLE DATA; Schema: test; Owner: postgres
+--
+
+INSERT INTO test.material_setup_descriptions VALUES (2, 'understernbrædder til siderne');
+INSERT INTO test.material_setup_descriptions VALUES (3, 'oversternbrædder til forenden');
+INSERT INTO test.material_setup_descriptions VALUES (4, 'oversternbrædder til siderne');
+INSERT INTO test.material_setup_descriptions VALUES (1, 'understernbrædder til for & bag ende');
+INSERT INTO test.material_setup_descriptions VALUES (5, 'til z på bagside af dør');
+INSERT INTO test.material_setup_descriptions VALUES (6, 'løsholter til skur gavle');
+INSERT INTO test.material_setup_descriptions VALUES (7, 'løsholter til skur sider');
+INSERT INTO test.material_setup_descriptions VALUES (8, 'Remme i sider, sadles ned i stolper');
+INSERT INTO test.material_setup_descriptions VALUES (9, 'Remme i sider, sadles ned i stolper ( skur del, deles)');
+INSERT INTO test.material_setup_descriptions VALUES (10, 'Spær, monteres på rem');
+INSERT INTO test.material_setup_descriptions VALUES (11, 'Stolper nedgraves 90 cm. i jord');
+INSERT INTO test.material_setup_descriptions VALUES (12, 'til beklædning af skur 1 på 2');
+INSERT INTO test.material_setup_descriptions VALUES (13, 'vandbrædt på stern i sider');
+INSERT INTO test.material_setup_descriptions VALUES (14, 'vandbrædt på stern i forende');
+INSERT INTO test.material_setup_descriptions VALUES (15, 'Tagplader monteres på spær');
+
+
+--
+-- TOC entry 3489 (class 0 OID 21774)
+-- Dependencies: 239
+-- Data for Name: materials; Type: TABLE DATA; Schema: test; Owner: postgres
+--
+
+INSERT INTO test.materials VALUES (1, '25x200 mm. trykimp. Brædt', 'stk', 32.95);
+INSERT INTO test.materials VALUES (2, '25x125 mm. trykimp. Brædt', 'stk', 16.95);
+INSERT INTO test.materials VALUES (3, '38x73 mm. Lægte ubh.', 'stk', 13.95);
+INSERT INTO test.materials VALUES (4, '45x95 mm. Reglar ub.', 'stk', 24.95);
+INSERT INTO test.materials VALUES (5, '45x195 mm. spærtræ ubh.', 'stk', 45.95);
+INSERT INTO test.materials VALUES (6, '97x97 mm. trykimp. Stolpe', 'stk', 42.95);
+INSERT INTO test.materials VALUES (7, '19x100 mm. trykimp. Brædt', 'stk', 10.95);
+INSERT INTO test.materials VALUES (8, 'Plastmo Ecolite blåtonet', 'stk', 49.95);
+
+
+--
+-- TOC entry 3490 (class 0 OID 21782)
+-- Dependencies: 240
+-- Data for Name: orders; Type: TABLE DATA; Schema: test; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 3485 (class 0 OID 21745)
+-- Dependencies: 235
+-- Data for Name: users; Type: TABLE DATA; Schema: test; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 3491 (class 0 OID 21790)
+-- Dependencies: 241
+-- Data for Name: zip_codes; Type: TABLE DATA; Schema: test; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 3503 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: complete_unit_material_cum_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.complete_unit_material_cum_id_seq', 301, true);
+
+
+--
+-- TOC entry 3504 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: material_length_ml_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.material_length_ml_id_seq', 49, true);
+
+
+--
+-- TOC entry 3505 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: material_setup_descriptions_msd_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.material_setup_descriptions_msd_id_seq', 15, true);
+
+
+--
+-- TOC entry 3506 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: materials_material_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.materials_material_id_seq', 14, true);
+
+
+--
+-- TOC entry 3507 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: orders_order_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.orders_order_id_seq', 39, true);
+
+
+--
+-- TOC entry 3508 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_user_id_seq', 27, true);
+
+
+--
+-- TOC entry 3509 (class 0 OID 0)
+-- Dependencies: 230
+-- Name: complete_unit_material_cum_id_seq; Type: SEQUENCE SET; Schema: test; Owner: postgres
+--
+
+SELECT pg_catalog.setval('test.complete_unit_material_cum_id_seq', 1, false);
+
+
+--
+-- TOC entry 3510 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: material_length_ml_id_seq; Type: SEQUENCE SET; Schema: test; Owner: postgres
+--
+
+SELECT pg_catalog.setval('test.material_length_ml_id_seq', 38, true);
+
+
+--
+-- TOC entry 3511 (class 0 OID 0)
+-- Dependencies: 232
+-- Name: material_setup_descriptions_msd_id_seq; Type: SEQUENCE SET; Schema: test; Owner: postgres
+--
+
+SELECT pg_catalog.setval('test.material_setup_descriptions_msd_id_seq', 15, true);
+
+
+--
+-- TOC entry 3512 (class 0 OID 0)
+-- Dependencies: 233
+-- Name: materials_material_id_seq; Type: SEQUENCE SET; Schema: test; Owner: postgres
+--
+
+SELECT pg_catalog.setval('test.materials_material_id_seq', 8, true);
+
+
+--
+-- TOC entry 3513 (class 0 OID 0)
+-- Dependencies: 234
+-- Name: orders_order_id_seq; Type: SEQUENCE SET; Schema: test; Owner: postgres
+--
+
+SELECT pg_catalog.setval('test.orders_order_id_seq', 1, false);
+
+
+--
+-- TOC entry 3514 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: test; Owner: postgres
+--
+
+SELECT pg_catalog.setval('test.users_user_id_seq', 1, false);
+
+
+--
+-- TOC entry 3286 (class 2606 OID 16510)
+-- Name: complete_unit_material complete_unit_material_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.complete_unit_material
+    ADD CONSTRAINT complete_unit_material_pkey PRIMARY KEY (cum_id);
+
+
+--
+-- TOC entry 3284 (class 2606 OID 16501)
+-- Name: material_length material_length_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.material_length
+    ADD CONSTRAINT material_length_pkey PRIMARY KEY (ml_id);
+
+
+--
+-- TOC entry 3298 (class 2606 OID 16570)
+-- Name: material_setup_descriptions material_setup_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.material_setup_descriptions
+    ADD CONSTRAINT material_setup_descriptions_pkey PRIMARY KEY (msd_id);
+
+
+--
+-- TOC entry 3282 (class 2606 OID 16494)
+-- Name: materials materials_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.materials
+    ADD CONSTRAINT materials_pkey PRIMARY KEY (material_id);
+
+
+--
+-- TOC entry 3288 (class 2606 OID 16519)
+-- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (order_id);
+
+
+--
+-- TOC entry 3292 (class 2606 OID 16580)
+-- Name: zip_codes unique_city; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.zip_codes
+    ADD CONSTRAINT unique_city UNIQUE (city) INCLUDE (city);
+
+
+--
+-- TOC entry 3294 (class 2606 OID 16578)
+-- Name: zip_codes unique_zip; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.zip_codes
+    ADD CONSTRAINT unique_zip UNIQUE (zip_code) INCLUDE (zip_code);
+
+
+--
+-- TOC entry 3290 (class 2606 OID 16529)
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+
+
+--
+-- TOC entry 3296 (class 2606 OID 16554)
+-- Name: zip_codes zip_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.zip_codes
+    ADD CONSTRAINT zip_codes_pkey PRIMARY KEY (zip_code);
+
+
+--
+-- TOC entry 3302 (class 2606 OID 21759)
+-- Name: complete_unit_material complete_unit_material_pkey; Type: CONSTRAINT; Schema: test; Owner: postgres
+--
+
+ALTER TABLE ONLY test.complete_unit_material
+    ADD CONSTRAINT complete_unit_material_pkey PRIMARY KEY (cum_id);
+
+
+--
+-- TOC entry 3304 (class 2606 OID 21765)
+-- Name: material_length material_length_pkey; Type: CONSTRAINT; Schema: test; Owner: postgres
+--
+
+ALTER TABLE ONLY test.material_length
+    ADD CONSTRAINT material_length_pkey PRIMARY KEY (ml_id);
+
+
+--
+-- TOC entry 3306 (class 2606 OID 21773)
+-- Name: material_setup_descriptions material_setup_descriptions_pkey; Type: CONSTRAINT; Schema: test; Owner: postgres
+--
+
+ALTER TABLE ONLY test.material_setup_descriptions
+    ADD CONSTRAINT material_setup_descriptions_pkey PRIMARY KEY (msd_id);
+
+
+--
+-- TOC entry 3308 (class 2606 OID 21781)
+-- Name: materials materials_pkey; Type: CONSTRAINT; Schema: test; Owner: postgres
+--
+
+ALTER TABLE ONLY test.materials
+    ADD CONSTRAINT materials_pkey PRIMARY KEY (material_id);
+
+
+--
+-- TOC entry 3310 (class 2606 OID 21789)
+-- Name: orders orders_pkey; Type: CONSTRAINT; Schema: test; Owner: postgres
+--
+
+ALTER TABLE ONLY test.orders
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (order_id);
+
+
+--
+-- TOC entry 3300 (class 2606 OID 21753)
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: test; Owner: postgres
+--
+
+ALTER TABLE ONLY test.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+
+
+--
+-- TOC entry 3312 (class 2606 OID 21800)
+-- Name: zip_codes zip_codes_city_city1_key; Type: CONSTRAINT; Schema: test; Owner: postgres
+--
+
+ALTER TABLE ONLY test.zip_codes
+    ADD CONSTRAINT zip_codes_city_city1_key UNIQUE (city) INCLUDE (city);
+
+
+--
+-- TOC entry 3314 (class 2606 OID 21796)
+-- Name: zip_codes zip_codes_pkey; Type: CONSTRAINT; Schema: test; Owner: postgres
+--
+
+ALTER TABLE ONLY test.zip_codes
+    ADD CONSTRAINT zip_codes_pkey PRIMARY KEY (zip_code);
+
+
+--
+-- TOC entry 3316 (class 2606 OID 21798)
+-- Name: zip_codes zip_codes_zip_code_zip_code1_key; Type: CONSTRAINT; Schema: test; Owner: postgres
+--
+
+ALTER TABLE ONLY test.zip_codes
+    ADD CONSTRAINT zip_codes_zip_code_zip_code1_key UNIQUE (zip_code) INCLUDE (zip_code);
+
+
+--
+-- TOC entry 3318 (class 2606 OID 16571)
+-- Name: complete_unit_material complete_unit_material_description_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.complete_unit_material
+    ADD CONSTRAINT complete_unit_material_description_id_fkey FOREIGN KEY (ms_description_id) REFERENCES public.material_setup_descriptions(msd_id) NOT VALID;
+
+
+--
+-- TOC entry 3319 (class 2606 OID 16540)
+-- Name: complete_unit_material complete_unit_material_ml_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.complete_unit_material
+    ADD CONSTRAINT complete_unit_material_ml_id_fkey FOREIGN KEY (ml_id) REFERENCES public.material_length(ml_id) NOT VALID;
+
+
+--
+-- TOC entry 3320 (class 2606 OID 16535)
+-- Name: complete_unit_material complete_unit_material_orders_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.complete_unit_material
+    ADD CONSTRAINT complete_unit_material_orders_id_fkey FOREIGN KEY (orders_id) REFERENCES public.orders(order_id) NOT VALID;
+
+
+--
+-- TOC entry 3317 (class 2606 OID 16530)
+-- Name: material_length material_length_material_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.material_length
+    ADD CONSTRAINT material_length_material_id_fkey FOREIGN KEY (material_id) REFERENCES public.materials(material_id) NOT VALID;
+
+
+--
+-- TOC entry 3321 (class 2606 OID 16545)
+-- Name: orders orders_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) NOT VALID;
+
+
+--
+-- TOC entry 3322 (class 2606 OID 16557)
+-- Name: users users_zip_code_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_zip_code_fkey FOREIGN KEY (zip_code) REFERENCES public.zip_codes(zip_code) NOT VALID;
+
+
+-- Completed on 2025-05-19 19:28:30 UTC
+
+--
+-- PostgreSQL database dump complete
+--
+
