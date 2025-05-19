@@ -15,13 +15,16 @@
         <a href="/" th:href="@{/}">
             <img src="/images/carportmenuicon.png" th:src="@{/images/carportmenuicon.png}" alt="carport menu icon" class="carport-menuicon" style="width: 50px; height: 50px;">
         </a>
-        <a href="/admin" th:href="@{/admin}" th:if="${session.currentUser != null and session.currentUser.isAdmin}">Kunder</a>
+        <a href="/admin" th:href="@{/admin}" th:if="${session.currentUser != null and session.currentUser.isAdmin}">Forespørgelser</a>
         <a href="/login" th:href="@{/login}" th:if="${session.currentUser == null}">Log på</a>
         <a href="/register" th:href="@{/register}" th:if="${session.currentUser == null}">Opret bruger</a>
-        <span th:if="${session.currentUser != null}" th:text="${session.currentUser.email}">Email</span>
+
+        <a th:if="${session.currentUser != null}" th:href="@{/userprofile}" th:text="${session.currentUser.email}">Email</a>
+
         <a href="/logout" th:href="@{/logout}" th:if="${session.currentUser != null}" class="logout-button">Log ud</a>
     </div>
 </nav>
+
 
 <div class="index-header1">
     <h1>BYG DIN CARPORT HOS FOG I DAG!</h1>
@@ -37,26 +40,32 @@
     </div>
 
 
-    <div class="press-to-login">
-        <a href="login.html" th:href="@{/login}">
+    <div class="press-to-login" th:if="${session.currentUser == null}">
+        <a href="login.html" th:href="@{/login}" th:if="${session.currentUser == null}">
             <h2>LOG PÅ</h2>
             <p>Har du allerede en bruger? Så log på her</p>
         </a>
     </div>
 
 
-    <div class="press-to-register">
-        <a href="register.html" th:href="@{/register}" class="box">
+    <div class="press-to-register" th:if="${session.currentUser == null}">
+        <a href="register.html" th:href="@{/register}" th:if="${session.currentUser == null}" class="box">
             <h2>REGISTRER DIG</h2>
             <p>Har du ikke en bruger endnu? Registrer dig nu og bliv tildelt en salgsperson der kan vejlede dig gennem
                 din carport rejse</p>
         </a>
     </div>
 
-    <div class="press-to-admin">
+    <div class="press-to-admin" th:if="${session.currentUser != null and session.currentUser.isAdmin}">
         <a href="/admin" th:if="${session.currentUser != null and session.currentUser.isAdmin}" class="box">
             <h2>GÅ TIL ADMIN PAGE</h2>
             <p>Tjek kunders forespørgelser</p>
+        </a>
+    </div>
+
+    <div class="press-to-contact" th:if="${session.currentUser != null}">
+        <a href="/contact" th:if="${session.currentUser != null}" class="box">
+            <h2>KONTAKT</h2>
         </a>
     </div>
 

@@ -1,9 +1,7 @@
-package app.utilities;
+package app.persistence;
 
-import app.entities.Material;
-import app.persistence.ConnectionPool;
-import app.persistence.MaterialMapper;
-import app.persistence.ZipCodeMapper;
+import app.entities.*;
+import app.exceptions.DatabaseException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,23 +9,26 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-class CalculatorTest {
+
+class OrderMapperTest {
     private static final String USER = "postgres";
     private static final String PASSWORD = "postgres";
     private static final String URL = "jdbc:postgresql://localhost:5432/%s?currentSchema=public";
     private static final String DB = "cupcake";
 
     private static ConnectionPool connectionPool;
-    private static MaterialMapper materialMapper;
+    private static OrderMapper orderMapper;
 
     @BeforeAll
     public static void setUpClass() {
         try {
             connectionPool = ConnectionPool.getInstance(USER, PASSWORD, URL, DB);
-            materialMapper = new MaterialMapper();
+            orderMapper = new OrderMapper();
             try (Connection testConnection = connectionPool.getConnection()) {
                 try (Statement stmt = testConnection.createStatement()) {
                     stmt.execute("CREATE SCHEMA IF NOT EXISTS test");
@@ -132,48 +133,123 @@ class CalculatorTest {
     }
 
     @Test
-    void calculatePostAmount() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        int actual = calculator.calculatePostAmount();
-
-        assertEquals(6, actual);
+    void getDescriptions() {
+        try {
+            Map<Integer, String> descriptions = orderMapper.getDescriptions(connectionPool);
+            assertNotNull(descriptions);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
-
-    @Test
-    void getTotalPrice() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        double actual = calculator.getTotalPrice();
-
-        assertEquals(9236.1, actual);
-    }
-
 
 
     @Test
-    void getPost() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        Material post = calculator.getPost();
+    void registerOrderAndGet() {
+        User newUser = new User("test@mail.dk", "12345678", 42756486, false, "Test vej");
+        newUser.setZipCode(new ZipCode(2800, "Lyngby"));
+        try {
+            int userId = UserMapper.register(newUser, connectionPool).getUserID();
+            int actual1 = OrderMapper.registerOrder(1, 780, 600, 230, 10000.00, 1, connectionPool);
+            int actual2 = OrderMapper.registerOrder(1, 780, 600, 230, 10000.00, 1, connectionPool);
 
-        assertNotNull(post);
-        assertEquals("97x97 mm. trykimp. Stolpe", post.getName());
+            List<Order> orders = OrderMapper.getAllOrdersWithDetails(connectionPool);
+
+            assertNotNull(orders);
+            assertEquals(1, actual1);
+            assertEquals(2, actual2);
+
+
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Test
-    void getBeams() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        List<Material> beams = calculator.getBeams();
+    void updateOrder() {
+        User newUser = new User("test@mail.dk", "12345678", 42756486, false, "Test vej");
+        newUser.setZipCode(new ZipCode(2800, "Lyngby"));
+        List<CompleteUnitMaterial> materialList = new ArrayList<>();
+        materialList.add(new CompleteUnitMaterial(10, "ohøj", new Material(1, "træ", "stk", 5.00)));
+        try {
+            UserMapper.register(newUser, connectionPool).getUserID();
+            int orderId = OrderMapper.registerOrder(1, 780, 600, 230, 10000.00, 1, connectionPool);
 
-        assertNotNull(beams);
-        assertEquals(5, beams.size());
+            OrderMapper.updateOrder(orderId, 900, 800, 230, 2, 10.00, materialList, connectionPool);
+
+            List<Order> orders = OrderMapper.getAllOrdersWithDetails(connectionPool);
+
+            assertNotNull(orders);
+            assertEquals(1, orders.size());
+            assertEquals(800, orders.get(0).getCarport().getCarportLength());
+
+
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    void getRafter() {
+    void getAllOrdersByUserId() {
+        User newUser = new User("test@mail.dk", "12345678", 42756486, false, "Test vej");
+        newUser.setZipCode(new ZipCode(2800, "Lyngby"));
+        try {
+            UserMapper.register(newUser, connectionPool).getUserID();
+            OrderMapper.registerOrder(1, 780, 600, 230, 10000.00, 1, connectionPool);
+            OrderMapper.registerOrder(1, 780, 600, 230, 10000.00, 1, connectionPool);
+
+            List<Order> orders = OrderMapper.getAllOrdersByUserId(1, connectionPool);
+
+            assertNotNull(orders);
+
+            assertEquals(2, orders.size());
+
+
+
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    void getRoof() {
+    void updateStatus() {
+        User newUser = new User("test@mail.dk", "12345678", 42756486, false, "Test vej");
+        newUser.setZipCode(new ZipCode(2800, "Lyngby"));
+        try {
+            UserMapper.register(newUser, connectionPool).getUserID();
+            int orderId = OrderMapper.registerOrder(1, 780, 600, 230, 10000.00, 1, connectionPool);
+
+            List<Order> orders = OrderMapper.getAllOrdersWithDetails(connectionPool);
+
+            assertNotNull(orders);
+            assertEquals(1, orderId);
+
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    @Test
+    void getOrderById() {
+        User newUser = new User("test@mail.dk", "12345678", 42756486, false, "Test vej");
+        newUser.setZipCode(new ZipCode(2800, "Lyngby"));
+        try {
+            UserMapper.register(newUser, connectionPool).getUserID();
+
+            int orderId1 = OrderMapper.registerOrder(1, 780, 600, 230, 10000.00, 1, connectionPool);
+            int orderId2 = OrderMapper.registerOrder(1, 780, 600, 230, 12000.00, 1, connectionPool);
+
+            Order order1 = OrderMapper.getOrderById(orderId1, connectionPool);
+            Order order2 = OrderMapper.getOrderById(orderId2, connectionPool);
+
+            assertEquals(orderId1, order1.getOrderID());
+            assertEquals(10000.00, order1.getTotalPrice());
+            assertEquals(orderId2, order2.getOrderID());
+            assertEquals(12000.00, order2.getTotalPrice());
+
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

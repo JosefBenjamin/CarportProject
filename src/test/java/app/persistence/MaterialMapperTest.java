@@ -1,9 +1,8 @@
-package app.utilities;
+package app.persistence;
 
 import app.entities.Material;
-import app.persistence.ConnectionPool;
-import app.persistence.MaterialMapper;
-import app.persistence.ZipCodeMapper;
+import app.exceptions.DatabaseException;
+import app.utilities.PasswordUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,8 @@ import java.sql.Statement;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-class CalculatorTest {
+
+class MaterialMapperTest {
     private static final String USER = "postgres";
     private static final String PASSWORD = "postgres";
     private static final String URL = "jdbc:postgresql://localhost:5432/%s?currentSchema=public";
@@ -132,48 +132,60 @@ class CalculatorTest {
     }
 
     @Test
-    void calculatePostAmount() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        int actual = calculator.calculatePostAmount();
-
-        assertEquals(6, actual);
+    void getMaterialById() {
+        try {
+            List<Material> materials = MaterialMapper.getMaterialsByID(1, connectionPool);
+            assertEquals(7, materials.size());
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    void getTotalPrice() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        double actual = calculator.getTotalPrice();
-
-        assertEquals(9236.1, actual);
-    }
-
-
-
-    @Test
-    void getPost() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        Material post = calculator.getPost();
-
-        assertNotNull(post);
-        assertEquals("97x97 mm. trykimp. Stolpe", post.getName());
+    void addMaterial() {
+        try {
+            MaterialMapper.addMaterial("Test", "stk", 45.95, "9, 600", connectionPool);
+            List<Material> materials = MaterialMapper.getMaterialsByID(9, connectionPool);
+            assertNotNull(materials);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    void getBeams() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        List<Material> beams = calculator.getBeams();
-
-        assertNotNull(beams);
-        assertEquals(5, beams.size());
+    void deleteMaterial() {
+        try {
+            MaterialMapper.addMaterial("Test", "stk", 45.95, "9, 600", connectionPool);
+            MaterialMapper.deleteMaterial(9, connectionPool);
+            List<Material> materials = MaterialMapper.getMaterialsByID(9, connectionPool);
+            assertEquals(0, materials.size());
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    void getRafter() {
+    void getLengthID() {
+        try {
+            int actual = MaterialMapper.getLengthID(8, 480, connectionPool);
+            assertEquals(37, actual);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    void getRoof() {
+    void getAllMaterials() {
+        try {
+            int actual = MaterialMapper.getAllMaterials(connectionPool).size();
+            assertEquals(8, actual);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+
+
 
 
 }

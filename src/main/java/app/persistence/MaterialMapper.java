@@ -48,8 +48,8 @@ public class MaterialMapper {
     }
 
     public static void addMaterial(String name, String unitName, double meterPrice, String lengthsInput, ConnectionPool connectionPool) throws DatabaseException {
-        String insertMaterialSql = "INSERT INTO public.materials (name, unit_name, meter_price) VALUES (?, ?, ?) RETURNING material_id";
-        String insertLengthSql = "INSERT INTO public.material_length (material_id, length) VALUES (?, ?)";
+        String insertMaterialSql = "INSERT INTO materials (name, unit_name, meter_price) VALUES (?, ?, ?) RETURNING material_id";
+        String insertLengthSql = "INSERT INTO material_length (material_id, length) VALUES (?, ?)";
 
         try (Connection connection = connectionPool.getConnection()) {
             int materialId;
@@ -82,27 +82,40 @@ public class MaterialMapper {
     }
 
     public static void deleteMaterial(int materialId, ConnectionPool connectionPool) throws DatabaseException {
-        String checkSql = "SELECT COUNT(*) FROM public.material_length WHERE material_id = ?";
-        String deleteSql = "DELETE FROM public.materials WHERE material_id = ?";
+        // SQL to delete from material_length first
+        String deleteLengthsSql = "DELETE FROM material_length WHERE material_id = ?";
+        // SQL to delete from materials
+        String deleteMaterialSql = "DELETE FROM materials WHERE material_id = ?";
 
         try (Connection connection = connectionPool.getConnection()) {
-            try (PreparedStatement checkPs = connection.prepareStatement(checkSql)) {
-                checkPs.setInt(1, materialId);
-                ResultSet rs = checkPs.executeQuery();
-                if (rs.next() && rs.getInt(1) > 0) {
-                    throw new DatabaseException("Cannot delete material with ID " + materialId + " because it is used in material_length");
-                }
-            }
 
-            try (PreparedStatement deletePs = connection.prepareStatement(deleteSql)) {
-                deletePs.setInt(1, materialId);
-                int rowsAffected = deletePs.executeUpdate();
-                if (rowsAffected == 0) {
-                    throw new DatabaseException("Material with ID " + materialId + " not found");
+            connection.setAutoCommit(false);
+
+            try {
+                // Delete associated lengths from material_length
+                try (PreparedStatement psLengths = connection.prepareStatement(deleteLengthsSql)) {
+                    psLengths.setInt(1, materialId);
+                    psLengths.executeUpdate();
                 }
+
+                // Delete the material from materials
+                try (PreparedStatement psMaterial = connection.prepareStatement(deleteMaterialSql)) {
+                    psMaterial.setInt(1, materialId);
+                    int rowsAffected = psMaterial.executeUpdate();
+                    if (rowsAffected == 0) {
+                        throw new DatabaseException("Material with ID " + materialId + " not found.");
+                    }
+                }
+
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                throw new DatabaseException("Error deleting material with ID " + materialId + ": " + e.getMessage());
+            } finally {
+                connection.setAutoCommit(true);
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Error deleting material: " + e.getMessage(), e);
+            throw new DatabaseException("Database connection error: " + e.getMessage());
         }
     }
 
@@ -131,8 +144,8 @@ public static int getLengthID(int materialID, int length, ConnectionPool connect
             List<Material> materials = new ArrayList<>();
             Map<Integer, Material> materialMap = new HashMap<>();
 
-            String materialSql = "SELECT material_id, name, unit_name, meter_price FROM public.materials";
-            String lengthSql = "SELECT material_id, length FROM public.material_length";
+            String materialSql = "SELECT material_id, name, unit_name, meter_price FROM materials";
+            String lengthSql = "SELECT material_id, length FROM material_length";
 
             try (Connection connection = connectionPool.getConnection()) {
                 // Fetch materials

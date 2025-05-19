@@ -1,5 +1,7 @@
 package app.entities;
 
+import app.utilities.Role;
+
 public class User {
     private int userID;
     private String email;
@@ -91,6 +93,12 @@ public class User {
     public void setZipCode(ZipCode zipCode) {
         this.zipCode = zipCode;
     }
+
+    public Role getRole() {
+        return isAdmin ? Role.ADMIN : Role.USER;
+    }
+
+
 
     @Override
     public String toString() {

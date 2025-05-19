@@ -1,9 +1,8 @@
-package app.utilities;
+package app.persistence;
 
-import app.entities.Material;
-import app.persistence.ConnectionPool;
-import app.persistence.MaterialMapper;
-import app.persistence.ZipCodeMapper;
+import app.entities.User;
+import app.entities.ZipCode;
+import app.exceptions.DatabaseException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,23 +10,23 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-class CalculatorTest {
+
+class UserMapperTest {
     private static final String USER = "postgres";
     private static final String PASSWORD = "postgres";
     private static final String URL = "jdbc:postgresql://localhost:5432/%s?currentSchema=public";
     private static final String DB = "cupcake";
 
     private static ConnectionPool connectionPool;
-    private static MaterialMapper materialMapper;
+    private static UserMapper userMapper;
 
     @BeforeAll
     public static void setUpClass() {
         try {
             connectionPool = ConnectionPool.getInstance(USER, PASSWORD, URL, DB);
-            materialMapper = new MaterialMapper();
+            userMapper = new UserMapper();
             try (Connection testConnection = connectionPool.getConnection()) {
                 try (Statement stmt = testConnection.createStatement()) {
                     stmt.execute("CREATE SCHEMA IF NOT EXISTS test");
@@ -132,48 +131,85 @@ class CalculatorTest {
     }
 
     @Test
-    void calculatePostAmount() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        int actual = calculator.calculatePostAmount();
+    void registerAndGetUser() {
+        try {
+            User newUser = new User("test@mail.dk", "12345678", 42756486, false, "Test vej");
+            newUser.setZipCode(new ZipCode(2800, "Lyngby"));
+            User expected = UserMapper.register(newUser, connectionPool);
+            assertNotNull(expected);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
 
-        assertEquals(6, actual);
     }
 
     @Test
-    void getTotalPrice() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        double actual = calculator.getTotalPrice();
-
-        assertEquals(9236.1, actual);
-    }
-
-
-
-    @Test
-    void getPost() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        Material post = calculator.getPost();
-
-        assertNotNull(post);
-        assertEquals("97x97 mm. trykimp. Stolpe", post.getName());
+    void login() {
+        try {
+            User newUser = new User("test@mail.dk", "12345678", 42756486, false, "Test vej");
+            newUser.setZipCode(new ZipCode(2800, "Lyngby"));
+            UserMapper.register(newUser, connectionPool);
+            assertTrue(UserMapper.login("test@mail.dk", "12345678" , connectionPool));
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    void getBeams() {
-        Calculator calculator = new Calculator(780, 600, 230, connectionPool);
-        List<Material> beams = calculator.getBeams();
+    void emailExist() {
+        try {
+            User newUser = new User("test@mail.dk", "12345678", 42756486, false, "Test vej");
+            newUser.setZipCode(new ZipCode(2800, "Lyngby"));
+            UserMapper.register(newUser, connectionPool);
+            assertTrue(UserMapper.emailExist(newUser.getEmail(), connectionPool));
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-        assertNotNull(beams);
-        assertEquals(5, beams.size());
+
+    @Test
+    void getUserById() {
+        try {
+            User newUser = new User("test@mail.dk", "12345678", 42756486, false, "Test vej");
+            newUser.setZipCode(new ZipCode(2800, "Lyngby"));
+            User expected = UserMapper.register(newUser, connectionPool);
+            UserMapper.getUserById(expected.getUserID(), connectionPool);
+            assertNotNull(expected);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    void getRafter() {
+    void updateMail() {
+        try {
+            User newUser = new User("test@mail.dk", "12345678", 42756486, false, "Test vej");
+            newUser.setZipCode(new ZipCode(2800, "Lyngby"));
+            User registeredUser = UserMapper.register(newUser, connectionPool);
+            UserMapper.updateMail("newmail@mail.dk", registeredUser.getUserID(), connectionPool);
+
+
+            User expected = UserMapper.getUserById(registeredUser.getUserID(), connectionPool);
+            assertEquals(expected.getEmail(), "newmail@mail.dk");
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    void getRoof() {
+    void updatePassword() {
     }
 
+    @Test
+    void updateTlf() {
+    }
 
+    @Test
+    void updateAddress() {
+    }
+
+    @Test
+    void updateCityAndZipCode() {
+    }
 }

@@ -6,48 +6,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .order-details {
-            margin-left: 20px;
-        }
-        .admin-header a, .admin-header form {
-            display: inline-block;
-            margin-right: 10px;
-        }
-        .add-material-form {
-            margin: 20px 0;
-        }
-        .add-material-form input {
-            margin-right: 10px;
-        }
-    </style>
 </head>
 <body>
-<div class="admin-header">
-    <h1>Admin Page - Forespørgelser</h1>
-    <a href="/" th:href="@{/}">Tilbage til forsiden</a>
-    <form th:action="@{/admin/show-materials}" method="post" style="display: inline;">
-        <button type="submit">Se materialer</button>
-    </form>
-    <form th:action="@{/admin/show-orders}" method="post" style="display: inline;" th:if="${view == 'materials'}">
-        <button type="submit">Se ordrer</button>
-    </form>
-</div>
+<nav class="navbar">
+    <div class="navigation-links">
+        <a href="/" th:href="@{/}">
+            <img src="/images/carportmenuicon.png" th:src="@{/images/carportmenuicon.png}" alt="carport menu icon" class="carport-menuicon" style="width: 50px; height: 50px;">
+        </a>
+        <span>Admin Page - Forespørgelser</span>
+        <a href="/admin/show-materials" th:href="@{/admin/show-materials}" th:if="${view == 'orders'}">Se materialer</a>
+        <a href="/admin/show-orders" th:href="@{/admin/show-orders}" th:if="${view == 'materials'}">Se ordrer</a>
+        <a th:if="${session.currentUser != null}" th:href="@{/userprofile}" th:text="${session.currentUser.email}"></a>
+        <a href="/logout" th:href="@{/logout}" th:if="${session.currentUser != null}" class="logout-button">Log ud</a>
+    </div>
+</nav>
 
 <div class="admin-content">
+    <!-- Success Message -->
+    <div th:if="${successMessage}" class="success-message">
+        <p th:text="${successMessage}"></p>
+    </div>
+
+    <!-- Error Message -->
     <div th:if="${error}" class="error-message">
         <p th:text="${error}"></p>
     </div>
@@ -55,7 +35,7 @@
     <!-- Orders View -->
     <div th:if="${view == 'orders'}">
         <div th:if="${orders != null and !orders.isEmpty}">
-            <table>
+            <table class="admin-table">
                 <thead>
                 <tr>
                     <th>Order ID</th>
@@ -68,30 +48,62 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="order : ${orders}">
-                    <td th:text="${order.orderID}"></td>
-                    <td th:text="${order.userID}"></td>
-                    <td th:text="${order.carport.carportWidth} + ' x ' + ${order.carport.carportLength} + ' x ' + ${order.carport.carportHeight} + ' cm'"></td>
-                    <td th:text="${order.date}"></td>
-                    <td th:text="${order.totalPrice} + ' DKK'"></td>
-                    <td th:text="${order.status}"></td>
-                    <td>
-                        <div th:if="${order.billOfMaterials != null and !order.billOfMaterials.completeUnitMaterials.isEmpty}">
-                            <ul>
-                                <li th:each="material : ${order.billOfMaterials.completeUnitMaterials}">
-                                    <span th:text="'Materiale: ' + ${material.materialName} + ', Antal: ' + ${material.quantity} + ', Beskrivelse: ' + (${descriptions[material.msdId] != null} ? ${descriptions[material.msdId]} : 'Ukendt beskrivelse')"></span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div th:unless="${order.billOfMaterials != null and !order.billOfMaterials.completeUnitMaterials.isEmpty}">
-                            Ingen materialer tilknyttet.
-                        </div>
-                    </td>
-                </tr>
+                <th:block th:each="order : ${orders}">
+                    <tr class="order-row">
+                        <td>
+                            <a href="#" class="order-id-link" th:onclick="'showEditForm(' + ${order.orderID} + ')'">
+                                <span th:text="${order.orderID}"></span>
+                                <span class="edit-icon">✏️</span>
+                            </a>
+                        </td>
+                        <td th:text="${order.userID}"></td>
+                        <td th:text="${order.carport.carportWidth} + ' x ' + ${order.carport.carportLength} + ' x ' + ${order.carport.carportHeight} + ' cm'"></td>
+                        <td th:text="${order.date}"></td>
+                        <td th:text="${order.totalPrice} + ' DKK'"></td>
+                        <td th:text="${StatusChecker.getStatusText(order.status)}"></td>
+                        <td>
+                            <div th:if="${order.billOfMaterials != null and !order.billOfMaterials.completeUnitMaterials.isEmpty}">
+                                <ul>
+                                    <li th:each="material : ${order.billOfMaterials.completeUnitMaterials}">
+                                        <span th:text="'Materiale: ' + ${material.materialName} + ', Antal: ' + ${material.quantity} + ', Beskrivelse: ' + (${descriptions[material.msdId] != null} ? ${descriptions[material.msdId]} : 'Ukendt beskrivelse')"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div th:unless="${order.billOfMaterials != null and !order.billOfMaterials.completeUnitMaterials.isEmpty}">
+                                Ingen materialer tilknyttet.
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:id="'edit-form-row-' + ${order.orderID}" class="edit-form-row" style="display: none;">
+                        <td colspan="7">
+                            <div class="edit-order-form">
+                                <h3>Rediger Ordre <span th:text="${order.orderID}"></span></h3>
+                                <form th:action="@{/admin/update-order}" method="post">
+                                    <input type="hidden" name="orderId" th:value="${order.orderID}" />
+                                    <p><strong>Kunde Email:</strong> <span th:text="${order.user.email}"></span></p>
+                                    <p><strong>Kunde Telefonnummer:</strong> <span th:text="${order.user.tlf}"></span></p>
+                                    <label>Carport Bredde (cm):</label>
+                                    <input type="number" name="carportWidth" th:value="${order.carport.carportWidth}" required /><br/>
+                                    <label>Carport Længde (cm):</label>
+                                    <input type="number" name="carportLength" th:value="${order.carport.carportLength}" required /><br/>
+                                    <label>Carport Højde (cm):</label>
+                                    <input type="number" name="carportHeight" th:value="${order.carport.carportHeight}" required /><br/>
+                                    <label>Status:</label>
+                                    <select name="status" required>
+                                        <option value="1" th:selected="${order.status == 1}">Behandler</option>
+                                        <option value="2" th:selected="${order.status == 2}">Afventer betaling</option>
+                                        <option value="3" th:selected="${order.status == 3}">Forespørgsel afsluttet</option>
+                                    </select><br/>
+                                    <button type="submit">Update Order</button>
+                                    <button type="button" th:onclick="'hideEditForm(' + ${order.orderID} + ')'">Cancel</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </th:block>
                 </tbody>
             </table>
         </div>
-
         <div th:unless="${orders != null and !orders.isEmpty}">
             <p>Ingen forespørgelser fundet.</p>
         </div>
@@ -100,8 +112,6 @@
     <!-- Materials View -->
     <div th:if="${view == 'materials'}">
         <h2>Materialer</h2>
-
-        <!-- Form to Add a New Material -->
         <div class="add-material-form">
             <form th:action="@{/admin/add-material}" method="post">
                 <input type="text" name="name" placeholder="Navn" required />
@@ -111,10 +121,8 @@
                 <button type="submit">Tilføj materiale</button>
             </form>
         </div>
-
-        <!-- Materials Table -->
         <div th:if="${materials != null and !materials.isEmpty}">
-            <table>
+            <table class="admin-table">
                 <thead>
                 <tr>
                     <th>Materiale ID</th>
@@ -147,7 +155,6 @@
                 </tbody>
             </table>
         </div>
-
         <div th:unless="${materials != null and !materials.isEmpty}">
             <p>Ingen materialer fundet.</p>
         </div>
@@ -159,5 +166,15 @@
         <p>© 2025 Fog Carport. Alle rettigheder forbeholdes.</p>
     </div>
 </footer>
+
+<script>
+    function showEditForm(orderId) {
+        document.querySelectorAll('[id^="edit-form-row-"]').forEach(row => row.style.display = 'none');
+        document.getElementById('edit-form-row-' + orderId).style.display = 'table-row';
+    }
+    function hideEditForm(orderId) {
+        document.getElementById('edit-form-row-' + orderId).style.display = 'none';
+    }
+</script>
 </body>
 </html>

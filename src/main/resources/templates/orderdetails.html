@@ -24,24 +24,44 @@
     </div>
 </nav>
 
+<h2>Stykliste</h2>
 
-<body>
+<div class="billOfMaterial">
+    <table>
+        <thead>
+        <tr>
+            <th>Beskrivelse</th>
+            <th>Længde</th>
+            <th>Antal</th>
+            <th>Enhed</th>
+            <th>Beskrivelse</th>
+        </tr>
+        <tr>
+            <th colspan="5" style="text-align: left;">Træ & Tagplader</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="completeUnitMaterial : ${billOfMaterial}">
+            <td th:text="${completeUnitMaterial.material.name}"></td>
+            <td th:text="${completeUnitMaterial.material.length}"></td>
+            <td th:text="${completeUnitMaterial.quantity}"></td>
+            <td th:text="${completeUnitMaterial.material.unitName}"></td>
+            <td th:text="${completeUnitMaterial.description}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
-<h1>Din ordre er bestilt og registreret</h1>
-
-<h4>Du vil modtage på din mail med en ordrebekræftelse. På din profilside kan der nu ses en stykliste samt plantegning på denne ordre.</h4>
+<div class="caport-svg-topview">
+    <div th:utext="${svgTop}"></div>
+    <div th:utext="${svgSide}"></div>
+</div>
 
 <div>
     <a th:href="@{/userprofile}">Tilbage til din profil</a>
 </div>
 
 
-
-<footer>
-    <div class="footer-content">
-        <p>&copy; 2025 Fog Carport. Alle rettigheder forbeholdes.</p>
-    </div>
-</footer>
 
 </body>
 </html>

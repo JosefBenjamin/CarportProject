@@ -9,10 +9,12 @@ import app.persistence.CompleteUnitMaterialMapper;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.utilities.Calculator;
+import app.utilities.MailSender;
+import com.sendgrid.helpers.mail.Mail;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -73,6 +75,7 @@ public class CarportMakerController {
         Carport carport = new Carport(carportWidth, carportLength);
 
         User user = ctx.sessionAttribute("currentUser");
+        String mailRecipient = user.getEmail();
 
         Calculator calculator = new Calculator(carport.getCarportWidth(), carport.getCarportLength(), carport.getCarportHeight(), connectionPool);
         int newOrderID;
@@ -85,6 +88,7 @@ public class CarportMakerController {
         }
 
         List<CompleteUnitMaterial> billOfMaterials = calculator.getOrderMaterials();
+        double totalPrice = calculator.getTotalPrice();
         for(CompleteUnitMaterial material: billOfMaterials) {
             try {
                 CompleteUnitMaterialMapper.registerCUMToOrder(material.getQuantity(), newOrderID, material.getMaterial().getLengthID(connectionPool),
@@ -92,6 +96,15 @@ public class CarportMakerController {
             } catch (DatabaseException e) {
                 throw new RuntimeException(e);
             }
+        }
+
+        MailSender mailSender = new MailSender();
+        try {
+            mailSender.sendCarportRequestMail(String.valueOf(carportLength), String.valueOf(carportWidth),
+               String.valueOf(carport.getCarportHeight()), String.valueOf(totalPrice), mailRecipient);
+            System.out.println("mail sent to" + mailRecipient);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         ctx.attribute("orderSend", true);

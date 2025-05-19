@@ -14,10 +14,12 @@
         <a href="/" th:href="@{/}">
             <img src="/images/carportmenuicon.png" th:src="@{/images/carportmenuicon.png}" alt="carport menu icon" class="carport-menuicon" style="width: 50px; height: 50px;">
         </a>
-        <a href="/admin" th:href="@{/admin}" th:if="${session.currentUser != null and session.currentUser.isAdmin}">Kunder</a>
+        <a href="/admin" th:href="@{/admin}" th:if="${session.currentUser != null and session.currentUser.isAdmin}">Forespørgelser</a>
         <a href="/login" th:href="@{/login}" th:if="${session.currentUser == null}">Log på</a>
         <a href="/register" th:href="@{/register}" th:if="${session.currentUser == null}">Opret bruger</a>
-        <span th:if="${session.currentUser != null}" th:text="${session.currentUser.email}">Email</span>
+
+        <a th:if="${session.currentUser != null}" th:href="@{/userprofile}" th:text="${session.currentUser.email}">Email</a>
+
         <a href="/logout" th:href="@{/logout}" th:if="${session.currentUser != null}" class="logout-button">Log ud</a>
     </div>
 </nav>
@@ -29,19 +31,20 @@
 
 <form class="register-form" method="post">
     <label>Din email</label>
-    <input type="email" name="email" placeholder="example@example.org" th:value="${session.savedEmail}" required/>
+    <input type="email" name="email" placeholder="example@example.org" th:value="${session.savedEmail}"
+           autocomplete="email" required/>
     <label>Kodeord</label>
-    <input type="password" name="regpassword1" placeholder="" required minlength="8" maxlength="64"/>
+    <input type="password" name="regpassword1" placeholder="" autocomplete="new-password" required minlength="8" maxlength="64"/>
     <label>Gentag kodeord</label>
-    <input type="password" name="regpassword2" placeholder="" required minlength="8" maxlength="64"/>
+    <input type="password" name="regpassword2" placeholder="" autocomplete="new-password" required minlength="8" maxlength="64"/>
     <label>Telefonnummer</label>
-    <input type="tel" name="phonenumber" placeholder="" th:value="${session.savedPhone}" required/>
+    <input type="tel" name="phonenumber" placeholder="" th:value="${session.savedPhone}" autocomplete="tel" required/>
     <label>Adresse</label>
-    <input type="text" name="address" placeholder="Gammel kongevej 17" th:value="${session.savedAddress}" required/>
+    <input type="text" name="address" placeholder="Gammel kongevej 17" th:value="${session.savedAddress}" autocomplete="street-address" required/>
     <label>Postnummer</label>
-    <input type="text" name="zip" placeholder="2800" th:value="${session.savedZip}" required/>
+    <input type="text" name="zip" placeholder="2800" th:value="${session.savedZip}" autocomplete="postal-code" required/>
     <label>By</label>
-    <input type="text" name="city" placeholder="Lyngby" th:value="${session.savedCity}" required/>
+    <input type="text" name="city" placeholder="Lyngby" th:value="${session.savedCity}" autocomplete="address-level12" required/>
 
     <div class="register-button">
         <button type="submit" formaction="/register">Opret Bruger</button>

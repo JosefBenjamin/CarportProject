@@ -3,19 +3,15 @@ package app;
 
 import app.config.SessionConfig;
 import app.config.ThymeleafConfig;
-import app.controllers.AdminController;
-import app.controllers.CarportMakerController;
-import app.controllers.UserController;
+import app.controllers.*;
+import app.entities.User;
 import app.persistence.ConnectionPool;
+import app.utilities.Role;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
-
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public class Main {
-
-    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
     private static final String USER = "postgres";
     private static final String PASSWORD = "postgres";
@@ -43,6 +39,23 @@ public class Main {
             ctx.attribute("session", ctx.sessionAttributeMap());
         });
 
+
+        // Access management for admin routes
+        app.beforeMatched(ctx -> {
+            if (ctx.path().startsWith("/admin")) {
+                User user = ctx.sessionAttribute("currentUser");
+                if (user == null) {
+                    ctx.sessionAttribute("currentUser", null); // Clear any stale session
+                    ctx.redirect("/");
+                    return;
+                }
+                if (user.getRole() != Role.ADMIN) {
+                    ctx.redirect("/");
+                    return;
+                }
+            }
+        });
+
         app.get("/", ctx -> {
             System.out.println("Visitor ID: " + ctx.sessionAttribute("currentVisitor"));
             ctx.render("index.html");
@@ -51,6 +64,9 @@ public class Main {
         UserController.routes(app, connectionPool);
         AdminController.routes(app, connectionPool);
         CarportMakerController.routes(app, connectionPool);
+        ProfileController.routes(app, connectionPool);
+        OrderDetailsController.routes(app, connectionPool);
+        ContactController.routes(app, connectionPool);
 
     }
 

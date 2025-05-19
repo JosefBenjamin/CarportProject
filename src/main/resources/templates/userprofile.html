@@ -14,13 +14,102 @@
         <a href="/" th:href="@{/}">
             <img src="/images/carportmenuicon.png" th:src="@{/images/carportmenuicon.png}" alt="carport menu icon" class="carport-menuicon" style="width: 50px; height: 50px;">
         </a>
-        <a href="/admin" th:href="@{/admin}" th:if="${session.currentUser != null and session.currentUser.isAdmin}">Kunder</a>
+        <a href="/admin" th:href="@{/admin}" th:if="${session.currentUser != null and session.currentUser.isAdmin}">Forespørgelser</a>
         <a href="/login" th:href="@{/login}" th:if="${session.currentUser == null}">Log på</a>
         <a href="/register" th:href="@{/register}" th:if="${session.currentUser == null}">Opret bruger</a>
-        <span th:if="${session.currentUser != null}" th:text="${session.currentUser.email}">Email</span>
+
+        <a th:if="${session.currentUser != null}" th:href="@{/userprofile}" th:text="${session.currentUser.email}">Email</a>
+
         <a href="/logout" th:href="@{/logout}" th:if="${session.currentUser != null}" class="logout-button">Log ud</a>
     </div>
 </nav>
+
+<div class="register-header">
+<h1>Profil</h1>
+</div>
+
+<form method="post">
+
+    <table>
+        <tr>
+            <td>E-mail:</td>
+            <td th:text="${session.currentUser.email}"></td>
+            <td><input type="text" name="mail" placeholder="Ny e-mail her" ></td>
+            <td><button type="submit" name="profilemail" th:value="${session.currentUser.email}" formaction="updateMail">Opdater</button></td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td><input type="password" name="password" placeholder="Nyt password her"></td>
+            <td><input type="password" name="confirmPassword" placeholder="Gentag passwordet"></td>
+            <td>
+                <button type="submit" formaction="updatePassword">Opdater</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Tlf-nummer:</td>
+            <td th:text="${session.currentUser.tlf}"></td>
+            <td><input type="text" name="tlf" placeholder="Nyt tlf nummer her" ></td>
+            <td><button type="submit" name="profiletlf" th:value="${session.currentUser.tlf}" formaction="updateTlf">Opdater</button></td>
+        </tr>
+        <tr>
+            <td>Adresse:</td>
+            <td th:text="${session.currentUser.address}"></td>
+            <td><input type="text" name="address" placeholder="Ny adresse her" ></td>
+            <td><button type="submit" name="profileaddress" th:value="${session.currentUser.address}" formaction="updateAddress">Opdater</button></td>
+        </tr>
+        <tr>
+            <td>By:</td>
+            <td th:text="${session.currentUser.zipCode.city}"></td>
+            <td><input type="text" name="city" placeholder="Ny by her"></td>
+        </tr>
+        <tr>
+            <td>Postnummer:</td>
+            <td th:text="${session.currentUser.zipCode.zipCode}"></td>
+            <td><input type="text" name="zipcode" placeholder="Nyt postnummer her"></td>
+            <td><button type="submit" name="profilecityandzipcode" formaction="updateCityAndZip">Opdater By og Postnummer</button></td>
+        </tr>
+    </table>
+</form>
+
+<div><p class="error" th:unless="${#strings.isEmpty(message)}" th:text="${message}"> </p></div>
+
+<h2>Dine forespørgsler</h2>
+
+<div class="orders-section">
+    <table>
+        <thead>
+        <tr>
+            <th>Ordre ID</th>
+            <th>Dato</th>
+            <th>Status</th>
+            <th>Total Pris</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${userOrders}">
+            <td th:text="${order.orderID}">123</td>
+            <td th:text="${order.date}">01-01-2025</td>
+            <td th:text="${StatusChecker.getStatusText(order.status)}">Behandler</td>
+            <td th:text="${order.totalPrice} + ' kr'">1000 kr</td>
+            <td>
+                <!-- Show "Pay" button if status is 2 -->
+                <form th:if="${order.status == 2}" method="post" th:action="@{/orderconfirmation}">
+                    <input type="hidden" name="orderId" th:value="${order.orderID}" />
+                    <button type="submit">Betal</button>
+                </form>
+
+                <!-- Show "See details" link only if status >= 3 -->
+                <a th:if="${order.status >= 3}"
+                   th:href="@{/orderdetails(orderId=${order.orderID})}">Se detaljer</a>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+
+
 
 
 <footer>
