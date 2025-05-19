@@ -101,7 +101,18 @@ class StatusChecker {
 }
 
 class Svg {
+}
 
+class CarportSvgSide {
+- int width;
+- int height;
+- Svg carportSvg;
+}
+
+class CarportSvgTop {
+- int width;
+- int length;
+- Svg carportSvg;
 }
 
 }
