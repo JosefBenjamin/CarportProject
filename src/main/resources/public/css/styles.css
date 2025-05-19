@@ -421,9 +421,178 @@ table button:focus-visible { /* For delete material button */
         width: 100%;
     }
 }
-/*
-   admin page styles
-*/
+
+
+/********* OrderDetails ***************/
+.billOfMaterial table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.billOfMaterial th,
+.billOfMaterial td {
+    border: 1px solid #000;
+    padding: 8px 10px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.billOfMaterial th {
+    background-color: #e0e0e0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.billOfMaterial thead tr:first-child th {
+    font-size: 16px;
+    background-color: #d0d0d0;
+    text-decoration: underline;
+}
+
+/************ userProfile *********/
+h2, h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+form table {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto 40px auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+form td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+form td:first-child {
+    font-weight: bold;
+    width: 150px;
+}
+
+form input[type="text"],
+form input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+form button {
+    padding: 8px 14px;
+    background-color: #005b99;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #004a7c;
+}
+
+/* Orders section */
+.orders-section table {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.orders-section th,
+.orders-section td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.orders-section th {
+    background-color: #e9f1f7;
+    font-weight: bold;
+    text-align: center;
+}
+
+/********** orderconfirmation *********/
+h4 {
+    text-align: center;
+}
+
+/********** carportmaker **********/
+.carport-form {
+    background-color: white;
+    width: 50%;
+    margin: 0 auto;
+    padding: 30px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    border-radius: 12px;
+}
+
+.carport-form label {
+    display: block;
+    font-weight: bold;
+    margin-top: 15px;
+    color: #333;
+}
+
+.carport-form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.btn {
+    margin-top: 25px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn input[type="submit"] {
+    background-color: #004b87;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn input[type="submit"]:hover {
+    background-color: #003366;
+}
+
+.conformation-message {
+    background-color: #e6f7ff;
+    border: 1px solid #91d5ff;
+    padding: 30px;
+    width: 50%;
+    margin: 50px auto;
+    border-radius: 10px;
+}
+
+.conformation-message h2 {
+    color: #003366;
+}
+
+p {
+    margin-top: 10px;
+}
+
+
+/* admin page styles */
 
 .navigation-links span {
     color: #003D76;
@@ -645,7 +814,7 @@ table button:focus-visible { /* For delete material button */
     color: #721c24;
 }
 
-/* Responsive Design */
+
 @media (max-width: 900px) {
     .admin-table {
         display: block;
@@ -663,3 +832,4 @@ table button:focus-visible { /* For delete material button */
         max-width: 90vw;
     }
 }
+
