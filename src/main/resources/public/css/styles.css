@@ -421,3 +421,245 @@ table button:focus-visible { /* For delete material button */
         width: 100%;
     }
 }
+/*
+   admin page styles
+*/
+
+.navigation-links span {
+    color: #003D76;
+    padding: 8px 12px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.admin-content {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 15px;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    background-color: transparent;
+    margin: 20px 0;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #d0d0e0;
+}
+
+.admin-table th {
+    background-color: #F2F2FF;
+    color: #003D76;
+    font-weight: bold;
+    font-size: 0.9em;
+    border: none;
+}
+
+.admin-table .order-row,
+.admin-table .edit-form-row {
+    background-color: #FCFCFC;
+    border: 2px solid #003D76;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease;
+}
+
+.admin-table .order-row:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.admin-table .edit-form-row {
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+}
+
+.admin-table .order-id-link {
+    color: #003D76;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.admin-table .order-id-link:hover {
+    background-color: #F2F2FF;
+    color: #002a50;
+}
+
+.admin-table .order-id-link:focus-visible {
+    outline: 2px solid #003D76;
+    outline-offset: 1px;
+    background-color: #F2F2FF;
+}
+
+.admin-table .edit-icon {
+    font-size: 0.8em;
+}
+
+.admin-table ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.admin-table li {
+    color: #555;
+    font-size: 0.85em;
+    line-height: 1.4;
+}
+
+.admin-table a:not(.order-id-link),
+.admin-table button {
+    color: #003D76;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    font-size: 0.9em;
+}
+
+.admin-table a:not(.order-id-link):hover,
+.admin-table button:hover {
+    background-color: #F2F2FF;
+}
+
+.admin-table a:not(.order-id-link):focus-visible,
+.admin-table button:focus-visible {
+    outline: 2px solid #003D76;
+    outline-offset: 1px;
+    background-color: #F2F2FF;
+}
+
+.add-material-form,
+.edit-order-form {
+    background-color: #FCFCFC;
+    border: 1px solid #d0d0e0;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    margin: 20px 0;
+    max-width: 600px;
+}
+
+.add-material-form h2,
+.edit-order-form h3 {
+    color: #003D76;
+    font-size: 1.4em;
+    margin: 0 0 15px;
+}
+
+.add-material-form label,
+.edit-order-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.add-material-form input,
+.edit-order-form input,
+.edit-order-form select {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add-material-form input:focus,
+.edit-order-form input:focus,
+.edit-order-form select:focus {
+    outline: none;
+    border-color: #003D76;
+    box-shadow: 0 0 0 2px rgba(0, 61, 118, 0.15);
+}
+
+.add-material-form button,
+.edit-order-form button {
+    background-color: #003D76;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: bold;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-right: 10px;
+}
+
+.add-material-form button:hover,
+.edit-order-form button:hover {
+    background-color: #002a50;
+}
+
+.add-material-form button:focus-visible,
+.edit-order-form button:focus-visible {
+    outline: 2px solid #003D76;
+    outline-offset: 1px;
+}
+
+.add-material-form button:active,
+.edit-order-form button:active {
+    transform: translateY(1px);
+}
+
+.edit-order-form button[type="button"] {
+    background-color: #555;
+}
+
+.edit-order-form button[type="button"]:hover {
+    background-color: #444;
+}
+
+.success-message,
+.error-message {
+    max-width: 600px;
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+    .admin-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .navigation-links a,
+    .navigation-links span {
+        display: block;
+        margin: 5px 0;
+    }
+
+    .add-material-form,
+    .edit-order-form {
+        max-width: 90vw;
+    }
+}
