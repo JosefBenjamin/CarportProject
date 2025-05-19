@@ -1,5 +1,6 @@
 package app.controllers;
 
+import app.entities.CompleteUnitMaterial;
 import app.entities.Order;
 import app.entities.User;
 import app.entities.ZipCode;
@@ -8,9 +9,13 @@ import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.persistence.UserMapper;
 import app.persistence.ZipCodeMapper;
+import app.utilities.Calculator;
+import app.utilities.MailSender;
 import app.utilities.StatusChecker;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+
+import java.io.IOException;
 import java.util.List;
 
 public class ProfileController {
@@ -34,6 +39,53 @@ public class ProfileController {
         try {
             OrderMapper.updateStatus(orderId, connectionPool);
             ctx.render("orderconfirmation.html");
+            Order order =  OrderMapper.getOrderById(orderId, connectionPool);
+            int status = order.getStatus();
+            if(status == 3) {
+                MailSender mailSender = new MailSender();
+                StringBuilder sb = new StringBuilder();
+                Calculator calculator = new Calculator(order.getCarport().getCarportWidth(), order.getCarport().getCarportLength(), order.getCarport().getCarportHeight(), connectionPool);
+                double newPrice = calculator.getTotalPrice();
+                List<CompleteUnitMaterial> newMaterials = calculator.getOrderMaterials();
+                for (CompleteUnitMaterial material : newMaterials) {
+                    String matName = "Ukendt materiale";
+                    if (material.getMaterial() != null && material.getMaterial().getName() != null) {
+                        matName = material.getMaterial().getName();
+                    }else {
+                        matName = "Ukendt materiale";
+                    }
+                    String description;
+                    if (material.getDescription() != null) {
+                        description = material.getDescription();
+                    } else {
+                        description = "Ukendt beskrivelse";
+                    }
+                    sb.append("Materiale: ")
+                            .append(matName)
+                            .append(", Antal: ")
+                            .append(material.getQuantity())
+                            .append(", Beskrivelse: ")
+                            .append(description);
+                }
+                String formattedMaterials = sb.toString();
+                String currentDate = order.getDate().toString();
+                User user = UserMapper.getUserById(order.getUserID(), connectionPool);
+                String mailRecipient = user.getEmail();
+                String heightLengthWidth = String.valueOf(order.getCarport().getCarportHeight()) + " X " + order.getCarport().getCarportLength() + " X " + String.valueOf((order.getCarport().getCarportWidth()));
+                try {
+                    System.out.println("About to send mail to: " + mailRecipient);
+                    boolean success = mailSender.sendCUM(String.valueOf(orderId), heightLengthWidth, currentDate,
+                            String.valueOf(newPrice), String.valueOf(formattedMaterials), mailRecipient);
+                    if(success) {
+                        System.out.println("Email succesfully sent to " + mailRecipient);
+                    } else {
+                        System.out.println("Failed to send mail");
+                    }
+                } catch (IOException e) {
+                    throw new DatabaseException("Something went wrong sending an order confirmation mail to user");
+                }
+            }
+
 
         } catch (DatabaseException e) {
             ctx.attribute("message", e.getMessage());
