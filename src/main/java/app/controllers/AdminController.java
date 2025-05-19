@@ -21,7 +21,7 @@ public class AdminController {
         app.get("/admin", ctx -> showAdminPage(ctx, connectionPool), Role.ADMIN);
         app.get("/admin/show-materials", ctx -> showMaterials(ctx, connectionPool), Role.ADMIN);
         app.post("/admin/show-materials", ctx -> showMaterials(ctx, connectionPool), Role.ADMIN);
-        app.post("/admin/show-orders", ctx -> showOrders(ctx, connectionPool), Role.ADMIN);
+        app.get("/admin/show-orders", ctx -> showOrders(ctx, connectionPool), Role.ADMIN);
         app.post("/admin/add-material", ctx -> addMaterial(ctx, connectionPool), Role.ADMIN);
         app.post("/admin/delete-material", ctx -> deleteMaterial(ctx, connectionPool), Role.ADMIN);
         app.post("/admin/update-order", ctx -> updateOrder(ctx, connectionPool), Role.ADMIN);
