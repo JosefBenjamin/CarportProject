@@ -1,10 +1,10 @@
 .footer-content {
-    background-color: #FCFCFC; /* Light background */
-    color: #003D76;          /* Dark blue text */
-    padding: 15px 0;         /* Padding below the bar */
-    text-align: center;      /* center text */
+    background-color: #FCFCFC;
+    color: #003D76;
+    padding: 15px 0;
+    text-align: center;
     font-size: 0.9rem;
-    border-top: 5px solid #003D76; /* Solid color bar */
+    border-top: 5px solid #003D76;
 }
 
 .landingpage-boxes {
@@ -12,7 +12,7 @@
     justify-content: center;
     align-items: stretch;
     flex-wrap: wrap;
-    gap: 25px; /* Slightly smaller gap */
+    gap: 25px;
     padding: 40px 15px;
     max-width: 1000px;
     margin: 40px auto;
@@ -22,14 +22,14 @@
 .press-to-login,
 .press-to-admin,
 .press-to-register,
-.press-to-contact { /* Added .press-to-contact to the group */
+.press-to-contact {
     background-color: #FCFCFC;
-    border: 1px solid #d0d0e0; /* Subtle light grey border */
+    border: 1px solid #d0d0e0;
     border-radius: 6px;
-    width: 280px; /* Slightly smaller width */
+    width: 280px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     text-align: center;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease; /* Base transition */
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
 }
 
 .landingpage-boxes a {
@@ -43,7 +43,7 @@
 }
 
 .landingpage-boxes h2 {
-    color: #003D76; /* Blue heading */
+    color: #003D76;
     margin-top: 0;
     margin-bottom: 8px;
     font-size: 1.3em;
@@ -58,22 +58,19 @@
     transition: color 0.25s ease;
 }
 
-/* Enhancement from Brief: Smooth Hover & Active States (Section 2) & Accessibility (Section 7) */
-/* Applied to .press-to-* boxes on the landing page for more dynamic interaction and clear focus indication. */
+/* Hover & Focus Styles */
 .press-to-carport:hover,
 .press-to-login:hover,
 .press-to-admin:hover,
 .press-to-register:hover,
 .press-to-contact:hover {
     background-color: #F2F2FF;
-    transform: translateY(-4px) scale(1.025); /* Added scale */
-    box-shadow: 0 10px 24px rgba(0, 61, 118, 0.12); /* Enhanced shadow */
-    border-color: #b0b8ff; /* Refined border color */
-    transition: all 0.25s cubic-bezier(.4,2,.6,1); /* Smoother, custom transition from brief */
+    transform: translateY(-4px) scale(1.025);
+    box-shadow: 0 10px 24px rgba(0, 61, 118, 0.12);
+    border-color: #b0b8ff;
+    transition: all 0.25s cubic-bezier(.4,2,.6,1);
 }
 
-/* Enhancement from Brief: Accessibility - Focus Outlines (Section 2 & 7) */
-/* Ensures keyboard navigators get clear visual feedback matching the hover state. */
 .press-to-carport:focus-visible,
 .press-to-login:focus-visible,
 .press-to-admin:focus-visible,
@@ -81,29 +78,132 @@
 .press-to-contact:focus-visible {
     outline: 2px solid #003D76;
     outline-offset: 2px;
-    /* Mirroring hover styles for focus-visible for consistency */
     background-color: #F2F2FF;
     transform: translateY(-4px) scale(1.025);
     box-shadow: 0 10px 24px rgba(0, 61, 118, 0.12);
     border-color: #b0b8ff;
 }
 
-
 .press-to-carport:hover h2,
 .press-to-login:hover h2,
-.press-to-admin:hover h2, /* Added .press-to-admin */
+.press-to-admin:hover h2,
 .press-to-register:hover h2,
-.press-to-contact:hover h2 { /* Added .press-to-contact */
+.press-to-contact:hover h2 {
     color: #003D76;
 }
 
 .press-to-carport:hover p,
 .press-to-login:hover p,
-.press-to-admin:hover p, /* Added .press-to-admin */
+.press-to-admin:hover p,
 .press-to-register:hover p,
-.press-to-contact:hover p { /* Added .press-to-contact */
+.press-to-contact:hover p {
     color: #333;
 }
+
+/* ----------------------------
+   📱 Responsive Design for Phones
+   ---------------------------- */
+@media (max-width: 600px) {
+    .landingpage-boxes {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 20px 10px;
+        margin: 20px auto;
+    }
+
+    .press-to-carport,
+    .press-to-login,
+    .press-to-admin,
+    .press-to-register,
+    .press-to-contact {
+        width: 90%;
+        max-width: 360px;
+    }
+
+    .landingpage-boxes h2 {
+        font-size: 1.1em;
+    }
+
+    .landingpage-boxes p {
+        font-size: 0.85em;
+    }
+
+    .footer-content {
+        font-size: 0.8rem;
+        padding: 10px 5px;
+    }
+
+    .register-header {
+        padding: 30px 10px 15px 10px;
+    }
+
+    .register-header h1 {
+        font-size: 1.4em;
+    }
+
+    .register-form,
+    .login-form {
+        padding: 20px 15px;
+        margin: 20px auto;
+        width: 90%;
+        max-width: 100%;
+    }
+
+    .register-form input[type="email"],
+    .register-form input[type="password"],
+    .register-form input[type="tel"],
+    .register-form input[type="text"],
+    .login-form input[type="email"],
+    .login-form input[type="password"] {
+        padding: 10px;
+        font-size: 1em;
+    }
+
+    .register-form button,
+    .login-form button {
+        width: 100%;
+        padding: 12px;
+        font-size: 1em;
+    }
+
+    .register-message,
+    .login-message {
+        font-size: 0.9em;
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 12px;
+    }
+
+    .navigation-links {
+        flex-wrap: wrap;
+        gap: 8px;
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .navigation-links a,
+    .navigation-links span {
+        font-size: 0.95em;
+        padding: 8px 10px;
+    }
+
+    .carport-menuicon {
+        display: block;
+        font-size: 1.2em;
+    }
+
+    .logout-button {
+        width: 100%;
+        text-align: center;
+        font-size: 0.95em;
+        padding: 10px;
+    }
+}
+
 
 /* ==================
    Register Form Styles
