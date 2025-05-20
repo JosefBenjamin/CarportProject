@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserMapperTest {
     private static final String USER = "postgres";
     private static final String PASSWORD = "postgres";
-    private static final String URL = "jdbc:postgresql://localhost:5432/%s?currentSchema=public";
+    private static final String URL = "jdbc:postgresql://localhost:5432/%s?currentSchema=test";
     private static final String DB = "cupcake";
 
     private static ConnectionPool connectionPool;
@@ -29,6 +29,8 @@ class UserMapperTest {
             userMapper = new UserMapper();
             try (Connection testConnection = connectionPool.getConnection()) {
                 try (Statement stmt = testConnection.createStatement()) {
+                    stmt.execute("SET search_path TO test");
+
                     stmt.execute("CREATE SCHEMA IF NOT EXISTS test");
                     // The test schema is already created, so we only need to delete/create test tables
                     stmt.execute("DROP TABLE IF EXISTS test.users");
@@ -160,8 +162,8 @@ class UserMapperTest {
         try {
             User newUser = new User("test@mail.dk", "12345678", 42756486, false, "Test vej");
             newUser.setZipCode(new ZipCode(2800, "Lyngby"));
-            UserMapper.register(newUser, connectionPool);
-            assertTrue(UserMapper.emailExist(newUser.getEmail(), connectionPool));
+            User registeredUser = UserMapper.register(newUser, connectionPool);
+            assertEquals(true, UserMapper.login(registeredUser.getEmail(), "12345678", connectionPool));
         } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }

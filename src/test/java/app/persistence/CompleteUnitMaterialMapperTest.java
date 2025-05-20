@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CompleteUnitMaterialMapperTest {
     private static final String USER = "postgres";
     private static final String PASSWORD = "postgres";
-    private static final String URL = "jdbc:postgresql://localhost:5432/%s?currentSchema=public";
+    private static final String URL = "jdbc:postgresql://localhost:5432/%s?currentSchema=test";
     private static final String DB = "cupcake";
 
     private static ConnectionPool connectionPool;
@@ -32,6 +32,8 @@ class CompleteUnitMaterialMapperTest {
             completeUnitMaterialMapper = new CompleteUnitMaterialMapper();
             try (Connection testConnection = connectionPool.getConnection()) {
                 try (Statement stmt = testConnection.createStatement()) {
+                    stmt.execute("SET search_path TO test");
+
                     stmt.execute("CREATE SCHEMA IF NOT EXISTS test");
                     // The test schema is already created, so we only need to delete/create test tables
                     stmt.execute("DROP TABLE IF EXISTS test.users");

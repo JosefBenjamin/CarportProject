@@ -47,7 +47,7 @@ public class ZipCodeMapper {
             int zip = zipCode.getZipCode();
             String city = zipCode.getCity();
 
-            String sql = "SELECT * FROM public.zip_codes WHERE zip_code = ? AND city = ?";
+            String sql = "SELECT * FROM zip_codes WHERE zip_code = ? AND city = ?";
 
             try (Connection connection = connectionPool.getConnection();
                  PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -66,7 +66,7 @@ public class ZipCodeMapper {
 
 
       public static String getCityByZip(int zip, ConnectionPool connectionPool) throws DatabaseException {
-          String sql = "SELECT city FROM public.zip_codes WHERE zip_code = ?";
+          String sql = "SELECT city FROM zip_codes WHERE zip_code = ?";
           try (Connection connection = connectionPool.getConnection();
                PreparedStatement ps = connection.prepareStatement(sql)) {
 
@@ -84,7 +84,7 @@ public class ZipCodeMapper {
       }
 
       public static Integer getZipByCity(String city, ConnectionPool connectionPool) throws DatabaseException {
-          String sql = "SELECT zip_code FROM public.zip_codes WHERE city = ?";
+          String sql = "SELECT zip_code FROM zip_codes WHERE city = ?";
           try (Connection connection = connectionPool.getConnection();
                PreparedStatement ps = connection.prepareStatement(sql)) {
 
