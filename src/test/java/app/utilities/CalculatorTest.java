@@ -16,9 +16,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 class CalculatorTest {
     private static final String USER = "postgres";
-    private static final String PASSWORD = "88173480";
+    private static final String PASSWORD = "postgres";
     private static final String URL = "jdbc:postgresql://64.226.64.177:5432/%s?currentSchema=test";
-    private static final String DB = "fog_carport_2025";
+    private static final String DB = "cupcake";
 
     private static ConnectionPool connectionPool;
     private static MaterialMapper materialMapper;
