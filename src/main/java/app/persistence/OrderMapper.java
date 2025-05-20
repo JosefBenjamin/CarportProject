@@ -61,14 +61,12 @@ public class OrderMapper {
 
         String orderSql = "SELECT order_id, user_id, carport_width, carport_length, carport_height, date, total_price, status FROM orders";
 
-        String materialSql = """
-                SELECT cum.cum_id, cum.quantity, cum.orders_id, cum.ml_id, cum.ms_description_id,
-                       m.name AS material_name
-                FROM public.complete_unit_material cum
-                JOIN public.material_length ml ON cum.ml_id = ml.ml_id
-                JOIN public.materials m ON ml.material_id = m.material_id
-                WHERE cum.orders_id = ?
-                """;
+        String materialSql = "SELECT cum.cum_id, cum.quantity, cum.orders_id, cum.ml_id, cum.ms_description_id, " +
+                "m.name AS material_name " +
+                "FROM complete_unit_material cum " +
+                "JOIN material_length ml ON cum.ml_id = ml.ml_id " +
+                "JOIN materials m ON ml.material_id = m.material_id " +
+                "WHERE cum.orders_id = ? ";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement orderPs = connection.prepareStatement(orderSql)) {

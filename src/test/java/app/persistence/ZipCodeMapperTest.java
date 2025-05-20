@@ -28,6 +28,8 @@ class ZipCodeMapperTest {
             zipCodeMapper = new ZipCodeMapper();
             try (Connection testConnection = connectionPool.getConnection()) {
                 try (Statement stmt = testConnection.createStatement()) {
+                    stmt.execute("SET search_path TO test");
+
                     stmt.execute("CREATE SCHEMA IF NOT EXISTS test");
                     // The test schema is already created, so we only need to delete/create test tables
                     stmt.execute("DROP TABLE IF EXISTS test.users");

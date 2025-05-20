@@ -111,7 +111,7 @@ public class UserMapper {
     public static boolean emailExist(String email, ConnectionPool connectionPool) throws DatabaseException {
 
 
-        String sql = "SELECT email FROM public.users WHERE email = ?";
+        String sql = "SELECT email FROM users WHERE email = ?";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -128,8 +128,8 @@ public class UserMapper {
 
     public static User getUserByEmail(String email, ConnectionPool connectionPool) throws DatabaseException {
         String sql = "SELECT u.user_id, u.email, u.password, u.tlf, u.is_admin, u.address, z.zip_code, z.city " +
-                     "FROM public.users u " +
-                     "JOIN public.zip_codes z ON u.zip_code = z.zip_code " +
+                     "FROM users u " +
+                     "JOIN zip_codes z ON u.zip_code = z.zip_code " +
                      "WHERE u.email = ?";
 
         try (Connection connection = connectionPool.getConnection();
