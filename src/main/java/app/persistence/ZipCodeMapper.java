@@ -1,6 +1,5 @@
 package app.persistence;
 
-import app.entities.User;
 import app.entities.ZipCode;
 import app.exceptions.DatabaseException;
 

@@ -16,6 +16,15 @@ import java.util.Map;
 
 public class OrderMapper {
 
+    /**
+     * Retrieves all material setup descriptions from the database.
+     * This method queries the material_setup_descriptions table and maps each description to its corresponding ID.
+     *
+     * @param connectionPool the pool of database connections to use for the query
+     * @return a Map where the key is the material setup description ID (msd_id) and the value is the description
+     * @throws DatabaseException if there is an error accessing the database, such as a connection failure or SQL error
+     */
+
     public static Map<Integer, String> getDescriptions(ConnectionPool connectionPool) throws DatabaseException {
         Map<Integer, String> descriptions = new HashMap<>();
         String descriptionSql = "SELECT msd_id, description FROM material_setup_descriptions";
@@ -36,6 +45,15 @@ public class OrderMapper {
 
         return descriptions;
     }
+
+    /**
+     * Retrieves all orders from the database along with their associated details, including carport dimensions, user information,
+     * and materials.
+     *
+     * @param connectionPool the pool of database connections to use for the query
+     * @return a List of Order objects, each containing details such as carport dimensions, user, and bill of materials
+     * @throws DatabaseException if there is an error accessing the database, such as a connection failure or SQL error
+     */
 
     public static List<Order> getAllOrdersWithDetails(ConnectionPool connectionPool) throws DatabaseException {
         List<Order> orders = new ArrayList<>();
@@ -107,7 +125,22 @@ public class OrderMapper {
 
         return orders;
     }
-  
+
+    /**
+     * Registers a new order in the database for a given user with specified carport dimensions and details.
+     * The order is created with the current date and the provided total price and status.
+     *
+     * @param userID the ID of the user placing the order
+     * @param width the width of the carport in centimeters
+     * @param length the length of the carport in centimeters
+     * @param height the height of the carport in centimeters
+     * @param totalPrice the total price of the order in DKK
+     * @param status the status of the order (e.g., 1 for "Behandler", 2 for "Afventer betaling", 3 for "Forespørgsel afsluttet")
+     * @param connectionPool the pool of database connections to use for the query
+     * @return the ID of the newly created order, or 0 if the insertion fails
+     * @throws DatabaseException if there is an error accessing the database, such as a connection failure or SQL error
+     */
+
    public static int registerOrder(int userID, int width, int length, int height, double totalPrice, int status, ConnectionPool connectionPool) throws DatabaseException {
         String sql = "INSERT INTO orders (user_id, carport_width, carport_length, carport_height, date, total_price, status)" +
                 " VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -136,6 +169,21 @@ public class OrderMapper {
         return 0;
 
     }
+
+    /**
+     * Updates an existing order in the database with new carport dimensions, status, total price, and materials.
+     * This method performs the update within a transaction to ensure data consistency.
+     *
+     * @param orderId the ID of the order to update
+     * @param width the new width of the carport in centimeters
+     * @param length the new length of the carport in centimeters
+     * @param height the new height of the carport in centimeters
+     * @param status the new status of the order (e.g., 1 for "Behandler", 2 for "Afventer betaling", 3 for "Forespørgsel afsluttet")
+     * @param totalPrice the new total price of the order in DKK
+     * @param materials the updated list of materials associated with the order
+     * @param connectionPool the pool of database connections to use for the query
+     * @throws DatabaseException if the order is not found, or if there is an error accessing the database, such as a connection failure or SQL error
+     */
 
     public static void updateOrder(int orderId, int width, int length, int height, int status, double totalPrice, List<CompleteUnitMaterial> materials, ConnectionPool connectionPool) throws DatabaseException {
         String updateOrderSql = "UPDATE orders " +
@@ -188,7 +236,16 @@ public class OrderMapper {
         }
     }
 
-          public static List<Order> getAllOrdersByUserId(int userID, ConnectionPool connectionPool) throws DatabaseException {
+    /**
+     * Retrieves all orders placed by a specific user from the database.
+     *
+     * @param userID the ID of the user whose orders are to be retrieved
+     * @param connectionPool the pool of database connections to use for the query
+     * @return a List of Order objects representing all orders placed by the user
+     * @throws DatabaseException if there is an error accessing the database, such as a connection failure or SQL error
+     */
+
+    public static List<Order> getAllOrdersByUserId(int userID, ConnectionPool connectionPool) throws DatabaseException {
         List<Order> orders = new ArrayList<>();
         String sql = "SELECT * FROM orders WHERE user_id = ?";
         try (Connection conn = connectionPool.getConnection();
@@ -217,6 +274,15 @@ public class OrderMapper {
         }
     }
 
+    /**
+     * Updates the status of a specific order to "Forespørgsel afsluttet" (status 3).
+     * This method is used to mark an order as completed.
+     *
+     * @param orderId the ID of the order to update
+     * @param connectionPool the pool of database connections to use for the query
+     * @throws DatabaseException if there is an error accessing the database, such as a connection failure or SQL error
+     */
+
     public static void updateStatus(int orderId, ConnectionPool connectionPool) throws DatabaseException {
         String sql = "UPDATE orders SET status = ? WHERE order_id = ?";
 
@@ -233,6 +299,15 @@ public class OrderMapper {
 
         }
     }
+
+    /**
+     * Retrieves a specific order from the database by its ID, including associated user details.
+     *
+     * @param orderId the ID of the order to retrieve
+     * @param connectionPool the pool of database connections to use for the query
+     * @return the Order object with the specified ID, including its associated user
+     * @throws DatabaseException if the order is not found, or if there is an error accessing the database, such as a connection failure or SQL error
+     */
 
     public static Order getOrderById(int orderId, ConnectionPool connectionPool) throws DatabaseException {
         String sql = "SELECT * FROM orders WHERE order_id = ?";
